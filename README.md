@@ -40,16 +40,16 @@ Distributed via GitHub — no npm publish needed:
 
 ```bash
 # MCP server (stdio, for Claude Code)
-bunx --bun hanuman-ai@github:Soul-Brews-Studio/hanuman-ai#main
+bunx --bun hanuman-ai@github:kongoon/hanuman-ai#main
 
 # Vault CLI (secondary bin — use --package)
-bunx --bun --package hanuman-ai@github:Soul-Brews-Studio/hanuman-ai#main hanuman-vault --help
+bunx --bun --package hanuman-ai@github:kongoon/hanuman-ai#main hanuman-vault --help
 ```
 
 ### Add to Claude Code
 
 ```bash
-claude mcp add hanuman-ai -- bunx --bun hanuman-ai@github:Soul-Brews-Studio/hanuman-ai#main
+claude mcp add hanuman-ai -- bunx --bun hanuman-ai@github:kongoon/hanuman-ai#main
 ```
 
 Or in `~/.claude.json`:
@@ -58,7 +58,7 @@ Or in `~/.claude.json`:
   "mcpServers": {
     "hanuman-ai": {
       "command": "bunx",
-      "args": ["--bun", "hanuman-ai@github:Soul-Brews-Studio/hanuman-ai#main"]
+      "args": ["--bun", "hanuman-ai@github:kongoon/hanuman-ai#main"]
     }
   }
 }
@@ -67,7 +67,7 @@ Or in `~/.claude.json`:
 ### From source
 
 ```bash
-git clone https://github.com/Soul-Brews-Studio/hanuman-ai.git
+git clone https://github.com/kongoon/hanuman-ai.git
 cd hanuman-ai && bun install
 bun run dev          # MCP server
 bun run server       # HTTP API on :47778
@@ -77,7 +77,7 @@ bun run server       # HTTP API on :47778
 <summary>Install script (legacy)</summary>
 
 ```bash
-curl -sSL https://raw.githubusercontent.com/Soul-Brews-Studio/hanuman-ai/main/scripts/install.sh | bash
+curl -sSL https://raw.githubusercontent.com/kongoon/hanuman-ai/main/scripts/install.sh | bash
 ```
 </details>
 
