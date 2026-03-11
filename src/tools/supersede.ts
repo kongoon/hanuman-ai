@@ -1,16 +1,16 @@
 /**
- * Oracle Supersede Handler
+ * Hanuman Supersede Handler
  *
  * Mark old documents as superseded by newer ones.
  * "Nothing is Deleted" — old doc preserved but marked outdated.
  */
 
 import { eq } from 'drizzle-orm';
-import { oracleDocuments } from '../db/schema.ts';
-import type { ToolContext, ToolResponse, OracleSupersededInput } from './types.ts';
+import { hanumanDocuments } from '../db/schema.ts';
+import type { ToolContext, ToolResponse, HanumanSupersededInput } from './types.ts';
 
 export const supersedeToolDef = {
-  name: 'oracle_supersede',
+  name: 'hanuman_supersede',
   description: 'Mark an old learning/document as superseded by a newer one. Aligns with "Nothing is Deleted" - old doc preserved but marked outdated.',
   inputSchema: {
     type: 'object',
@@ -32,29 +32,29 @@ export const supersedeToolDef = {
   }
 };
 
-export async function handleSupersede(ctx: ToolContext, input: OracleSupersededInput): Promise<ToolResponse> {
+export async function handleSupersede(ctx: ToolContext, input: HanumanSupersededInput): Promise<ToolResponse> {
   const { oldId, newId, reason } = input;
   const now = Date.now();
 
-  const oldDoc = ctx.db.select({ id: oracleDocuments.id, type: oracleDocuments.type })
-    .from(oracleDocuments)
-    .where(eq(oracleDocuments.id, oldId))
+  const oldDoc = ctx.db.select({ id: hanumanDocuments.id, type: hanumanDocuments.type })
+    .from(hanumanDocuments)
+    .where(eq(hanumanDocuments.id, oldId))
     .get();
-  const newDoc = ctx.db.select({ id: oracleDocuments.id, type: oracleDocuments.type })
-    .from(oracleDocuments)
-    .where(eq(oracleDocuments.id, newId))
+  const newDoc = ctx.db.select({ id: hanumanDocuments.id, type: hanumanDocuments.type })
+    .from(hanumanDocuments)
+    .where(eq(hanumanDocuments.id, newId))
     .get();
 
   if (!oldDoc) throw new Error(`Old document not found: ${oldId}`);
   if (!newDoc) throw new Error(`New document not found: ${newId}`);
 
-  ctx.db.update(oracleDocuments)
+  ctx.db.update(hanumanDocuments)
     .set({
       supersededBy: newId,
       supersededAt: now,
       supersededReason: reason || null,
     })
-    .where(eq(oracleDocuments.id, oldId))
+    .where(eq(hanumanDocuments.id, oldId))
     .run();
 
   console.error(`[MCP:SUPERSEDE] ${oldId} → superseded by → ${newId}`);

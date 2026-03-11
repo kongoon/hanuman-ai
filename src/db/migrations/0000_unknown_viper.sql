@@ -96,7 +96,7 @@ CREATE TABLE `learn_log` (
 --> statement-breakpoint
 CREATE INDEX `idx_learn_project` ON `learn_log` (`project`);--> statement-breakpoint
 CREATE INDEX `idx_learn_created` ON `learn_log` (`created_at`);--> statement-breakpoint
-CREATE TABLE `oracle_documents` (
+CREATE TABLE `hanuman_documents` (
 	`id` text PRIMARY KEY NOT NULL,
 	`type` text NOT NULL,
 	`source_file` text NOT NULL,
@@ -106,8 +106,8 @@ CREATE TABLE `oracle_documents` (
 	`indexed_at` integer NOT NULL
 );
 --> statement-breakpoint
-CREATE INDEX `idx_source` ON `oracle_documents` (`source_file`);--> statement-breakpoint
-CREATE INDEX `idx_type` ON `oracle_documents` (`type`);--> statement-breakpoint
+CREATE INDEX `idx_source` ON `hanuman_documents` (`source_file`);--> statement-breakpoint
+CREATE INDEX `idx_type` ON `hanuman_documents` (`type`);--> statement-breakpoint
 CREATE TABLE `search_log` (
 	`id` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
 	`query` text NOT NULL,

@@ -1,5 +1,5 @@
 import type { Command } from 'commander';
-import { oracleFetch } from '../http.ts';
+import { hanumanFetch } from '../http.ts';
 import { printJson, printInbox } from '../format.ts';
 
 export function registerInbox(program: Command): void {
@@ -10,7 +10,7 @@ export function registerInbox(program: Command): void {
     .option('-t, --type <type>', 'Filter by type (handoff, all)', 'all')
     .option('--json', 'Output raw JSON')
     .action(async (opts) => {
-      const data = await oracleFetch('/api/inbox', {
+      const data = await hanumanFetch('/api/inbox', {
         query: {
           limit: opts.limit,
           type: opts.type,

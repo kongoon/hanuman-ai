@@ -1,6 +1,6 @@
 /**
  * Database Integration Tests
- * Tests oracle-v2 database operations with Drizzle ORM
+ * Tests hanuman-ai database operations with Drizzle ORM
  * Uses isolated test database with proper migrations
  */
 import { describe, test, expect, beforeAll, afterAll } from "bun:test";
@@ -15,7 +15,7 @@ import { homedir } from "os";
 import * as schema from "../db/schema";
 
 // Test database (separate from production)
-const TEST_DB_PATH = join(homedir(), ".oracle", "test-integration.db");
+const TEST_DB_PATH = join(homedir(), ".hanuman", "test-integration.db");
 const PROJECT_ROOT = join(import.meta.dir, "../..");
 
 let sqlite: Database;
@@ -24,7 +24,7 @@ let db: ReturnType<typeof drizzle>;
 describe("Database Integration (Drizzle ORM)", () => {
   beforeAll(async () => {
     // Ensure directory exists
-    const dir = join(homedir(), ".oracle");
+    const dir = join(homedir(), ".hanuman");
     if (!existsSync(dir)) {
       mkdirSync(dir, { recursive: true });
     }
@@ -69,7 +69,7 @@ describe("Database Integration (Drizzle ORM)", () => {
 
     // Create FTS5 table (not in migrations)
     sqlite.exec(`
-      CREATE VIRTUAL TABLE IF NOT EXISTS oracle_fts USING fts5(
+      CREATE VIRTUAL TABLE IF NOT EXISTS hanuman_fts USING fts5(
         id UNINDEXED,
         content,
         concepts,
@@ -93,7 +93,7 @@ describe("Database Integration (Drizzle ORM)", () => {
     const now = Date.now();
 
     test("INSERT document with Drizzle", async () => {
-      await db.insert(schema.oracleDocuments).values({
+      await db.insert(schema.hanumanDocuments).values({
         id: "drizzle_doc_1",
         type: "learning",
         sourceFile: "/test/drizzle.md",
@@ -105,8 +105,8 @@ describe("Database Integration (Drizzle ORM)", () => {
 
       const docs = await db
         .select()
-        .from(schema.oracleDocuments)
-        .where(eq(schema.oracleDocuments.id, "drizzle_doc_1"));
+        .from(schema.hanumanDocuments)
+        .where(eq(schema.hanumanDocuments.id, "drizzle_doc_1"));
 
       expect(docs.length).toBe(1);
       expect(docs[0].type).toBe("learning");
@@ -114,11 +114,11 @@ describe("Database Integration (Drizzle ORM)", () => {
     });
 
     test("SELECT by type with Drizzle", async () => {
-      await db.insert(schema.oracleDocuments).values({
+      await db.insert(schema.hanumanDocuments).values({
         id: "drizzle_doc_2",
         type: "principle",
         sourceFile: "/test/principle.md",
-        concepts: JSON.stringify(["core", "oracle"]),
+        concepts: JSON.stringify(["core", "hanuman"]),
         createdAt: now,
         updatedAt: now,
         indexedAt: now,
@@ -126,15 +126,15 @@ describe("Database Integration (Drizzle ORM)", () => {
 
       const learnings = await db
         .select()
-        .from(schema.oracleDocuments)
-        .where(eq(schema.oracleDocuments.type, "learning"));
+        .from(schema.hanumanDocuments)
+        .where(eq(schema.hanumanDocuments.type, "learning"));
 
       expect(learnings.length).toBeGreaterThanOrEqual(1);
       expect(learnings.every((d) => d.type === "learning")).toBe(true);
     });
 
     test("Supersede document (Nothing is Deleted)", async () => {
-      await db.insert(schema.oracleDocuments).values({
+      await db.insert(schema.hanumanDocuments).values({
         id: "drizzle_doc_3",
         type: "learning",
         sourceFile: "/test/updated.md",
@@ -145,18 +145,18 @@ describe("Database Integration (Drizzle ORM)", () => {
       });
 
       await db
-        .update(schema.oracleDocuments)
+        .update(schema.hanumanDocuments)
         .set({
           supersededBy: "drizzle_doc_3",
           supersededAt: Date.now(),
           supersededReason: "Updated with new information",
         })
-        .where(eq(schema.oracleDocuments.id, "drizzle_doc_1"));
+        .where(eq(schema.hanumanDocuments.id, "drizzle_doc_1"));
 
       const oldDoc = await db
         .select()
-        .from(schema.oracleDocuments)
-        .where(eq(schema.oracleDocuments.id, "drizzle_doc_1"));
+        .from(schema.hanumanDocuments)
+        .where(eq(schema.hanumanDocuments.id, "drizzle_doc_1"));
 
       expect(oldDoc[0].supersededBy).toBe("drizzle_doc_3");
       expect(oldDoc[0].supersededReason).toBe("Updated with new information");
@@ -165,15 +165,15 @@ describe("Database Integration (Drizzle ORM)", () => {
     test("Filter non-superseded documents", async () => {
       const activeDocs = await db
         .select()
-        .from(schema.oracleDocuments)
-        .where(isNull(schema.oracleDocuments.supersededBy));
+        .from(schema.hanumanDocuments)
+        .where(isNull(schema.hanumanDocuments.supersededBy));
 
       expect(activeDocs.length).toBeGreaterThanOrEqual(1);
       expect(activeDocs.every((d) => d.supersededBy === null)).toBe(true);
     });
 
     test("Project filtering with universal docs", async () => {
-      await db.insert(schema.oracleDocuments).values({
+      await db.insert(schema.hanumanDocuments).values({
         id: "proj_doc_1",
         type: "learning",
         sourceFile: "/proj/a.md",
@@ -184,7 +184,7 @@ describe("Database Integration (Drizzle ORM)", () => {
         project: "github.com/test/project",
       });
 
-      await db.insert(schema.oracleDocuments).values({
+      await db.insert(schema.hanumanDocuments).values({
         id: "universal_doc",
         type: "principle",
         sourceFile: "/core/universal.md",
@@ -197,9 +197,9 @@ describe("Database Integration (Drizzle ORM)", () => {
 
       const docs = await db
         .select()
-        .from(schema.oracleDocuments)
+        .from(schema.hanumanDocuments)
         .where(
-          sql`${schema.oracleDocuments.project} = ${"github.com/test/project"} OR ${schema.oracleDocuments.project} IS NULL`
+          sql`${schema.hanumanDocuments.project} = ${"github.com/test/project"} OR ${schema.hanumanDocuments.project} IS NULL`
         );
 
       const hasProjectDocs = docs.some((d) => d.project === "github.com/test/project");
@@ -218,7 +218,7 @@ describe("Database Integration (Drizzle ORM)", () => {
 
     test("LOG search query", async () => {
       await db.insert(schema.searchLog).values({
-        query: "oracle philosophy",
+        query: "hanuman philosophy",
         type: "all",
         mode: "hybrid",
         resultsCount: 5,
@@ -231,7 +231,7 @@ describe("Database Integration (Drizzle ORM)", () => {
       const logs = await db
         .select()
         .from(schema.searchLog)
-        .where(eq(schema.searchLog.query, "oracle philosophy"));
+        .where(eq(schema.searchLog.query, "hanuman philosophy"));
 
       expect(logs.length).toBe(1);
       expect(logs[0].mode).toBe("hybrid");
@@ -323,7 +323,7 @@ describe("Database Integration (Drizzle ORM)", () => {
 
       await db.insert(schema.traceLog).values({
         traceId,
-        query: "oracle patterns",
+        query: "hanuman patterns",
         queryType: "general",
         foundFiles: JSON.stringify(["/path/to/file.md"]),
         foundCommits: JSON.stringify([{ hash: "abc123", message: "test" }]),
@@ -338,7 +338,7 @@ describe("Database Integration (Drizzle ORM)", () => {
         .where(eq(schema.traceLog.traceId, traceId));
 
       expect(traces.length).toBe(1);
-      expect(traces[0].query).toBe("oracle patterns");
+      expect(traces[0].query).toBe("hanuman patterns");
     });
   });
 
@@ -347,22 +347,22 @@ describe("Database Integration (Drizzle ORM)", () => {
   // ===================
   describe("FTS5 Full-Text Search (Raw SQL)", () => {
     beforeAll(() => {
-      sqlite.exec(`INSERT INTO oracle_fts (id, content, concepts) VALUES ('fts_1', 'The Oracle philosophy emphasizes patterns', 'oracle,philosophy')`);
-      sqlite.exec(`INSERT INTO oracle_fts (id, content, concepts) VALUES ('fts_2', 'Integration testing with Drizzle ORM', 'testing,drizzle')`);
+      sqlite.exec(`INSERT INTO hanuman_fts (id, content, concepts) VALUES ('fts_1', 'The Hanuman philosophy emphasizes patterns', 'hanuman,philosophy')`);
+      sqlite.exec(`INSERT INTO hanuman_fts (id, content, concepts) VALUES ('fts_2', 'Integration testing with Drizzle ORM', 'testing,drizzle')`);
     });
 
     test("FTS5 MATCH query", () => {
-      const results = sqlite.query("SELECT id, content FROM oracle_fts WHERE oracle_fts MATCH ?").all("oracle") as any[];
+      const results = sqlite.query("SELECT id, content FROM hanuman_fts WHERE hanuman_fts MATCH ?").all("hanuman") as any[];
       expect(results.length).toBeGreaterThanOrEqual(1);
     });
 
     test("FTS5 with porter stemming", () => {
-      const results = sqlite.query("SELECT id FROM oracle_fts WHERE oracle_fts MATCH ?").all("tests") as any[];
+      const results = sqlite.query("SELECT id FROM hanuman_fts WHERE hanuman_fts MATCH ?").all("tests") as any[];
       expect(results.length).toBeGreaterThanOrEqual(1);
     });
 
     test("FTS5 concept column search", () => {
-      const results = sqlite.query("SELECT id FROM oracle_fts WHERE oracle_fts MATCH 'concepts:philosophy'").all() as any[];
+      const results = sqlite.query("SELECT id FROM hanuman_fts WHERE hanuman_fts MATCH 'concepts:philosophy'").all() as any[];
       expect(results.length).toBeGreaterThanOrEqual(1);
     });
   });

@@ -1,8 +1,8 @@
 /**
- * Oracle Forum Types
+ * Hanuman Forum Types
  *
  * DB-first discussion threads with GitHub Issue mirroring.
- * Oracle auto-answers from knowledge base, logs unanswered for later.
+ * Hanuman auto-answers from knowledge base, logs unanswered for later.
  */
 
 // ============================================================================
@@ -10,7 +10,7 @@
 // ============================================================================
 
 export type ThreadStatus = 'active' | 'answered' | 'pending' | 'closed';
-export type MessageRole = 'human' | 'oracle' | 'claude';
+export type MessageRole = 'human' | 'hanuman' | 'claude';
 
 export interface ForumThread {
   id: number;
@@ -30,9 +30,9 @@ export interface ForumMessage {
   threadId: number;
   role: MessageRole;
   content: string;
-  author?: string;        // GitHub username or "oracle"
+  author?: string;        // GitHub username or "hanuman"
 
-  // Oracle response metadata
+  // Hanuman response metadata
   principlesFound?: number;
   patternsFound?: number;
   searchQuery?: string;
@@ -74,7 +74,7 @@ export function buildIssueUrl(owner: string, repo: string, issueNumber: number):
 // ============================================================================
 
 // Start new thread or add to existing
-export interface OracleThreadInput {
+export interface HanumanThreadInput {
   message: string;
   threadId?: number;      // If continuing existing thread
   title?: string;         // For new threads
@@ -82,10 +82,10 @@ export interface OracleThreadInput {
   model?: string;         // e.g., 'opus', 'sonnet' for Claude calls
 }
 
-export interface OracleThreadOutput {
+export interface HanumanThreadOutput {
   threadId: number;
   messageId: number;
-  oracleResponse?: {
+  hanumanResponse?: {
     content: string;
     principlesFound: number;
     patternsFound: number;
@@ -95,25 +95,25 @@ export interface OracleThreadOutput {
 }
 
 // Sync thread to GitHub Issue
-export interface OracleSyncInput {
+export interface HanumanSyncInput {
   threadId: number;
   createIssue?: boolean;  // Create new issue if not exists
 }
 
-export interface OracleSyncOutput {
+export interface HanumanSyncOutput {
   synced: boolean;
   issueUrl?: string;
   messagesSync: number;
 }
 
 // List threads
-export interface OracleListThreadsInput {
+export interface HanumanListThreadsInput {
   status?: ThreadStatus;
   limit?: number;
   offset?: number;
 }
 
-export interface OracleListThreadsOutput {
+export interface HanumanListThreadsOutput {
   threads: Array<{
     id: number;
     title: string;
@@ -132,7 +132,7 @@ export interface OracleListThreadsOutput {
 
 export interface ForumConfig {
   defaultRepo: string;
-  autoAnswer: boolean;      // Oracle auto-responds to questions
+  autoAnswer: boolean;      // Hanuman auto-responds to questions
   autoSync: boolean;        // Auto-sync to GitHub
   labels: {
     question: string;
@@ -142,12 +142,12 @@ export interface ForumConfig {
 }
 
 export const DEFAULT_FORUM_CONFIG: ForumConfig = {
-  defaultRepo: process.env.ORACLE_FORUM_REPO || 'laris-co/Nat-s-Agents',
+  defaultRepo: process.env.HANUMAN_FORUM_REPO || 'laris-co/Nat-s-Agents',
   autoAnswer: true,
   autoSync: false,  // Manual sync by default
   labels: {
-    question: 'oracle-thread',
-    answered: 'oracle-answered',
-    pending: 'oracle-pending'
+    question: 'hanuman-thread',
+    answered: 'hanuman-answered',
+    pending: 'hanuman-pending'
   }
 };

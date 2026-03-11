@@ -13,7 +13,7 @@ interface Thread {
 
 interface Message {
   id: number;
-  role: 'human' | 'oracle' | 'claude';
+  role: 'human' | 'hanuman' | 'claude';
   content: string;
   author: string | null;
   principles_found: number | null;
@@ -213,7 +213,7 @@ export function Forum() {
                 className={styles.input}
               />
               <textarea
-                placeholder="Ask Oracle a question..."
+                placeholder="Ask Hanuman a question..."
                 value={newMessage}
                 onChange={e => setNewMessage(e.target.value)}
                 className={styles.textarea}
@@ -224,7 +224,7 @@ export function Forum() {
                 disabled={loading || !newMessage.trim()}
                 className={styles.submitButton}
               >
-                {loading ? 'Sending...' : 'Ask Oracle'}
+                {loading ? 'Sending...' : 'Ask Hanuman'}
               </button>
             </form>
           </div>
@@ -258,8 +258,8 @@ export function Forum() {
                 >
                   <div className={styles.messageHeader}>
                     <span className={styles.role}>
-                      {msg.role === 'oracle'
-                        ? '🔮 Oracle'
+                      {msg.role === 'hanuman'
+                        ? '🔮 Hanuman'
                         : msg.role === 'claude'
                           ? `🤖 ${msg.author || 'Claude'}`
                           : `👤 ${msg.author || 'User'}`}

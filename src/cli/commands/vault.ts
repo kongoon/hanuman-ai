@@ -9,9 +9,9 @@ import fs from 'fs';
 export function registerVault(program: Command): void {
   const vault = program
     .command('vault')
-    .description('Manage Oracle knowledge vault');
+    .description('Manage Hanuman knowledge vault');
 
-  const repoRoot = process.env.ORACLE_REPO_ROOT || process.cwd();
+  const repoRoot = process.env.HANUMAN_REPO_ROOT || process.cwd();
 
   vault
     .command('init <repo>')

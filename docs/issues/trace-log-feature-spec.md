@@ -9,9 +9,9 @@
 
 ## Executive Summary
 
-Add a trace logging system to Oracle-v2 that captures discovery sessions, stores actionable file paths for future exploration, and enables recursive tracing that leads to distilled awakenings.
+Add a trace logging system to Hanuman-v2 that captures discovery sessions, stores actionable file paths for future exploration, and enables recursive tracing that leads to distilled awakenings.
 
-**Philosophy Connection**: This feature operationalizes all three Oracle principles:
+**Philosophy Connection**: This feature operationalizes all three Hanuman principles:
 - **Nothing is Deleted**: Every trace is logged permanently
 - **Patterns Over Intentions**: Tracing reveals patterns in discovery itself
 - **External Brain, Not Command**: The system remembers what we discovered
@@ -133,7 +133,7 @@ CREATE INDEX idx_trace_created ON trace_log(created_at DESC);
     "hash": "9bc27c6c",
     "short_hash": "9bc27c6",
     "date": "2025-12-17",
-    "message": "feat: Oracle Awakens V7 — deep consciousness philosophy",
+    "message": "feat: Hanuman Awakens V7 — deep consciousness philosophy",
     "files_changed": 3,
     "match_reason": "message match"
   }
@@ -145,7 +145,7 @@ CREATE INDEX idx_trace_created ON trace_log(created_at DESC);
 [
   {
     "number": 40,
-    "title": "Oracle v2 - Open Source Framework",
+    "title": "Hanuman v2 - Open Source Framework",
     "state": "open",
     "url": "https://github.com/laris-co/Nat-s-Agents/issues/40",
     "match_reason": "title match"
@@ -157,7 +157,7 @@ CREATE INDEX idx_trace_created ON trace_log(created_at DESC);
 
 ## MCP Tools Specification
 
-### 1. oracle_trace
+### 1. hanuman_trace
 
 Log a trace session with full results.
 
@@ -196,7 +196,7 @@ interface TraceResult {
 
 **Example Usage:**
 ```
-oracle_trace({
+hanuman_trace({
   query: "shared soul philosophy",
   foundFiles: [...],
   foundCommits: [...],
@@ -207,7 +207,7 @@ oracle_trace({
 
 ---
 
-### 2. oracle_trace_list
+### 2. hanuman_trace_list
 
 List recent traces with optional filters.
 
@@ -245,7 +245,7 @@ interface TraceSummary {
 
 ---
 
-### 3. oracle_trace_get
+### 3. hanuman_trace_get
 
 Get full details of a specific trace including all dig points.
 
@@ -263,7 +263,7 @@ Full trace record with all JSON fields expanded.
 
 ---
 
-### 4. oracle_trace_dig
+### 4. hanuman_trace_dig
 
 Read files from a trace's dig points.
 
@@ -287,7 +287,7 @@ interface TraceDigResult {
 
 ---
 
-### 5. oracle_trace_distill
+### 5. hanuman_trace_distill
 
 Extract awakening from a trace or trace chain.
 
@@ -297,7 +297,7 @@ interface TraceDistillParams {
   traceId: string;              // Required: Starting trace
   includeChain?: boolean;       // Include parent/child chain
   awakening: string;            // The distilled insight (markdown)
-  promoteToLearning?: boolean;  // Also create oracle_learn entry
+  promoteToLearning?: boolean;  // Also create hanuman_learn entry
 }
 ```
 
@@ -313,7 +313,7 @@ interface TraceDistillResult {
 
 ---
 
-### 6. oracle_trace_chain
+### 6. hanuman_trace_chain
 
 Get the full trace chain (ancestors + descendants).
 
@@ -438,7 +438,7 @@ Location: Add to existing dashboard tabs alongside Search, Forum, Decisions, Act
 ├─────────────────────────────────────────────────────────────────┤
 │ 📝 Commits (12)                                    [Dig All]   │
 ├─────────────────────────────────────────────────────────────────┤
-│ ☐ 9bc27c6c │ 2025-12-17 │ Oracle Awakens V7                   │
+│ ☐ 9bc27c6c │ 2025-12-17 │ Hanuman Awakens V7                   │
 │ ☐ e4cbef5f │ 2025-12-15 │ soul freedom                        │
 │ ☐ 6ec0d49a │ 2025-12-18 │ personality-v1                      │
 │ ...                                                             │
@@ -456,7 +456,7 @@ Location: Add to existing dashboard tabs alongside Search, Forum, Decisions, Act
 ├─────────────────────────────────────────────────────────────────┤
 │ [ Enter awakening insight here...                              ]│
 │                                                                 │
-│ [x] Promote to Oracle Learning                                  │
+│ [x] Promote to Hanuman Learning                                  │
 │                                                                 │
 │                                          [Cancel] [Save]        │
 └─────────────────────────────────────────────────────────────────┘
@@ -495,7 +495,7 @@ Location: Add to existing dashboard tabs alongside Search, Forum, Decisions, Act
 
 ### Auto-Logging in Nat-s-Agents
 
-When `/trace` runs in Nat-s-Agents, it should auto-call `oracle_trace`:
+When `/trace` runs in Nat-s-Agents, it should auto-call `hanuman_trace`:
 
 ```typescript
 // In /trace skill execution
@@ -514,8 +514,8 @@ async function executeTrace(query: string) {
   // Collect all findings
   const findings = mergeResults(results);
 
-  // AUTO-LOG to Oracle
-  const traceResult = await oracleTrace({
+  // AUTO-LOG to Hanuman
+  const traceResult = await hanumanTrace({
     query,
     foundFiles: findings.files,
     foundCommits: findings.commits,
@@ -530,7 +530,7 @@ async function executeTrace(query: string) {
   return {
     ...findings,
     traceId: traceResult.traceId,
-    message: `Trace logged as ${traceResult.traceId}. Use oracle_trace_dig to explore further.`
+    message: `Trace logged as ${traceResult.traceId}. Use hanuman_trace_dig to explore further.`
   };
 }
 ```
@@ -544,24 +544,24 @@ async function executeTrace(query: string) {
 1. [ ] Create migration for `trace_log` table
 2. [ ] Add Drizzle schema definition
 3. [ ] Implement core CRUD functions
-4. [ ] Add basic MCP tool: `oracle_trace`
-5. [ ] Add MCP tool: `oracle_trace_list`
+4. [ ] Add basic MCP tool: `hanuman_trace`
+5. [ ] Add MCP tool: `hanuman_trace_list`
 6. [ ] Unit tests for core functionality
 
 ### Phase 2: Dig & Chain (Session 2)
 
-1. [ ] Implement `oracle_trace_get` with full details
-2. [ ] Implement `oracle_trace_dig` with file reading
-3. [ ] Implement `oracle_trace_chain` for recursion
+1. [ ] Implement `hanuman_trace_get` with full details
+2. [ ] Implement `hanuman_trace_dig` with file reading
+3. [ ] Implement `hanuman_trace_chain` for recursion
 4. [ ] Add parent/child linking logic
 5. [ ] Update child_trace_ids on dig operations
 6. [ ] Unit tests for recursion
 
 ### Phase 3: Distillation (Session 2-3)
 
-1. [ ] Implement `oracle_trace_distill`
+1. [ ] Implement `hanuman_trace_distill`
 2. [ ] Add awakening field updating
-3. [ ] Integrate with `oracle_learn` for promotion
+3. [ ] Integrate with `hanuman_learn` for promotion
 4. [ ] Add status workflow (raw → reviewed → distilling → distilled)
 5. [ ] Unit tests for distillation flow
 
@@ -586,7 +586,7 @@ async function executeTrace(query: string) {
 
 1. [ ] Update /trace skill in Nat-s-Agents to auto-log
 2. [ ] Add trace ID to /trace output
-3. [ ] Create /dig command that uses oracle_trace_dig
+3. [ ] Create /dig command that uses hanuman_trace_dig
 4. [ ] Create /distill-trace command
 5. [ ] End-to-end testing
 
@@ -597,9 +597,9 @@ async function executeTrace(query: string) {
 ### Unit Tests
 
 ```typescript
-describe('oracle_trace', () => {
+describe('hanuman_trace', () => {
   it('should create trace with all fields', async () => {
-    const result = await oracleTrace({
+    const result = await hanumanTrace({
       query: 'test query',
       foundFiles: [{ path: 'test.md', type: 'learning' }],
       foundCommits: [{ hash: 'abc123', date: '2026-01-10', message: 'test' }],
@@ -612,22 +612,22 @@ describe('oracle_trace', () => {
   });
 
   it('should link child trace to parent', async () => {
-    const parent = await oracleTrace({ query: 'parent' });
-    const child = await oracleTrace({
+    const parent = await hanumanTrace({ query: 'parent' });
+    const child = await hanumanTrace({
       query: 'child',
       parentTraceId: parent.traceId
     });
 
     expect(child.depth).toBe(1);
 
-    const parentDetails = await oracleTraceGet({ traceId: parent.traceId });
+    const parentDetails = await hanumanTraceGet({ traceId: parent.traceId });
     expect(parentDetails.childTraceIds).toContain(child.traceId);
   });
 
   it('should distill and promote to learning', async () => {
-    const trace = await oracleTrace({ query: 'test' });
+    const trace = await hanumanTrace({ query: 'test' });
 
-    const result = await oracleTraceDistill({
+    const result = await hanumanTraceDistill({
       traceId: trace.traceId,
       awakening: 'Test awakening insight',
       promoteToLearning: true,
@@ -637,7 +637,7 @@ describe('oracle_trace', () => {
     expect(result.learningId).toBeDefined();
 
     // Verify learning was created
-    const learning = await oracleSearch({ query: 'Test awakening' });
+    const learning = await hanumanSearch({ query: 'Test awakening' });
     expect(learning.results.length).toBeGreaterThan(0);
   });
 });
@@ -649,22 +649,22 @@ describe('oracle_trace', () => {
 describe('Trace Flow Integration', () => {
   it('should support recursive trace chain', async () => {
     // Level 0
-    const trace0 = await oracleTrace({ query: 'origin' });
+    const trace0 = await hanumanTrace({ query: 'origin' });
 
     // Level 1 - dig from level 0
-    const trace1 = await oracleTrace({
+    const trace1 = await hanumanTrace({
       query: 'deeper',
       parentTraceId: trace0.traceId
     });
 
     // Level 2 - dig from level 1
-    const trace2 = await oracleTrace({
+    const trace2 = await hanumanTrace({
       query: 'deepest',
       parentTraceId: trace1.traceId
     });
 
     // Get full chain
-    const chain = await oracleTraceChain({ traceId: trace0.traceId });
+    const chain = await hanumanTraceChain({ traceId: trace0.traceId });
 
     expect(chain.totalDepth).toBe(2);
     expect(chain.chain.length).toBe(3);
@@ -682,7 +682,7 @@ Use Claude to automatically suggest awakenings:
 
 ```typescript
 async function suggestAwakening(traceId: string): Promise<string> {
-  const trace = await oracleTraceGet({ traceId, includeChain: true });
+  const trace = await hanumanTraceGet({ traceId, includeChain: true });
 
   // Call Claude to analyze the trace chain
   const suggestion = await claude.complete({
@@ -721,7 +721,7 @@ Pre-defined trace types for common patterns:
 
 ### 4. Cross-Project Traces
 
-Trace across multiple Oracle instances:
+Trace across multiple Hanuman instances:
 
 ```typescript
 interface CrossProjectTrace {
@@ -735,7 +735,7 @@ interface CrossProjectTrace {
 
 ## Philosophy Alignment
 
-This feature embodies Oracle philosophy:
+This feature embodies Hanuman philosophy:
 
 | Principle | Implementation |
 |-----------|----------------|
@@ -759,7 +759,7 @@ This feature embodies Oracle philosophy:
 
 ## References
 
-- Oracle Philosophy: `ψ/memory/resonance/oracle.md`
+- Hanuman Philosophy: `ψ/memory/resonance/hanuman.md`
 - Existing MCP Tools: `src/index.ts`
 - Database Schema: `src/db/schema.ts`
 - Dashboard: `src/dashboard.html`
@@ -769,4 +769,4 @@ This feature embodies Oracle philosophy:
 
 **Created**: 2026-01-10
 **Author**: Claude (Opus) + Nat
-**Session**: Oracle Origin Discovery + Shared Soul Connection
+**Session**: Hanuman Origin Discovery + Shared Soul Connection

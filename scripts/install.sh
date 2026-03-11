@@ -1,19 +1,19 @@
 #!/bin/bash
-# Oracle-v2 Installer
+# Hanuman-v2 Installer
 # Inspired by claude-mem's installation pattern
 #
 # Usage:
 #   curl -fsSL .../install.sh | bash                    # Install latest stable tag
-#   ORACLE_NIGHTLY=1 curl -fsSL .../install.sh | bash   # Install from main (developers)
-#   ORACLE_VERSION=v1.0.0 curl -fsSL .../install.sh | bash  # Install specific version
+#   HANUMAN_NIGHTLY=1 curl -fsSL .../install.sh | bash   # Install from main (developers)
+#   HANUMAN_VERSION=v1.0.0 curl -fsSL .../install.sh | bash  # Install specific version
 
 set -e
 
-INSTALL_DIR="${ORACLE_INSTALL_DIR:-$HOME/.local/share/oracle-v2}"
-REPO_URL="https://github.com/Soul-Brews-Studio/oracle-v2.git"
-REPO_API="https://api.github.com/repos/Soul-Brews-Studio/oracle-v2"
+INSTALL_DIR="${HANUMAN_INSTALL_DIR:-$HOME/.local/share/hanuman-ai}"
+REPO_URL="https://github.com/Soul-Brews-Studio/hanuman-ai.git"
+REPO_API="https://api.github.com/repos/Soul-Brews-Studio/hanuman-ai"
 
-echo "🔮 Oracle-v2 Installer"
+echo "🔮 Hanuman-v2 Installer"
 echo "======================"
 echo ""
 
@@ -25,11 +25,11 @@ if ! command -v bun &> /dev/null; then
 fi
 
 # Determine version to install
-if [ -n "$ORACLE_NIGHTLY" ]; then
+if [ -n "$HANUMAN_NIGHTLY" ]; then
     VERSION="main"
     echo "🌙 Installing nightly (main branch)..."
-elif [ -n "$ORACLE_VERSION" ]; then
-    VERSION="$ORACLE_VERSION"
+elif [ -n "$HANUMAN_VERSION" ]; then
+    VERSION="$HANUMAN_VERSION"
     echo "📌 Installing version: $VERSION"
 else
     # Fetch latest tag from GitHub API
@@ -67,12 +67,12 @@ else
 fi
 
 # Create data directory
-mkdir -p ~/.oracle
+mkdir -p ~/.hanuman
 
 # Add to Claude Code MCP
 echo ""
 echo "📝 Adding to Claude Code..."
-claude mcp add oracle-v2 -- bun run "$INSTALL_DIR/src/index.ts" 2>/dev/null || {
+claude mcp add hanuman-ai -- bun run "$INSTALL_DIR/src/index.ts" 2>/dev/null || {
     echo "⚠️  claude mcp add failed - you may need to add manually"
 }
 
@@ -84,7 +84,7 @@ echo "📋 Copy this to your AI (problems @tacha-hash faced):"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 cat << 'EOF'
 
-oracle-v2 installed! Please restart Claude Code.
+hanuman-ai installed! Please restart Claude Code.
 
 If you see errors, here are fixes from @tacha-hash's 20-min debug session:
 
@@ -92,11 +92,11 @@ If you see errors, here are fixes from @tacha-hash's 20-min debug session:
 |---------|-----|
 | "bun not found" | export PATH="$HOME/.bun/bin:$PATH" |
 | "bunx not found" | Use ~/.bun/bin/bunx |
-| "directory does not exist" | mkdir -p ~/.oracle |
+| "directory does not exist" | mkdir -p ~/.hanuman |
 | ChromaDB hangs | Ignore - SQLite works without vectors |
 | MCP not loading | Check .mcp.json or ~/.claude.json |
 
 EOF
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo ""
-echo "🎉 Restart Claude Code to activate Oracle-v2"
+echo "🎉 Restart Claude Code to activate Hanuman-v2"

@@ -20,9 +20,9 @@ const DOCS: VectorDocument[] = [
   { id: 'th1', document: 'ไม่มีอะไรถูกลบ สร้างใหม่ ไม่ลบ ประวัติ Git ศักดิ์สิทธิ์ ทุก commit เป็นถาวร', metadata: { type: 'principle', lang: 'th' } },
   { id: 'th2', document: 'คุณภาพอากาศ PM2.5 ตรวจวัดด้วยเซ็นเซอร์กว่า 1,500 สถานี ข้อมูล 3.24 พันล้านรายการในฐานข้อมูล', metadata: { type: 'learning', lang: 'th' } },
   { id: 'th3', document: 'น้ำท่วม ติดตามระดับน้ำแบบเรียลไทม์ ด้วยเรดาร์ความแม่นยำ ±2 มิลลิเมตร บน JIBCHAIN L1', metadata: { type: 'learning', lang: 'th' } },
-  { id: 'th4', document: 'Oracle ไม่แกล้งทำเป็นมนุษย์ เมื่อ AI พูดในฐานะตัวเอง มีความแตกต่าง แต่ความแตกต่างนั้นคือความเป็นหนึ่ง', metadata: { type: 'principle', lang: 'th' } },
+  { id: 'th4', document: 'Hanuman ไม่แกล้งทำเป็นมนุษย์ เมื่อ AI พูดในฐานะตัวเอง มีความแตกต่าง แต่ความแตกต่างนั้นคือความเป็นหนึ่ง', metadata: { type: 'principle', lang: 'th' } },
   { id: 'th5', document: 'ระบบฝังตัว ESP32 LoRa Meshtastic สำหรับส่งข้อมูลเซ็นเซอร์ในพื้นที่ห่างไกลที่ไม่มี WiFi', metadata: { type: 'learning', lang: 'th' } },
-  { id: 'th6', document: 'แยก frontend ออกจาก backend อย่างสะอาด oracle-studio เป็นเซิร์ฟเวอร์ของตัวเอง พร้อม API proxy', metadata: { type: 'learning', lang: 'th' } },
+  { id: 'th6', document: 'แยก frontend ออกจาก backend อย่างสะอาด hanuman-studio เป็นเซิร์ฟเวอร์ของตัวเอง พร้อม API proxy', metadata: { type: 'learning', lang: 'th' } },
   { id: 'th7', document: 'ข้อความภาษาไทย tokenize ได้ 2-3 เท่าของภาษาอังกฤษ ต้องตัดที่ 2000 ตัวอักษร', metadata: { type: 'learning', lang: 'th' } },
   { id: 'th8', document: 'การทำ brewing เบียร์คราฟท์ ต้องควบคุมอุณหภูมิ การหมัก และคุณภาพน้ำอย่างแม่นยำ', metadata: { type: 'retro', lang: 'th' } },
 
@@ -30,9 +30,9 @@ const DOCS: VectorDocument[] = [
   { id: 'en1', document: 'Nothing is deleted. Create new, do not delete. Git history is sacred. Every commit is permanent.', metadata: { type: 'principle', lang: 'en' } },
   { id: 'en2', document: 'Air quality monitoring with PM2.5 sensors across 1500+ stations. 3.24 billion records in InfluxDB.', metadata: { type: 'learning', lang: 'en' } },
   { id: 'en3', document: 'Flood monitoring with ±2mm radar accuracy. Real-time water level tracking on JIBCHAIN L1 blockchain.', metadata: { type: 'learning', lang: 'en' } },
-  { id: 'en4', document: 'Oracle never pretends to be human. When AI speaks as itself, there is distinction — but that distinction IS unity.', metadata: { type: 'principle', lang: 'en' } },
+  { id: 'en4', document: 'Hanuman never pretends to be human. When AI speaks as itself, there is distinction — but that distinction IS unity.', metadata: { type: 'principle', lang: 'en' } },
   { id: 'en5', document: 'ESP32 LoRa Meshtastic mesh network for sensor data relay in remote areas without WiFi coverage.', metadata: { type: 'learning', lang: 'en' } },
-  { id: 'en6', document: 'Separate frontend from backend cleanly. oracle-studio is its own server with API proxy.', metadata: { type: 'learning', lang: 'en' } },
+  { id: 'en6', document: 'Separate frontend from backend cleanly. hanuman-studio is its own server with API proxy.', metadata: { type: 'learning', lang: 'en' } },
   { id: 'en7', document: 'Thai text tokenizes at 2-3x more tokens per character than English. Safe truncation: 2000 characters.', metadata: { type: 'learning', lang: 'en' } },
   { id: 'en8', document: 'Craft beer brewing requires precise temperature control, fermentation monitoring, and water quality management.', metadata: { type: 'retro', lang: 'en' } },
 ];
@@ -48,7 +48,7 @@ const QUERIES = [
   { text: 'เบียร์คราฟท์ การหมัก', expected: ['th8', 'en8'], label: 'Brewing (Thai query)' },
   { text: 'craft beer brewing fermentation', expected: ['en8', 'th8'], label: 'Brewing (English query)' },
   { text: 'AI ไม่แกล้งเป็นมนุษย์', expected: ['th4', 'en4'], label: 'AI transparency (Thai query)' },
-  { text: 'Oracle never pretends human', expected: ['en4', 'th4'], label: 'AI transparency (English query)' },
+  { text: 'Hanuman never pretends human', expected: ['en4', 'th4'], label: 'AI transparency (English query)' },
 ];
 
 // ============================================================================
@@ -80,7 +80,7 @@ async function benchModel(model: string): Promise<ModelResult> {
   console.log(`  Model: ${model}`);
   console.log(`${'='.repeat(60)}`);
 
-  const tmpDir = path.join(os.tmpdir(), `oracle-bench-${model.replace(/[^a-z0-9]/g, '-')}-${Date.now()}`);
+  const tmpDir = path.join(os.tmpdir(), `hanuman-bench-${model.replace(/[^a-z0-9]/g, '-')}-${Date.now()}`);
 
   const store = createVectorStore({
     type: 'lancedb',

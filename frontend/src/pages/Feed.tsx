@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { list } from '../api/oracle';
-import type { Document } from '../api/oracle';
+import { list } from '../api/hanuman';
+import type { Document } from '../api/hanuman';
 import { LogCard } from '../components/LogCard';
 import { SidebarLayout } from '../components/SidebarLayout';
 import styles from './Feed.module.css';
@@ -50,7 +50,7 @@ export function Feed() {
     <SidebarLayout activeType={type} onTypeChange={setType}>
       <h1 className={styles.title}>Knowledge Feed</h1>
       <p className={styles.subtitle}>
-        Browse Oracle's indexed knowledge — principles, learnings, and retrospectives
+        Browse Hanuman's indexed knowledge — principles, learnings, and retrospectives
       </p>
 
       <div className={styles.feed}>

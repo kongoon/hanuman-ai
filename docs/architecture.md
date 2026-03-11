@@ -1,10 +1,10 @@
-# Oracle v2 Architecture
+# Hanuman v2 Architecture
 
 > Knowledge system MCP server with hybrid search, consultation logging, and learning capabilities.
 
 ## Overview
 
-Oracle v2 indexes philosophy from markdown files and provides:
+Hanuman v2 indexes philosophy from markdown files and provides:
 - **Semantic + keyword search** (ChromaDB + FTS5)
 - **Decision guidance** via principles and patterns
 - **Learning capture** from sessions
@@ -12,7 +12,7 @@ Oracle v2 indexes philosophy from markdown files and provides:
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                      ORACLE v2 SYSTEM                       │
+│                      HANUMAN v2 SYSTEM                       │
 ├─────────────────────────────────────────────────────────────┤
 │                                                             │
 │  ┌─────────────┐    ┌─────────────┐    ┌─────────────┐     │
@@ -23,7 +23,7 @@ Oracle v2 indexes philosophy from markdown files and provides:
 │         └──────────────────┼──────────────────┘             │
 │                            │                                │
 │                    ┌───────▼───────┐                        │
-│                    │  Oracle Core  │                        │
+│                    │  Hanuman Core  │                        │
 │                    │   (index.ts)  │                        │
 │                    └───────┬───────┘                        │
 │                            │                                │
@@ -45,13 +45,13 @@ Exposes tools to Claude via Model Context Protocol:
 
 | Tool | Purpose | Logs To |
 |------|---------|---------|
-| `oracle_search` | Hybrid keyword + semantic search | (none yet) |
-| `oracle_consult` | Get guidance on decisions | `consult_log` |
-| `oracle_reflect` | Random principle/learning | - |
-| `oracle_learn` | Add new pattern | writes file + indexes |
-| `oracle_list` | Browse documents | - |
-| `oracle_stats` | Database statistics | - |
-| `oracle_concepts` | List concept tags | - |
+| `hanuman_search` | Hybrid keyword + semantic search | (none yet) |
+| `hanuman_consult` | Get guidance on decisions | `consult_log` |
+| `hanuman_reflect` | Random principle/learning | - |
+| `hanuman_learn` | Add new pattern | writes file + indexes |
+| `hanuman_list` | Browse documents | - |
+| `hanuman_stats` | Database statistics | - |
+| `hanuman_concepts` | List concept tags | - |
 
 ### HTTP Server (`src/server.ts`)
 
@@ -81,10 +81,10 @@ Populates database from markdown files:
 
 ## Database Schema
 
-### `oracle_documents` - Metadata Index
+### `hanuman_documents` - Metadata Index
 
 ```sql
-CREATE TABLE oracle_documents (
+CREATE TABLE hanuman_documents (
   id TEXT PRIMARY KEY,
   type TEXT NOT NULL,           -- principle, learning, pattern, retro
   source_file TEXT NOT NULL,
@@ -95,10 +95,10 @@ CREATE TABLE oracle_documents (
 );
 ```
 
-### `oracle_fts` - Full-Text Search
+### `hanuman_fts` - Full-Text Search
 
 ```sql
-CREATE VIRTUAL TABLE oracle_fts USING fts5(
+CREATE VIRTUAL TABLE hanuman_fts USING fts5(
   id UNINDEXED,
   content,
   concepts
@@ -163,7 +163,7 @@ CREATE TABLE indexing_status (
 
 ### Logging Gaps
 
-- No search query tracking (`oracle_search` calls)
+- No search query tracking (`hanuman_search` calls)
 - No learning history (when/what was learned)
 - No document access tracking (which docs referenced)
 - No HTTP endpoint access logs
@@ -174,7 +174,7 @@ CREATE TABLE indexing_status (
 
 | Variable | Default | Purpose |
 |----------|---------|---------|
-| `ORACLE_REPO_ROOT` | `process.cwd()` | Knowledge base location (your ψ/ repo) |
+| `HANUMAN_REPO_ROOT` | `process.cwd()` | Knowledge base location (your ψ/ repo) |
 | `PORT` | `47778` | HTTP server port |
 
 ### MCP Configuration
@@ -182,11 +182,11 @@ CREATE TABLE indexing_status (
 ```json
 {
   "mcpServers": {
-    "oracle-v2": {
+    "hanuman-ai": {
       "command": "node",
-      "args": ["/path/to/oracle-v2/dist/index.js"],
+      "args": ["/path/to/hanuman-ai/dist/index.js"],
       "env": {
-        "ORACLE_REPO_ROOT": "/path/to/knowledge-base"
+        "HANUMAN_REPO_ROOT": "/path/to/knowledge-base"
       }
     }
   }
@@ -208,7 +208,7 @@ FTS5 special characters are stripped to prevent SQL injection via FTS5 syntax er
 | Version | Changes |
 |---------|---------|
 | 0.1.0 | Initial MCP server with FTS5 |
-| 0.2.0 | ChromaDB hybrid search, oracle_stats, oracle_concepts, FTS5 bug fix |
+| 0.2.0 | ChromaDB hybrid search, hanuman_stats, hanuman_concepts, FTS5 bug fix |
 
 ## Graph API Performance
 

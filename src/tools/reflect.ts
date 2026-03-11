@@ -1,41 +1,41 @@
 /**
- * Oracle Reflect Handler
+ * Hanuman Reflect Handler
  *
  * Return random wisdom from the knowledge base.
  */
 
 import { sql, inArray } from 'drizzle-orm';
-import { oracleDocuments } from '../db/schema.ts';
-import type { ToolContext, ToolResponse, OracleReflectInput } from './types.ts';
+import { hanumanDocuments } from '../db/schema.ts';
+import type { ToolContext, ToolResponse, HanumanReflectInput } from './types.ts';
 
 export const reflectToolDef = {
-  name: 'oracle_reflect',
-  description: 'Get a random principle or learning for reflection. Use this for periodic wisdom or to align with Oracle philosophy.',
+  name: 'hanuman_reflect',
+  description: 'Get a random principle or learning for reflection. Use this for periodic wisdom or to align with Hanuman philosophy.',
   inputSchema: {
     type: 'object',
     properties: {}
   }
 };
 
-export async function handleReflect(ctx: ToolContext, _input: OracleReflectInput): Promise<ToolResponse> {
+export async function handleReflect(ctx: ToolContext, _input: HanumanReflectInput): Promise<ToolResponse> {
   const randomDoc = ctx.db.select({
-    id: oracleDocuments.id,
-    type: oracleDocuments.type,
-    sourceFile: oracleDocuments.sourceFile,
-    concepts: oracleDocuments.concepts,
+    id: hanumanDocuments.id,
+    type: hanumanDocuments.type,
+    sourceFile: hanumanDocuments.sourceFile,
+    concepts: hanumanDocuments.concepts,
   })
-    .from(oracleDocuments)
-    .where(inArray(oracleDocuments.type, ['principle', 'learning']))
+    .from(hanumanDocuments)
+    .where(inArray(hanumanDocuments.type, ['principle', 'learning']))
     .orderBy(sql`RANDOM()`)
     .limit(1)
     .get();
 
   if (!randomDoc) {
-    throw new Error('No documents found in Oracle knowledge base');
+    throw new Error('No documents found in Hanuman knowledge base');
   }
 
   const content = ctx.sqlite.prepare(`
-    SELECT content FROM oracle_fts WHERE id = ?
+    SELECT content FROM hanuman_fts WHERE id = ?
   `).get(randomDoc.id) as { content: string } | undefined;
 
   if (!content) {

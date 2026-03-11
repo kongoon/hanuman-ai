@@ -70,7 +70,7 @@ export class ChromaMcpClient {
     }
 
     console.log('Connecting to chroma-mcp server...');
-    const timeout = parseInt(process.env.ORACLE_CHROMA_TIMEOUT || '10000', 10);
+    const timeout = parseInt(process.env.HANUMAN_CHROMA_TIMEOUT || '10000', 10);
 
     try {
       this.transport = new StdioClientTransport({
@@ -85,7 +85,7 @@ export class ChromaMcpClient {
       });
 
       this.client = new Client({
-        name: 'oracle-v2-chroma',
+        name: 'hanuman-ai-chroma',
         version: '1.0.0'
       }, {
         capabilities: {}

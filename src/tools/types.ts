@@ -1,5 +1,5 @@
 /**
- * Shared types for Oracle tool handlers
+ * Shared types for Hanuman tool handlers
  */
 
 import type { BunSQLiteDatabase } from 'drizzle-orm/bun-sqlite';
@@ -29,7 +29,7 @@ export interface ToolResponse {
 // Input interfaces (moved from index.ts)
 // ============================================================================
 
-export interface OracleSearchInput {
+export interface HanumanSearchInput {
   query: string;
   type?: 'principle' | 'pattern' | 'learning' | 'retro' | 'all';
   limit?: number;
@@ -40,51 +40,51 @@ export interface OracleSearchInput {
   model?: 'nomic' | 'qwen3' | 'bge-m3';
 }
 
-export interface OracleReflectInput {}
+export interface HanumanReflectInput {}
 
-export interface OracleLearnInput {
+export interface HanumanLearnInput {
   pattern: string;
   source?: string;
   concepts?: string[];
   project?: string;
 }
 
-export interface OracleListInput {
+export interface HanumanListInput {
   type?: 'principle' | 'pattern' | 'learning' | 'retro' | 'all';
   limit?: number;
   offset?: number;
 }
 
-export interface OracleStatsInput {}
+export interface HanumanStatsInput {}
 
-export interface OracleConceptsInput {
+export interface HanumanConceptsInput {
   limit?: number;
   type?: 'principle' | 'pattern' | 'learning' | 'retro' | 'all';
 }
 
-export interface OracleSupersededInput {
+export interface HanumanSupersededInput {
   oldId: string;
   newId: string;
   reason?: string;
 }
 
-export interface OracleHandoffInput {
+export interface HanumanHandoffInput {
   content: string;
   slug?: string;
 }
 
-export interface OracleInboxInput {
+export interface HanumanInboxInput {
   limit?: number;
   offset?: number;
   type?: 'handoff' | 'all';
 }
 
-export interface OracleVerifyInput {
+export interface HanumanVerifyInput {
   check?: boolean;
   type?: string;
 }
 
-export interface OracleScheduleAddInput {
+export interface HanumanScheduleAddInput {
   date: string;
   event: string;
   time?: string;
@@ -92,7 +92,7 @@ export interface OracleScheduleAddInput {
   recurring?: 'daily' | 'weekly' | 'monthly';
 }
 
-export interface OracleScheduleListInput {
+export interface HanumanScheduleListInput {
   date?: string;
   from?: string;
   to?: string;
@@ -101,7 +101,7 @@ export interface OracleScheduleListInput {
   limit?: number;
 }
 
-export interface OracleReadInput {
+export interface HanumanReadInput {
   file?: string;
   id?: string;
 }

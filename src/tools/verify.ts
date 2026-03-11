@@ -1,14 +1,14 @@
 /**
- * Oracle Verify Handler (bridge)
+ * Hanuman Verify Handler (bridge)
  *
  * Wraps src/verify/handler.ts for consistency with tools/ pattern.
  */
 
 import { verifyKnowledgeBase } from '../verify/handler.ts';
-import type { ToolContext, ToolResponse, OracleVerifyInput } from './types.ts';
+import type { ToolContext, ToolResponse, HanumanVerifyInput } from './types.ts';
 
 export const verifyToolDef = {
-  name: 'oracle_verify',
+  name: 'hanuman_verify',
   description: 'Verify knowledge base integrity: compare ψ/ files on disk vs DB index. Detects missing (on disk, not indexed), orphaned (in DB, file gone), and drifted (file changed since last index) documents.',
   inputSchema: {
     type: 'object',
@@ -28,7 +28,7 @@ export const verifyToolDef = {
   }
 };
 
-export async function handleVerify(ctx: ToolContext, input: OracleVerifyInput): Promise<ToolResponse> {
+export async function handleVerify(ctx: ToolContext, input: HanumanVerifyInput): Promise<ToolResponse> {
   const { check = true, type } = input;
 
   const result = verifyKnowledgeBase({

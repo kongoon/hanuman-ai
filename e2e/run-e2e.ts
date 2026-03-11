@@ -1,5 +1,5 @@
 /**
- * Oracle Dashboard E2E Tests
+ * Hanuman Dashboard E2E Tests
  *
  * Run with: cd ~/.claude/skills/dev-browser && npx tsx /path/to/run-e2e.ts
  * Requires: dev-browser server running (./skills/dev-browser/server.sh)
@@ -29,11 +29,11 @@ async function runTest(name: string, fn: () => Promise<any>): Promise<void> {
 
 async function main() {
   console.log("\n========================================");
-  console.log("Oracle Dashboard E2E Tests");
+  console.log("Hanuman Dashboard E2E Tests");
   console.log("========================================\n");
 
   const client = await connect();
-  const page = await client.page("oracle-e2e");
+  const page = await client.page("hanuman-e2e");
   await page.setViewportSize({ width: 1280, height: 800 });
 
   // Test 1: Homepage loads

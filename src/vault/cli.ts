@@ -1,18 +1,18 @@
 #!/usr/bin/env bun
 /**
- * Oracle Vault CLI
+ * Hanuman Vault CLI
  *
- * Global CLI for managing the Oracle knowledge vault.
- * Can be run from any repo after `bun add -g @laris-co/oracle-v2`.
+ * Global CLI for managing the Hanuman knowledge vault.
+ * Can be run from any repo after `bun add -g @laris-co/hanuman-ai`.
  *
  * Usage:
- *   oracle-vault init <owner/repo>
- *   oracle-vault sync [--dry-run]
- *   oracle-vault pull
- *   oracle-vault status
- *   oracle-vault migrate [--dry-run | --list]
- *   oracle-vault --help | -h
- *   oracle-vault --version | -v
+ *   hanuman-vault init <owner/repo>
+ *   hanuman-vault sync [--dry-run]
+ *   hanuman-vault pull
+ *   hanuman-vault status
+ *   hanuman-vault migrate [--dry-run | --list]
+ *   hanuman-vault --help | -h
+ *   hanuman-vault --version | -v
  */
 
 import { initVault, syncVault, pullVault, vaultStatus } from './handler.ts';
@@ -23,15 +23,15 @@ import path from 'path';
 const VERSION = '0.4.0-nightly';
 
 const HELP = `
-oracle-vault v${VERSION} — Central knowledge brain for Oracle
+hanuman-vault v${VERSION} — Central knowledge brain for Hanuman
 
-The vault repo IS your central ψ/. Once initialized, oracle_learn and
-oracle_handoff write directly to the vault repo with project-nested paths.
+The vault repo IS your central ψ/. Once initialized, hanuman_learn and
+hanuman_handoff write directly to the vault repo with project-nested paths.
 The indexer scans the vault repo for cross-project search. Sync commits
 and pushes to GitHub for backup.
 
 Usage:
-  oracle-vault <command> [options]
+  hanuman-vault <command> [options]
 
 Commands:
   init <owner/repo>    Initialize vault with a GitHub repo (cloned via ghq)
@@ -48,31 +48,31 @@ Options:
   -v, --version        Show version
 
 Environment:
-  ORACLE_REPO_ROOT     Override the repo root (default: cwd)
+  HANUMAN_REPO_ROOT     Override the repo root (default: cwd)
 
 How it works:
-  1. oracle-vault init <repo>   Clone vault repo via ghq, save to settings
-  2. oracle_learn / handoff     Write directly to vault repo (project-nested)
+  1. hanuman-vault init <repo>   Clone vault repo via ghq, save to settings
+  2. hanuman_learn / handoff     Write directly to vault repo (project-nested)
   3. bun src/indexer.ts          Scan vault repo, index all projects
-  4. oracle_search               Cross-project search results
-  5. oracle-vault sync           git add + commit + push (backup)
+  4. hanuman_search               Cross-project search results
+  5. hanuman-vault sync           git add + commit + push (backup)
 
 Examples:
-  oracle-vault init Soul-Brews-Studio/oracle-vault
-  oracle-vault migrate --list
-  oracle-vault migrate
-  oracle-vault sync
-  oracle-vault status
+  hanuman-vault init Soul-Brews-Studio/hanuman-vault
+  hanuman-vault migrate --list
+  hanuman-vault migrate
+  hanuman-vault sync
+  hanuman-vault status
 `.trim();
 
-const repoRoot = process.env.ORACLE_REPO_ROOT || process.cwd();
+const repoRoot = process.env.HANUMAN_REPO_ROOT || process.cwd();
 const [command, ...args] = process.argv.slice(2);
 
 switch (command) {
   case 'init': {
     const repo = args[0];
     if (!repo) {
-      console.error('Usage: oracle-vault init <owner/repo>');
+      console.error('Usage: hanuman-vault init <owner/repo>');
       process.exit(1);
     }
     const result = initVault(repo);
@@ -146,7 +146,7 @@ switch (command) {
   case '-v':
   case '--version':
   case 'version':
-    console.log(`oracle-vault v${VERSION}`);
+    console.log(`hanuman-vault v${VERSION}`);
     break;
 
   case undefined:

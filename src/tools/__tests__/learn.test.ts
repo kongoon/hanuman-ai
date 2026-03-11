@@ -34,7 +34,7 @@ describe('normalizeProject', () => {
   });
 
   it('should normalize to lowercase', () => {
-    expect(normalizeProject('github.com/Soul-Brews-Studio/Oracle-V2')).toBe('github.com/soul-brews-studio/oracle-v2');
+    expect(normalizeProject('github.com/Soul-Brews-Studio/Hanuman-V2')).toBe('github.com/soul-brews-studio/hanuman-ai');
     expect(normalizeProject('https://github.com/Owner/Repo')).toBe('github.com/owner/repo');
     expect(normalizeProject('Owner/Repo')).toBe('github.com/owner/repo');
   });
@@ -55,14 +55,14 @@ describe('extractProjectFromSource', () => {
     expect(extractProjectFromSource('')).toBeNull();
   });
 
-  it('should extract from "oracle_learn from github.com/owner/repo" format', () => {
-    expect(extractProjectFromSource('oracle_learn from github.com/owner/repo session 42'))
+  it('should extract from "hanuman_learn from github.com/owner/repo" format', () => {
+    expect(extractProjectFromSource('hanuman_learn from github.com/owner/repo session 42'))
       .toBe('github.com/owner/repo');
   });
 
   it('should extract from "rrr: org/repo" format', () => {
-    expect(extractProjectFromSource('rrr: Soul-Brews-Studio/oracle-v2'))
-      .toBe('github.com/soul-brews-studio/oracle-v2');
+    expect(extractProjectFromSource('rrr: Soul-Brews-Studio/hanuman-ai'))
+      .toBe('github.com/soul-brews-studio/hanuman-ai');
   });
 
   it('should extract direct github.com reference', () => {

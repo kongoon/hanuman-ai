@@ -1,16 +1,16 @@
 /**
- * Oracle Concepts Handler
+ * Hanuman Concepts Handler
  *
  * List all concept tags with document counts.
  */
 
 import { eq, and, ne, isNotNull } from 'drizzle-orm';
-import { oracleDocuments } from '../db/schema.ts';
-import type { ToolContext, ToolResponse, OracleConceptsInput } from './types.ts';
+import { hanumanDocuments } from '../db/schema.ts';
+import type { ToolContext, ToolResponse, HanumanConceptsInput } from './types.ts';
 
 export const conceptsToolDef = {
-  name: 'oracle_concepts',
-  description: 'List all concept tags in the Oracle knowledge base with document counts. Useful for discovering what topics are covered and filtering searches.',
+  name: 'hanuman_concepts',
+  description: 'List all concept tags in the Hanuman knowledge base with document counts. Useful for discovering what topics are covered and filtering searches.',
   inputSchema: {
     type: 'object',
     properties: {
@@ -30,13 +30,13 @@ export const conceptsToolDef = {
   }
 };
 
-export async function handleConcepts(ctx: ToolContext, input: OracleConceptsInput): Promise<ToolResponse> {
+export async function handleConcepts(ctx: ToolContext, input: HanumanConceptsInput): Promise<ToolResponse> {
   const { limit = 50, type = 'all' } = input;
 
-  const baseCondition = and(isNotNull(oracleDocuments.concepts), ne(oracleDocuments.concepts, '[]'));
+  const baseCondition = and(isNotNull(hanumanDocuments.concepts), ne(hanumanDocuments.concepts, '[]'));
   const rows = type === 'all'
-    ? ctx.db.select({ concepts: oracleDocuments.concepts }).from(oracleDocuments).where(baseCondition).all()
-    : ctx.db.select({ concepts: oracleDocuments.concepts }).from(oracleDocuments).where(and(baseCondition, eq(oracleDocuments.type, type))).all();
+    ? ctx.db.select({ concepts: hanumanDocuments.concepts }).from(hanumanDocuments).where(baseCondition).all()
+    : ctx.db.select({ concepts: hanumanDocuments.concepts }).from(hanumanDocuments).where(and(baseCondition, eq(hanumanDocuments.type, type))).all();
 
   const conceptCounts = new Map<string, number>();
   for (const row of rows as Array<{ concepts: string }>) {

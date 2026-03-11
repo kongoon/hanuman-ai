@@ -1,6 +1,6 @@
-# Oracle Dashboard Proposal
+# Hanuman Dashboard Proposal
 
-> A web interface for monitoring Oracle usage, viewing analytics, and exploring the knowledge graph.
+> A web interface for monitoring Hanuman usage, viewing analytics, and exploring the knowledge graph.
 
 ## Goals
 
@@ -13,7 +13,7 @@
 
 ```
 ┌─────────────────────────────────────────────────────────────────────┐
-│  ORACLE DASHBOARD                                          v0.3.0  │
+│  HANUMAN DASHBOARD                                          v0.3.0  │
 ├─────────────────────────────────────────────────────────────────────┤
 │                                                                     │
 │  ┌────────────┐  ┌────────────┐  ┌────────────┐  ┌────────────┐    │
@@ -185,8 +185,8 @@ Response:
   ],
   "learnings": [
     {
-      "document_id": "learning_2025-01-03_oracle-loop",
-      "pattern_preview": "Oracle can improve itself...",
+      "document_id": "learning_2025-01-03_hanuman-loop",
+      "pattern_preview": "Hanuman can improve itself...",
       "created_at": "2025-01-03T11:00:00Z"
     }
   ]

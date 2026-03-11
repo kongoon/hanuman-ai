@@ -42,7 +42,7 @@ Output format:
 - [Insight 1]
 - [Insight 2]
 
-**🔮 Oracle**: [related pattern from past, if any]
+**🔮 Hanuman**: [related pattern from past, if any]
 
 ---
 **Persist?** (y/n)

@@ -255,7 +255,7 @@ export function Traces() {
         }
       }
 
-      // Search Oracle for related content (use last part of path or repo name)
+      // Search Hanuman for related content (use last part of path or repo name)
       const searchTerm = path.split('/').pop()?.replace('.md', '') || path.split('/').slice(-1)[0] || '';
       const searchRes = await fetch(`/api/search?q=${encodeURIComponent(searchTerm)}&limit=1`);
       if (searchRes.ok) {
@@ -836,7 +836,7 @@ export function Traces() {
         <div className={styles.empty}>
           <p>No traces recorded yet.</p>
           <p className={styles.hint}>
-            Use <code>/trace</code> or <code>oracle_trace()</code> to log discoveries.
+            Use <code>/trace</code> or <code>hanuman_trace()</code> to log discoveries.
           </p>
         </div>
       ) : (

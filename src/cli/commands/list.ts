@@ -1,5 +1,5 @@
 import type { Command } from 'commander';
-import { oracleFetch } from '../http.ts';
+import { hanumanFetch } from '../http.ts';
 import { printJson } from '../format.ts';
 
 export function registerList(program: Command): void {
@@ -12,7 +12,7 @@ export function registerList(program: Command): void {
     .option('--no-group', 'Disable grouping by type')
     .option('--json', 'Output raw JSON')
     .action(async (opts) => {
-      const data = await oracleFetch('/api/list', {
+      const data = await hanumanFetch('/api/list', {
         query: {
           type: opts.type,
           limit: opts.limit,

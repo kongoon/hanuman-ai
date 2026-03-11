@@ -1,5 +1,5 @@
 import type { Command } from 'commander';
-import { oracleFetch } from '../http.ts';
+import { hanumanFetch } from '../http.ts';
 import { printJson, printThreads, printThread } from '../format.ts';
 
 export function registerThreads(program: Command): void {
@@ -10,7 +10,7 @@ export function registerThreads(program: Command): void {
     .option('-l, --limit <n>', 'Max results', '20')
     .option('--json', 'Output raw JSON')
     .action(async (opts) => {
-      const data = await oracleFetch('/api/threads', {
+      const data = await hanumanFetch('/api/threads', {
         query: {
           status: opts.status,
           limit: opts.limit,
@@ -25,7 +25,7 @@ export function registerThreads(program: Command): void {
     .description('View a thread and its messages')
     .option('--json', 'Output raw JSON')
     .action(async (id, opts) => {
-      const data = await oracleFetch(`/api/thread/${id}`);
+      const data = await hanumanFetch(`/api/thread/${id}`);
       if (opts.json) return printJson(data);
       printThread(data.thread, data.messages || []);
     });

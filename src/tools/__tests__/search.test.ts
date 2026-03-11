@@ -1,6 +1,6 @@
 /**
  * Unit tests for search helpers (pure functions).
- * These were previously duplicated in oracle-core.test.ts.
+ * These were previously duplicated in hanuman-core.test.ts.
  */
 
 import { describe, it, expect } from 'bun:test';
@@ -39,7 +39,7 @@ describe('sanitizeFtsQuery', () => {
   });
 
   it('should preserve valid queries', () => {
-    expect(sanitizeFtsQuery('oracle philosophy')).toBe('oracle philosophy');
+    expect(sanitizeFtsQuery('hanuman philosophy')).toBe('hanuman philosophy');
     expect(sanitizeFtsQuery('git safety')).toBe('git safety');
   });
 

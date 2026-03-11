@@ -256,7 +256,7 @@
   border: 1px solid var(--border);
 }
 
-.message.oracle {
+.message.hanuman {
   background: linear-gradient(135deg, rgba(167, 139, 250, 0.1), rgba(109, 40, 217, 0.1));
   border-color: var(--accent);
 }

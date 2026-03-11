@@ -36,10 +36,10 @@ export interface VectorStoreConfig {
  * Create a VectorStoreAdapter from config or env vars.
  *
  * Env vars:
- *   ORACLE_VECTOR_DB          = 'chroma' | 'sqlite-vec' | 'lancedb' | 'qdrant' | 'cloudflare-vectorize'
- *   ORACLE_EMBEDDING_PROVIDER = 'chromadb-internal' | 'ollama' | 'openai' | 'cloudflare-ai'
- *   ORACLE_EMBEDDING_MODEL    = model name override
- *   ORACLE_VECTOR_DB_PATH     = sqlite-vec / lancedb path
+ *   HANUMAN_VECTOR_DB          = 'chroma' | 'sqlite-vec' | 'lancedb' | 'qdrant' | 'cloudflare-vectorize'
+ *   HANUMAN_EMBEDDING_PROVIDER = 'chromadb-internal' | 'ollama' | 'openai' | 'cloudflare-ai'
+ *   HANUMAN_EMBEDDING_MODEL    = model name override
+ *   HANUMAN_VECTOR_DB_PATH     = sqlite-vec / lancedb path
  *   CLOUDFLARE_ACCOUNT_ID     = CF account (for cloudflare-vectorize)
  *   CLOUDFLARE_API_TOKEN      = CF API token (for cloudflare-vectorize)
  */
@@ -48,23 +48,23 @@ export function createVectorStore(config: VectorStoreConfig = {}): VectorStoreAd
   if (!home) throw new Error('HOME environment variable not set — cannot resolve vector DB paths');
 
   const type = config.type
-    || (process.env.ORACLE_VECTOR_DB as VectorDBType)
+    || (process.env.HANUMAN_VECTOR_DB as VectorDBType)
     || 'chroma';
 
-  const collectionName = config.collectionName || 'oracle_knowledge';
+  const collectionName = config.collectionName || 'hanuman_knowledge';
 
   switch (type) {
     case 'sqlite-vec': {
       const dbPath = config.dataPath
-        || process.env.ORACLE_VECTOR_DB_PATH
-        || path.join(home,'.oracle', 'vectors.db');
+        || process.env.HANUMAN_VECTOR_DB_PATH
+        || path.join(home,'.hanuman', 'vectors.db');
 
       const embeddingType = config.embeddingProvider
-        || (process.env.ORACLE_EMBEDDING_PROVIDER as EmbeddingProviderType)
+        || (process.env.HANUMAN_EMBEDDING_PROVIDER as EmbeddingProviderType)
         || 'ollama';
 
       const embeddingModel = config.embeddingModel
-        || process.env.ORACLE_EMBEDDING_MODEL;
+        || process.env.HANUMAN_EMBEDDING_MODEL;
 
       const embedder = createEmbeddingProvider(embeddingType, embeddingModel);
       return new SqliteVecAdapter(collectionName, dbPath, embedder);
@@ -72,15 +72,15 @@ export function createVectorStore(config: VectorStoreConfig = {}): VectorStoreAd
 
     case 'lancedb': {
       const dbPath = config.dataPath
-        || process.env.ORACLE_VECTOR_DB_PATH
-        || path.join(home,'.oracle', 'lancedb');
+        || process.env.HANUMAN_VECTOR_DB_PATH
+        || path.join(home,'.hanuman', 'lancedb');
 
       const embeddingType = config.embeddingProvider
-        || (process.env.ORACLE_EMBEDDING_PROVIDER as EmbeddingProviderType)
+        || (process.env.HANUMAN_EMBEDDING_PROVIDER as EmbeddingProviderType)
         || 'ollama';
 
       const embeddingModel = config.embeddingModel
-        || process.env.ORACLE_EMBEDDING_MODEL;
+        || process.env.HANUMAN_EMBEDDING_MODEL;
 
       const embedder = createEmbeddingProvider(embeddingType, embeddingModel);
       return new LanceDBAdapter(collectionName, dbPath, embedder);
@@ -88,11 +88,11 @@ export function createVectorStore(config: VectorStoreConfig = {}): VectorStoreAd
 
     case 'qdrant': {
       const embeddingType = config.embeddingProvider
-        || (process.env.ORACLE_EMBEDDING_PROVIDER as EmbeddingProviderType)
+        || (process.env.HANUMAN_EMBEDDING_PROVIDER as EmbeddingProviderType)
         || 'ollama';
 
       const embeddingModel = config.embeddingModel
-        || process.env.ORACLE_EMBEDDING_MODEL;
+        || process.env.HANUMAN_EMBEDDING_MODEL;
 
       const embedder = createEmbeddingProvider(embeddingType, embeddingModel);
       return new QdrantAdapter(collectionName, embedder, {
@@ -108,7 +108,7 @@ export function createVectorStore(config: VectorStoreConfig = {}): VectorStoreAd
       };
 
       const embeddingModel = config.embeddingModel
-        || process.env.ORACLE_EMBEDDING_MODEL;
+        || process.env.HANUMAN_EMBEDDING_MODEL;
 
       // Default to Cloudflare AI embeddings (same platform, zero egress)
       const embedder = new CloudflareAIEmbeddings({
@@ -146,19 +146,19 @@ export function getEmbeddingModels(): Record<string, { collection: string; model
     const home = homeDir();
     _embeddingModels = {
       nomic: {
-        collection: 'oracle_knowledge',
+        collection: 'hanuman_knowledge',
         model: 'nomic-embed-text',
-        dataPath: path.join(home, '.oracle', 'lancedb'),
+        dataPath: path.join(home, '.hanuman', 'lancedb'),
       },
       qwen3: {
-        collection: 'oracle_knowledge_qwen3',
+        collection: 'hanuman_knowledge_qwen3',
         model: 'qwen3-embedding',
-        dataPath: path.join(home, '.oracle', 'lancedb'),
+        dataPath: path.join(home, '.hanuman', 'lancedb'),
       },
       'bge-m3': {
-        collection: 'oracle_knowledge_bge_m3',
+        collection: 'hanuman_knowledge_bge_m3',
         model: 'bge-m3',
-        dataPath: path.join(home, '.oracle', 'lancedb'),
+        dataPath: path.join(home, '.hanuman', 'lancedb'),
       },
     };
   }

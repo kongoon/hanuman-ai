@@ -1,5 +1,5 @@
 /**
- * Terminal output formatting for Oracle CLI
+ * Terminal output formatting for Hanuman CLI
  */
 
 export function printJson(data: unknown): void {
@@ -50,7 +50,7 @@ export function printThread(thread: any, messages: any[]): void {
   if (thread.issue_url) console.log(`Issue: ${thread.issue_url}`);
   console.log('---');
   for (const m of messages) {
-    const role = m.role === 'oracle' ? 'Oracle' : m.author || m.role;
+    const role = m.role === 'hanuman' ? 'Hanuman' : m.author || m.role;
     console.log(`\n[${role}] ${m.created_at}`);
     console.log(m.content);
   }

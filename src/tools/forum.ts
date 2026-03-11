@@ -1,5 +1,5 @@
 /**
- * Oracle Forum Tool Handlers
+ * Hanuman Forum Tool Handlers
  *
  * Thin wrappers around forum/handler.ts — these don't need ToolContext
  * since forum handlers use their own module-scoped DB.
@@ -19,7 +19,7 @@ import type { ToolResponse } from './types.ts';
 // Input interfaces
 // ============================================================================
 
-export interface OracleThreadInput {
+export interface HanumanThreadInput {
   message: string;
   threadId?: number;
   title?: string;
@@ -27,18 +27,18 @@ export interface OracleThreadInput {
   model?: string;
 }
 
-export interface OracleThreadsInput {
+export interface HanumanThreadsInput {
   status?: 'active' | 'answered' | 'pending' | 'closed';
   limit?: number;
   offset?: number;
 }
 
-export interface OracleThreadReadInput {
+export interface HanumanThreadReadInput {
   threadId: number;
   limit?: number;
 }
 
-export interface OracleThreadUpdateInput {
+export interface HanumanThreadUpdateInput {
   threadId: number;
   status?: 'active' | 'closed' | 'answered' | 'pending';
 }
@@ -48,8 +48,8 @@ export interface OracleThreadUpdateInput {
 // ============================================================================
 
 export const threadToolDef = {
-  name: 'oracle_thread',
-  description: 'Send a message to an Oracle discussion thread. Creates a new thread or continues an existing one. Oracle auto-responds from knowledge base. Use for multi-turn consultations.',
+  name: 'hanuman_thread',
+  description: 'Send a message to an Hanuman discussion thread. Creates a new thread or continues an existing one. Hanuman auto-responds from knowledge base. Use for multi-turn consultations.',
   inputSchema: {
     type: 'object',
     properties: {
@@ -64,8 +64,8 @@ export const threadToolDef = {
 };
 
 export const threadsToolDef = {
-  name: 'oracle_threads',
-  description: 'List Oracle discussion threads. Filter by status to find pending questions or active discussions.',
+  name: 'hanuman_threads',
+  description: 'List Hanuman discussion threads. Filter by status to find pending questions or active discussions.',
   inputSchema: {
     type: 'object',
     properties: {
@@ -78,7 +78,7 @@ export const threadsToolDef = {
 };
 
 export const threadReadToolDef = {
-  name: 'oracle_thread_read',
+  name: 'hanuman_thread_read',
   description: 'Read full message history from a thread. Use to review context before continuing a conversation.',
   inputSchema: {
     type: 'object',
@@ -91,7 +91,7 @@ export const threadReadToolDef = {
 };
 
 export const threadUpdateToolDef = {
-  name: 'oracle_thread_update',
+  name: 'hanuman_thread_update',
   description: 'Update thread status. Use to close, reopen, or mark threads as answered/pending.',
   inputSchema: {
     type: 'object',
@@ -115,7 +115,7 @@ export const forumToolDefs = [
 // Handlers
 // ============================================================================
 
-export async function handleThread(input: OracleThreadInput): Promise<ToolResponse> {
+export async function handleThread(input: HanumanThreadInput): Promise<ToolResponse> {
   const result = await handleThreadMessage({
     message: input.message,
     threadId: input.threadId,
@@ -131,10 +131,10 @@ export async function handleThread(input: OracleThreadInput): Promise<ToolRespon
         thread_id: result.threadId,
         message_id: result.messageId,
         status: result.status,
-        oracle_response: result.oracleResponse ? {
-          content: result.oracleResponse.content,
-          principles_found: result.oracleResponse.principlesFound,
-          patterns_found: result.oracleResponse.patternsFound,
+        hanuman_response: result.hanumanResponse ? {
+          content: result.hanumanResponse.content,
+          principles_found: result.hanumanResponse.principlesFound,
+          patterns_found: result.hanumanResponse.patternsFound,
         } : null,
         issue_url: result.issueUrl,
       }, null, 2)
@@ -142,7 +142,7 @@ export async function handleThread(input: OracleThreadInput): Promise<ToolRespon
   };
 }
 
-export async function handleThreads(input: OracleThreadsInput): Promise<ToolResponse> {
+export async function handleThreads(input: HanumanThreadsInput): Promise<ToolResponse> {
   const result = listThreads({
     status: input.status as any,
     limit: input.limit || 20,
@@ -171,7 +171,7 @@ export async function handleThreads(input: OracleThreadsInput): Promise<ToolResp
   };
 }
 
-export async function handleThreadRead(input: OracleThreadReadInput): Promise<ToolResponse> {
+export async function handleThreadRead(input: HanumanThreadReadInput): Promise<ToolResponse> {
   const threadData = getFullThread(input.threadId);
   if (!threadData) throw new Error(`Thread ${input.threadId} not found`);
 
@@ -201,7 +201,7 @@ export async function handleThreadRead(input: OracleThreadReadInput): Promise<To
   };
 }
 
-export async function handleThreadUpdate(input: OracleThreadUpdateInput): Promise<ToolResponse> {
+export async function handleThreadUpdate(input: HanumanThreadUpdateInput): Promise<ToolResponse> {
   if (!input.status) throw new Error('status is required');
 
   updateThreadStatus(input.threadId, input.status);

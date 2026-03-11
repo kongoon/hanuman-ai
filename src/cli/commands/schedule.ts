@@ -1,5 +1,5 @@
 import type { Command } from 'commander';
-import { oracleFetch } from '../http.ts';
+import { hanumanFetch } from '../http.ts';
 import { printJson, printSchedule } from '../format.ts';
 
 export function registerSchedule(program: Command): void {
@@ -17,7 +17,7 @@ export function registerSchedule(program: Command): void {
     .option('-l, --limit <n>', 'Max results')
     .option('--json', 'Output raw JSON')
     .action(async (opts) => {
-      const data = await oracleFetch('/api/schedule', {
+      const data = await hanumanFetch('/api/schedule', {
         query: {
           date: opts.date,
           from: opts.from,
@@ -40,7 +40,7 @@ export function registerSchedule(program: Command): void {
     .option('-r, --recurring <pattern>', 'Recurrence pattern')
     .option('--json', 'Output raw JSON')
     .action(async (opts) => {
-      const data = await oracleFetch('/api/schedule', {
+      const data = await hanumanFetch('/api/schedule', {
         method: 'POST',
         body: {
           date: opts.date,
@@ -57,7 +57,7 @@ export function registerSchedule(program: Command): void {
 
   // Default action: list
   sched.action(async (opts) => {
-    const data = await oracleFetch('/api/schedule');
+    const data = await hanumanFetch('/api/schedule');
     if (opts.json) return printJson(data);
     printSchedule(data.events || data.schedule || [], data.total || 0);
   }).option('--json', 'Output raw JSON');

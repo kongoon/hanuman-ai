@@ -1,5 +1,5 @@
 /**
- * Oracle v2 Database Schema (Drizzle ORM)
+ * Hanuman v2 Database Schema (Drizzle ORM)
  *
  * Generated from existing database via drizzle-kit pull,
  * then cleaned up to exclude FTS5 internal tables.
@@ -8,7 +8,7 @@
 import { sqliteTable, text, integer, index } from 'drizzle-orm/sqlite-core';
 
 // Main document index table
-export const oracleDocuments = sqliteTable('oracle_documents', {
+export const hanumanDocuments = sqliteTable('hanuman_documents', {
   id: text('id').primaryKey(),
   type: text('type').notNull(),
   sourceFile: text('source_file').notNull(),
@@ -22,8 +22,8 @@ export const oracleDocuments = sqliteTable('oracle_documents', {
   supersededReason: text('superseded_reason'), // Why (optional)
   // Provenance tracking (Issue #22)
   origin: text('origin'),                   // 'mother' | 'arthur' | 'volt' | 'human' | null (legacy)
-  project: text('project'),                 // ghq-style: 'github.com/laris-co/oracle-v2'
-  createdBy: text('created_by'),            // 'indexer' | 'oracle_learn' | 'manual'
+  project: text('project'),                 // ghq-style: 'github.com/laris-co/hanuman-ai'
+  createdBy: text('created_by'),            // 'indexer' | 'hanuman_learn' | 'manual'
 }, (table) => [
   index('idx_source').on(table.sourceFile),
   index('idx_type').on(table.type),
@@ -88,7 +88,7 @@ export const documentAccess = sqliteTable('document_access', {
 ]);
 
 // ============================================================================
-// Forum Tables (threaded discussions with Oracle)
+// Forum Tables (threaded discussions with Hanuman)
 // ============================================================================
 
 // Forum threads - conversation topics
@@ -113,9 +113,9 @@ export const forumThreads = sqliteTable('forum_threads', {
 export const forumMessages = sqliteTable('forum_messages', {
   id: integer('id').primaryKey({ autoIncrement: true }),
   threadId: integer('thread_id').notNull().references(() => forumThreads.id),
-  role: text('role').notNull(),             // human, oracle, claude
+  role: text('role').notNull(),             // human, hanuman, claude
   content: text('content').notNull(),
-  author: text('author'),                   // GitHub username or "oracle"
+  author: text('author'),                   // GitHub username or "hanuman"
   principlesFound: integer('principles_found'),
   patternsFound: integer('patterns_found'),
   searchQuery: text('search_query'),
@@ -127,7 +127,7 @@ export const forumMessages = sqliteTable('forum_messages', {
   index('idx_message_created').on(table.createdAt),
 ]);
 
-// Note: FTS5 virtual table (oracle_fts) is managed via raw SQL
+// Note: FTS5 virtual table (hanuman_fts) is managed via raw SQL
 // since Drizzle doesn't natively support FTS5
 
 // ============================================================================
@@ -194,7 +194,7 @@ export const traceLog = sqliteTable('trace_log', {
 // ============================================================================
 
 // Tracks document supersessions even when original file is deleted
-// This is separate from oracle_documents.superseded_by to preserve history
+// This is separate from hanuman_documents.superseded_by to preserve history
 export const supersedeLog = sqliteTable('supersede_log', {
   id: integer('id').primaryKey({ autoIncrement: true }),
 
@@ -245,7 +245,7 @@ export const activityLog = sqliteTable('activity_log', {
 ]);
 
 // ============================================================================
-// Schedule Table - Appointments & events (per-human, shared across Oracles)
+// Schedule Table - Appointments & events (per-human, shared across Hanumans)
 // ============================================================================
 
 export const schedule = sqliteTable('schedule', {

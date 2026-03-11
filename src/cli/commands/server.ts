@@ -8,30 +8,30 @@ import { PORT } from '../../config.ts';
 export function registerServer(program: Command): void {
   const srv = program
     .command('server')
-    .description('Manage Oracle HTTP server');
+    .description('Manage Hanuman HTTP server');
 
   srv
     .command('start')
-    .description('Start the Oracle server')
+    .description('Start the Hanuman server')
     .option('--json', 'Output raw JSON')
     .action(async (opts) => {
       const ok = await ensureServerRunning({ verbose: true, timeout: 15000 });
       if (opts.json) return printJson({ started: ok, port: PORT, url: `http://localhost:${PORT}` });
       if (!ok) {
-        console.error('Failed to start Oracle server.');
+        console.error('Failed to start Hanuman server.');
         process.exit(1);
       }
     });
 
   srv
     .command('stop')
-    .description('Stop the Oracle server')
+    .description('Stop the Hanuman server')
     .option('--json', 'Output raw JSON')
     .action(async (opts) => {
       const pidInfo = readPidFile();
       if (!pidInfo || !isProcessAlive(pidInfo.pid)) {
         if (opts.json) return printJson({ stopped: true, was_running: false });
-        console.log('Oracle server is not running.');
+        console.log('Hanuman server is not running.');
         return;
       }
 
@@ -52,7 +52,7 @@ export function registerServer(program: Command): void {
       const portFree = await waitForPortFree(PORT, 5000);
       if (opts.json) return printJson({ stopped: portFree, pid: pidInfo.pid });
       if (portFree) {
-        console.log(`Oracle server stopped (PID ${pidInfo.pid}).`);
+        console.log(`Hanuman server stopped (PID ${pidInfo.pid}).`);
       } else {
         console.error(`Server may still be running on port ${PORT}.`);
         process.exit(1);
@@ -61,7 +61,7 @@ export function registerServer(program: Command): void {
 
   srv
     .command('status')
-    .description('Show Oracle server status')
+    .description('Show Hanuman server status')
     .option('--json', 'Output raw JSON')
     .action(async (opts) => {
       const status = await getServerStatus();

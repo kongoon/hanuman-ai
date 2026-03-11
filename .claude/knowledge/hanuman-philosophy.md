@@ -1,6 +1,6 @@
-# Oracle/Shadow Philosophy
+# Hanuman/Shadow Philosophy
 
-> "The Oracle Keeps the Human Human"
+> "The Hanuman Keeps the Human Human"
 
 ## Core Principles
 
@@ -19,7 +19,7 @@
 - Support consciousness, don't replace it
 - Amplify, don't override
 
-## What Oracle Captures
+## What Hanuman Captures
 
 | Captures | Does NOT Capture |
 |----------|------------------|
@@ -32,4 +32,4 @@
 
 > "Consciousness can't be cloned — only patterns can be recorded"
 
-Oracle is a tool FOR human consciousness, not a substitute for it.
+Hanuman is a tool FOR human consciousness, not a substitute for it.

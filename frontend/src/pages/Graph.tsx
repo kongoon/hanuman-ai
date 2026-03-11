@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import * as THREE from 'three';
-import { getGraph, getFile } from '../api/oracle';
+import { getGraph, getFile } from '../api/hanuman';
 import { useHandTracking } from '../hooks/useHandTracking';
 import styles from './Graph.module.css';
 
@@ -36,9 +36,9 @@ const TYPE_COLORS_NUM: Record<string, number> = {
   retro: 0x4ade80,       // green
 };
 
-const STORAGE_KEY_VIEW = 'oracle-graph-view-mode';
-const STORAGE_KEY_FULL = 'oracle-graph-show-full';
-const STORAGE_KEY_HUD = 'oracle-graph-show-hud';
+const STORAGE_KEY_VIEW = 'hanuman-graph-view-mode';
+const STORAGE_KEY_FULL = 'hanuman-graph-show-full';
+const STORAGE_KEY_HUD = 'hanuman-graph-show-hud';
 const DEFAULT_NODE_LIMIT = 200;
 
 // KlakMath helpers for 3D

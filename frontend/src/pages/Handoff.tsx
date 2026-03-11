@@ -92,7 +92,7 @@ export function Handoff() {
     <SidebarLayout navItems={TOOLS_NAV} navTitle="Tools" filters={[]}>
       <h1 className={styles.title}>Inbox</h1>
       <p className={styles.subtitle}>
-        Session handoffs from <code>oracle_handoff()</code>
+        Session handoffs from <code>hanuman_handoff()</code>
       </p>
 
       {loading ? (
@@ -101,7 +101,7 @@ export function Handoff() {
         <div className={styles.empty}>
           <p>No handoffs yet.</p>
           <p className={styles.hint}>
-            Use <code>oracle_handoff(content)</code> to save session context for future sessions.
+            Use <code>hanuman_handoff(content)</code> to save session context for future sessions.
           </p>
         </div>
       ) : (

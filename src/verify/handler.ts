@@ -1,5 +1,5 @@
 /**
- * Oracle Verify Handler
+ * Hanuman Verify Handler
  *
  * Compares ψ/ files on disk vs DB index.
  * Detects: healthy, missing, orphaned, drifted, untracked files.
@@ -10,7 +10,7 @@
 import fs from 'fs';
 import path from 'path';
 import { eq } from 'drizzle-orm';
-import { db, oracleDocuments } from '../db/index.ts';
+import { db, hanumanDocuments } from '../db/index.ts';
 
 export interface VerifyResult {
   counts: {
@@ -82,21 +82,21 @@ export function verifyKnowledgeBase(opts: {
   const typeFilter = type && type !== 'all' ? type : undefined;
   const dbRows = typeFilter
     ? db.select({
-        id: oracleDocuments.id,
-        sourceFile: oracleDocuments.sourceFile,
-        indexedAt: oracleDocuments.indexedAt,
-        type: oracleDocuments.type,
+        id: hanumanDocuments.id,
+        sourceFile: hanumanDocuments.sourceFile,
+        indexedAt: hanumanDocuments.indexedAt,
+        type: hanumanDocuments.type,
       })
-        .from(oracleDocuments)
-        .where(eq(oracleDocuments.type, typeFilter))
+        .from(hanumanDocuments)
+        .where(eq(hanumanDocuments.type, typeFilter))
         .all()
     : db.select({
-        id: oracleDocuments.id,
-        sourceFile: oracleDocuments.sourceFile,
-        indexedAt: oracleDocuments.indexedAt,
-        type: oracleDocuments.type,
+        id: hanumanDocuments.id,
+        sourceFile: hanumanDocuments.sourceFile,
+        indexedAt: hanumanDocuments.indexedAt,
+        type: hanumanDocuments.type,
       })
-        .from(oracleDocuments)
+        .from(hanumanDocuments)
         .all();
 
   // Build map: sourceFile -> { indexedAt, ids[] }
@@ -167,13 +167,13 @@ export function verifyKnowledgeBase(opts: {
       const entry = dbFileMap.get(sourceFile);
       if (entry) {
         for (const id of entry.ids) {
-          db.update(oracleDocuments)
+          db.update(hanumanDocuments)
             .set({
               supersededBy: '_verified_orphan',
               supersededAt: now,
-              supersededReason: 'File missing from disk (oracle_verify)',
+              supersededReason: 'File missing from disk (hanuman_verify)',
             })
-            .where(eq(oracleDocuments.id, id))
+            .where(eq(hanumanDocuments.id, id))
             .run();
           fixedOrphans++;
         }

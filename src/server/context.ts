@@ -1,5 +1,5 @@
 /**
- * Oracle v2 Project Context
+ * Hanuman v2 Project Context
  * Detects project context from ghq-format directory paths
  */
 
@@ -7,10 +7,10 @@ import { execSync } from 'child_process';
 
 export interface ProjectContext {
   // From ghq path parsing
-  github: string;      // "https://github.com/laris-co/oracle-v2"
+  github: string;      // "https://github.com/laris-co/hanuman-ai"
   owner: string;       // "laris-co"
-  repo: string;        // "oracle-v2"
-  ghqPath: string;     // "github.com/laris-co/oracle-v2"
+  repo: string;        // "hanuman-ai"
+  ghqPath: string;     // "github.com/laris-co/hanuman-ai"
 
   // Directories
   root: string;        // Git root directory
@@ -81,10 +81,10 @@ export function getProjectContext(cwd: string): ProjectContext | null {
 /**
  * Handle /context HTTP request
  * Query params:
- *   - cwd: Current working directory (optional, defaults to ORACLE_CWD or process.cwd())
+ *   - cwd: Current working directory (optional, defaults to HANUMAN_CWD or process.cwd())
  */
 export function handleContext(cwdParam?: string): ProjectContext | { error: string } {
-  const cwd = cwdParam || process.env.ORACLE_CWD || process.cwd();
+  const cwd = cwdParam || process.env.HANUMAN_CWD || process.cwd();
 
   const context = getProjectContext(cwd);
   if (!context) {

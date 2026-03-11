@@ -1,5 +1,5 @@
 /**
- * Oracle Search Handler
+ * Hanuman Search Handler
  *
  * Hybrid search combining FTS5 keyword search and ChromaDB vector search.
  * Exports pure helper functions (sanitizeFtsQuery, normalizeFtsScore,
@@ -9,11 +9,11 @@
 import { logSearch } from '../server/logging.ts';
 import { detectProject } from '../server/project-detect.ts';
 import { ensureVectorStoreConnected } from '../vector/factory.ts';
-import type { ToolContext, ToolResponse, OracleSearchInput } from './types.ts';
+import type { ToolContext, ToolResponse, HanumanSearchInput } from './types.ts';
 
 export const searchToolDef = {
-  name: 'oracle_search',
-  description: 'Search Oracle knowledge base using hybrid search (FTS5 keywords + ChromaDB vectors). Finds relevant principles, patterns, learnings, or retrospectives. Falls back to FTS5-only if ChromaDB unavailable.',
+  name: 'hanuman_search',
+  description: 'Search Hanuman knowledge base using hybrid search (FTS5 keywords + ChromaDB vectors). Finds relevant principles, patterns, learnings, or retrospectives. Falls back to FTS5-only if ChromaDB unavailable.',
   inputSchema: {
     type: 'object',
     properties: {
@@ -112,7 +112,7 @@ export function parseConceptsFromMetadata(concepts: unknown): string[] {
 
 /**
  * Vector search using ChromaMcpClient.
- * Performs semantic similarity search on the oracle_knowledge collection.
+ * Performs semantic similarity search on the hanuman_knowledge collection.
  */
 export async function vectorSearch(
   ctx: ToolContext,
@@ -307,7 +307,7 @@ export function combineResults(
 // Handler
 // ============================================================================
 
-export async function handleSearch(ctx: ToolContext, input: OracleSearchInput): Promise<ToolResponse> {
+export async function handleSearch(ctx: ToolContext, input: HanumanSearchInput): Promise<ToolResponse> {
   const startTime = Date.now();
   const { query, type = 'all', limit = 5, offset = 0, mode = 'hybrid', project, cwd, model } = input;
 
@@ -336,9 +336,9 @@ export async function handleSearch(ctx: ToolContext, input: OracleSearchInput): 
     if (type === 'all') {
       const stmt = ctx.sqlite.prepare(`
         SELECT f.id, f.content, d.type, d.source_file, d.concepts, rank
-        FROM oracle_fts f
-        JOIN oracle_documents d ON f.id = d.id
-        WHERE oracle_fts MATCH ? ${projectFilter}
+        FROM hanuman_fts f
+        JOIN hanuman_documents d ON f.id = d.id
+        WHERE hanuman_fts MATCH ? ${projectFilter}
         ORDER BY rank
         LIMIT ?
       `);
@@ -346,9 +346,9 @@ export async function handleSearch(ctx: ToolContext, input: OracleSearchInput): 
     } else {
       const stmt = ctx.sqlite.prepare(`
         SELECT f.id, f.content, d.type, d.source_file, d.concepts, rank
-        FROM oracle_fts f
-        JOIN oracle_documents d ON f.id = d.id
-        WHERE oracle_fts MATCH ? AND d.type = ? ${projectFilter}
+        FROM hanuman_fts f
+        JOIN hanuman_documents d ON f.id = d.id
+        WHERE hanuman_fts MATCH ? AND d.type = ? ${projectFilter}
         ORDER BY rank
         LIMIT ?
       `);

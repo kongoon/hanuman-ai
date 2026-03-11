@@ -1,9 +1,9 @@
 /**
- * Oracle Forum Handler
+ * Hanuman Forum Handler
  *
- * DB-first threaded discussions with Oracle.
+ * DB-first threaded discussions with Hanuman.
  * - Create threads, add messages
- * - Oracle auto-responds from knowledge base
+ * - Hanuman auto-responds from knowledge base
  * - Logs unanswered questions for later
  *
  * Refactored to use Drizzle ORM for type-safe queries.
@@ -17,8 +17,8 @@ import type {
   ForumMessage,
   ThreadStatus,
   MessageRole,
-  OracleThreadInput,
-  OracleThreadOutput,
+  HanumanThreadInput,
+  HanumanThreadOutput,
 } from './types.ts';
 
 /**
@@ -232,11 +232,11 @@ export function getMessages(threadId: number): ForumMessage[] {
 // ============================================================================
 
 /**
- * Main entry point: Send message to thread, Oracle auto-responds
+ * Main entry point: Send message to thread, Hanuman auto-responds
  */
 export async function handleThreadMessage(
-  input: OracleThreadInput
-): Promise<OracleThreadOutput> {
+  input: HanumanThreadInput
+): Promise<HanumanThreadOutput> {
   const { message, threadId, title, role = 'human', model } = input;
 
   // Get project context

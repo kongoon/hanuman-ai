@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
- * Oracle Vault Report Generator
- * Scans ghq repos + oracle-vault → generates HTML dashboard + JSON export
+ * Hanuman Vault Report Generator
+ * Scans ghq repos + hanuman-vault → generates HTML dashboard + JSON export
  * Usage: node scripts/generate-vault-report.mjs [--push]
  */
 
@@ -12,13 +12,13 @@ import { execSync } from 'child_process';
 // ── Config ───────────────────────────────────────────────────────────────────
 
 const GHQ_ROOT = execSync('ghq root', { encoding: 'utf-8' }).trim();
-const VAULT = process.env.ORACLE_VAULT_PATH
-  || execSync('ghq list -p', { encoding: 'utf-8' }).trim().split('\n').find(p => /\/oracle-vault$/.test(p) && !p.includes('-report'))
+const VAULT = process.env.HANUMAN_VAULT_PATH
+  || execSync('ghq list -p', { encoding: 'utf-8' }).trim().split('\n').find(p => /\/hanuman-vault$/.test(p) && !p.includes('-report'))
   || '';
 const OUT_DIR = process.cwd();
 q
 if (!existsSync(VAULT)) {
-  console.error('ERROR: oracle-vault not found');
+  console.error('ERROR: hanuman-vault not found');
   process.exit(1);
 }
 
@@ -40,7 +40,7 @@ for (const repo of allRepos) {
     const mdCount = countMd(target);
     repos.symlinked.push({ rel, target: vaultRel, mdCount });
   } else if (existsSync(psiPath) && statSync(psiPath).isDirectory()) {
-    if (rel.includes('oracle-vault')) continue;
+    if (rel.includes('hanuman-vault')) continue;
     const mdCount = countMd(psiPath);
     const size = dirSize(psiPath);
     const isWt = /\.wt[-/]/.test(rel);
@@ -185,8 +185,8 @@ function orgColor(org) {
     'laris-co': { bg: 'violet', hex: '#8b5cf6' },
     'soul-brews-studio': { bg: 'emerald', hex: '#10b981' },
     'nazt': { bg: 'amber', hex: '#f59e0b' },
-    'arthur-oracle-ai': { bg: 'blue', hex: '#3b82f6' },
-    'oracle-net-the-resonance-network': { bg: 'rose', hex: '#f43f5e' },
+    'arthur-hanuman-ai': { bg: 'blue', hex: '#3b82f6' },
+    'hanuman-net-the-resonance-network': { bg: 'rose', hex: '#f43f5e' },
     'prakit-advertising': { bg: 'teal', hex: '#14b8a6' },
     'maeon-lab': { bg: 'indigo', hex: '#6366f1' },
     'dryoungdo-wellness-clinic': { bg: 'orange', hex: '#f97316' },
@@ -291,7 +291,7 @@ function generateHTML() {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Oracle Vault Report</title>
+  <title>Hanuman Vault Report</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -338,7 +338,7 @@ function generateHTML() {
 
     <!-- Header -->
     <header class="text-center mb-6">
-      <h1 class="text-2xl font-semibold tracking-tight mb-1">Oracle Vault Report</h1>
+      <h1 class="text-2xl font-semibold tracking-tight mb-1">Hanuman Vault Report</h1>
       <p class="text-gray-500 text-xs font-mono">${totalVaultProjects} projects &middot; ${totalVaultOrgs} orgs &middot; ${generatedDisplay}</p>
       <div class="mt-2 flex gap-3 justify-center">
         <a href="vault-repos.html" class="text-xs text-gray-500 hover:text-gray-300">All Repos</a>
@@ -413,7 +413,7 @@ function generateHTML() {
     </div>` : ''}
 
     <footer class="text-center text-gray-600 text-[10px] py-3 border-t border-white/5">
-      <a href="https://github.com/Soul-Brews-Studio/oracle-v2" class="text-gray-500 hover:text-gray-300">oracle-v2</a> &middot; <span class="font-mono">${generated}</span>
+      <a href="https://github.com/Soul-Brews-Studio/hanuman-ai" class="text-gray-500 hover:text-gray-300">hanuman-ai</a> &middot; <span class="font-mono">${generated}</span>
     </footer>
   </div>
 </body>
@@ -448,7 +448,7 @@ function generateRepoListHTML() {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Oracle Vault - All Repos</title>
+  <title>Hanuman Vault - All Repos</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -470,7 +470,7 @@ function generateRepoListHTML() {
     <header class="mb-8">
       <div class="flex items-center justify-between">
         <div>
-          <h1 class="text-2xl font-semibold">Oracle Vault Repos</h1>
+          <h1 class="text-2xl font-semibold">Hanuman Vault Repos</h1>
           <p class="text-gray-500 text-sm mt-1">${totalVaultProjects} projects in vault &middot; ${totalSymlinked} symlinked repos</p>
         </div>
         <a href="vault-report.html" class="text-sm text-gray-500 hover:text-gray-300">&larr; Dashboard</a>

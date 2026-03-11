@@ -1,16 +1,16 @@
 /**
- * Oracle Inbox Handler
+ * Hanuman Inbox Handler
  *
- * List and preview pending handoff files from the Oracle inbox.
+ * List and preview pending handoff files from the Hanuman inbox.
  */
 
 import path from 'path';
 import fs from 'fs';
-import type { ToolContext, ToolResponse, OracleInboxInput } from './types.ts';
+import type { ToolContext, ToolResponse, HanumanInboxInput } from './types.ts';
 
 export const inboxToolDef = {
-  name: 'oracle_inbox',
-  description: 'List and preview pending handoff files from the Oracle inbox. Returns files sorted newest-first with previews.',
+  name: 'hanuman_inbox',
+  description: 'List and preview pending handoff files from the Hanuman inbox. Returns files sorted newest-first with previews.',
   inputSchema: {
     type: 'object',
     properties: {
@@ -34,7 +34,7 @@ export const inboxToolDef = {
   }
 };
 
-export async function handleInbox(ctx: ToolContext, input: OracleInboxInput): Promise<ToolResponse> {
+export async function handleInbox(ctx: ToolContext, input: HanumanInboxInput): Promise<ToolResponse> {
   const { limit = 10, offset = 0, type = 'all' } = input;
   const inboxDir = path.join(ctx.repoRoot, 'ψ/inbox');
   const results: Array<{ filename: string; path: string; created: string; preview: string; type: string }> = [];

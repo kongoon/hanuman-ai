@@ -1,6 +1,6 @@
 /**
  * HTTP API Integration Tests
- * Tests oracle-v2 server endpoints
+ * Tests hanuman-ai server endpoints
  */
 import { describe, test, expect, beforeAll, afterAll } from "bun:test";
 import type { Subprocess } from "bun";
@@ -44,7 +44,7 @@ describe("HTTP API Integration", () => {
       cwd: import.meta.dir.replace("/src/integration", ""),
       stdout: "pipe",
       stderr: "pipe",
-      env: { ...process.env, ORACLE_CHROMA_TIMEOUT: "3000" },
+      env: { ...process.env, HANUMAN_CHROMA_TIMEOUT: "3000" },
     });
 
     const ready = await waitForServer();
@@ -95,7 +95,7 @@ describe("HTTP API Integration", () => {
   // ===================
   describe("Search", () => {
     test("GET /api/search with query returns results", async () => {
-      const res = await fetch(`${BASE_URL}/api/search?q=oracle`);
+      const res = await fetch(`${BASE_URL}/api/search?q=hanuman`);
       expect(res.ok).toBe(true);
       const data = await res.json();
       expect(Array.isArray(data.results)).toBe(true);

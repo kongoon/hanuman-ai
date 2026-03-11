@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
-import { getAuthStatus, login as apiLogin, logout as apiLogout, type AuthStatus } from '../api/oracle';
+import { getAuthStatus, login as apiLogin, logout as apiLogout, type AuthStatus } from '../api/hanuman';
 
 interface AuthContextType {
   isAuthenticated: boolean;

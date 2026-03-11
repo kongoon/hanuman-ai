@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import Markdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import { getStats, reflect, stripProjectPrefix } from '../api/oracle';
-import type { Document, Stats } from '../api/oracle';
+import { getStats, reflect, stripProjectPrefix } from '../api/hanuman';
+import type { Document, Stats } from '../api/hanuman';
 import styles from './Overview.module.css';
 
 export function Overview() {
@@ -34,7 +34,7 @@ export function Overview() {
       }
     } catch (e) {
       console.error('Failed to load stats:', e);
-      setConnectionError('Cannot connect to Oracle backend. Run: bun run server');
+      setConnectionError('Cannot connect to Hanuman backend. Run: bun run server');
     } finally {
       setLoading(false);
     }
@@ -54,7 +54,7 @@ export function Overview() {
 
   return (
     <div className={styles.container}>
-      <h1 className={styles.title}>Oracle Overview</h1>
+      <h1 className={styles.title}>Hanuman Overview</h1>
       <p className={styles.subtitle}>Your knowledge base at a glance</p>
 
       {connectionError && (
@@ -111,7 +111,7 @@ export function Overview() {
               <div className={styles.wisdomHeader}>
                 <div className={styles.wisdomLabel}>
                   <span className={styles.wisdomOrb}></span>
-                  <span>Oracle Wisdom</span>
+                  <span>Hanuman Wisdom</span>
                 </div>
                 <button
                   onClick={(e) => { e.stopPropagation(); refreshWisdom(); }}
@@ -154,7 +154,7 @@ export function Overview() {
                 <div className={styles.modalHeader}>
                   <div className={styles.modalLabel}>
                     <span className={styles.wisdomOrb}></span>
-                    <span>Oracle Wisdom</span>
+                    <span>Hanuman Wisdom</span>
                   </div>
                   <button onClick={() => setShowModal(false)} className={styles.closeBtn}>
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">

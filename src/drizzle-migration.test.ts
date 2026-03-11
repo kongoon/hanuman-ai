@@ -18,7 +18,7 @@ import fs from 'fs';
 // ============================================================================
 
 let db: Database;
-const TEST_DB_PATH = '/tmp/oracle-drizzle-migration-test.db';
+const TEST_DB_PATH = '/tmp/hanuman-drizzle-migration-test.db';
 
 beforeAll(() => {
   // Remove existing test db
@@ -31,7 +31,7 @@ beforeAll(() => {
   // Create all required tables (matching schema.ts)
   db.exec(`
     -- Main document index
-    CREATE TABLE oracle_documents (
+    CREATE TABLE hanuman_documents (
       id TEXT PRIMARY KEY,
       type TEXT NOT NULL,
       source_file TEXT NOT NULL,
@@ -47,12 +47,12 @@ beforeAll(() => {
       created_by TEXT
     );
 
-    CREATE INDEX idx_type ON oracle_documents(type);
-    CREATE INDEX idx_source ON oracle_documents(source_file);
-    CREATE INDEX idx_project ON oracle_documents(project);
+    CREATE INDEX idx_type ON hanuman_documents(type);
+    CREATE INDEX idx_source ON hanuman_documents(source_file);
+    CREATE INDEX idx_project ON hanuman_documents(project);
 
     -- FTS5 virtual table
-    CREATE VIRTUAL TABLE oracle_fts USING fts5(
+    CREATE VIRTUAL TABLE hanuman_fts USING fts5(
       id UNINDEXED,
       content,
       concepts,
@@ -115,11 +115,11 @@ beforeAll(() => {
 
   const now = Date.now();
   const insertDoc = db.prepare(`
-    INSERT INTO oracle_documents (id, type, source_file, concepts, created_at, updated_at, indexed_at)
+    INSERT INTO hanuman_documents (id, type, source_file, concepts, created_at, updated_at, indexed_at)
     VALUES (?, ?, ?, ?, ?, ?, ?)
   `);
   const insertFts = db.prepare(`
-    INSERT INTO oracle_fts (id, content, concepts)
+    INSERT INTO hanuman_fts (id, content, concepts)
     VALUES (?, ?, ?)
   `);
 
@@ -140,10 +140,10 @@ afterAll(() => {
 // handleReflect Tests - SELECT random document
 // ============================================================================
 
-describe('handleReflect - SELECT oracle_documents', () => {
+describe('handleReflect - SELECT hanuman_documents', () => {
   it('should select random document of type principle or learning', () => {
     const result = db.prepare(`
-      SELECT id, type, source_file, concepts FROM oracle_documents
+      SELECT id, type, source_file, concepts FROM hanuman_documents
       WHERE type IN ('principle', 'learning')
       ORDER BY RANDOM()
       LIMIT 1
@@ -161,7 +161,7 @@ describe('handleReflect - SELECT oracle_documents', () => {
     // Run multiple times to verify randomness
     for (let i = 0; i < 20; i++) {
       const result = db.prepare(`
-        SELECT id FROM oracle_documents
+        SELECT id FROM hanuman_documents
         WHERE type IN ('principle', 'learning')
         ORDER BY RANDOM()
         LIMIT 1
@@ -176,7 +176,7 @@ describe('handleReflect - SELECT oracle_documents', () => {
   it('should only return principle and learning types', () => {
     for (let i = 0; i < 10; i++) {
       const result = db.prepare(`
-        SELECT type FROM oracle_documents
+        SELECT type FROM hanuman_documents
         WHERE type IN ('principle', 'learning')
         ORDER BY RANDOM()
         LIMIT 1
@@ -188,16 +188,16 @@ describe('handleReflect - SELECT oracle_documents', () => {
 });
 
 // ============================================================================
-// handleLearn Tests - INSERT oracle_documents
+// handleLearn Tests - INSERT hanuman_documents
 // ============================================================================
 
-describe('handleLearn - INSERT oracle_documents', () => {
+describe('handleLearn - INSERT hanuman_documents', () => {
   it('should insert new learning document', () => {
     const now = Date.now();
     const id = `learning_test_${now}`;
 
     db.prepare(`
-      INSERT INTO oracle_documents (id, type, source_file, concepts, created_at, updated_at, indexed_at, origin, project, created_by)
+      INSERT INTO hanuman_documents (id, type, source_file, concepts, created_at, updated_at, indexed_at, origin, project, created_by)
       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `).run(
       id,
@@ -209,16 +209,16 @@ describe('handleLearn - INSERT oracle_documents', () => {
       now,
       null,
       'github.com/test/repo',
-      'oracle_learn'
+      'hanuman_learn'
     );
 
-    const result = db.prepare('SELECT * FROM oracle_documents WHERE id = ?').get(id) as any;
+    const result = db.prepare('SELECT * FROM hanuman_documents WHERE id = ?').get(id) as any;
 
     expect(result).toBeDefined();
     expect(result.type).toBe('learning');
     expect(result.source_file).toBe('ψ/memory/learnings/test-pattern.md');
     expect(JSON.parse(result.concepts)).toEqual(['test', 'pattern']);
-    expect(result.created_by).toBe('oracle_learn');
+    expect(result.created_by).toBe('hanuman_learn');
     expect(result.project).toBe('github.com/test/repo');
   });
 
@@ -227,11 +227,11 @@ describe('handleLearn - INSERT oracle_documents', () => {
     const id = `learning_null_test_${now}`;
 
     db.prepare(`
-      INSERT INTO oracle_documents (id, type, source_file, concepts, created_at, updated_at, indexed_at, origin, project, created_by)
+      INSERT INTO hanuman_documents (id, type, source_file, concepts, created_at, updated_at, indexed_at, origin, project, created_by)
       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    `).run(id, 'learning', 'test.md', '[]', now, now, now, null, null, 'oracle_learn');
+    `).run(id, 'learning', 'test.md', '[]', now, now, now, null, null, 'hanuman_learn');
 
-    const result = db.prepare('SELECT * FROM oracle_documents WHERE id = ?').get(id) as any;
+    const result = db.prepare('SELECT * FROM hanuman_documents WHERE id = ?').get(id) as any;
 
     expect(result.origin).toBeNull();
     expect(result.project).toBeNull();
@@ -242,22 +242,22 @@ describe('handleLearn - INSERT oracle_documents', () => {
 // handleList Tests - COUNT queries
 // ============================================================================
 
-describe('handleList - COUNT oracle_documents', () => {
+describe('handleList - COUNT hanuman_documents', () => {
   it('should count all documents', () => {
-    const result = db.prepare('SELECT COUNT(*) as total FROM oracle_documents').get() as any;
+    const result = db.prepare('SELECT COUNT(*) as total FROM hanuman_documents').get() as any;
 
     expect(result.total).toBeGreaterThanOrEqual(5); // At least our test docs
   });
 
   it('should count documents by type', () => {
-    const result = db.prepare('SELECT COUNT(*) as total FROM oracle_documents WHERE type = ?')
+    const result = db.prepare('SELECT COUNT(*) as total FROM hanuman_documents WHERE type = ?')
       .get('principle') as any;
 
     expect(result.total).toBe(2);
   });
 
   it('should return 0 for non-existent type', () => {
-    const result = db.prepare('SELECT COUNT(*) as total FROM oracle_documents WHERE type = ?')
+    const result = db.prepare('SELECT COUNT(*) as total FROM hanuman_documents WHERE type = ?')
       .get('nonexistent') as any;
 
     expect(result.total).toBe(0);
@@ -272,7 +272,7 @@ describe('handleStats - Aggregation queries', () => {
   it('should count documents grouped by type', () => {
     const results = db.prepare(`
       SELECT type, COUNT(*) as count
-      FROM oracle_documents
+      FROM hanuman_documents
       GROUP BY type
     `).all() as Array<{ type: string; count: number }>;
 
@@ -286,7 +286,7 @@ describe('handleStats - Aggregation queries', () => {
 
   it('should get max indexed_at timestamp', () => {
     const result = db.prepare(`
-      SELECT MAX(indexed_at) as last_indexed FROM oracle_documents
+      SELECT MAX(indexed_at) as last_indexed FROM hanuman_documents
     `).get() as any;
 
     expect(result.last_indexed).toBeDefined();
@@ -295,7 +295,7 @@ describe('handleStats - Aggregation queries', () => {
 
   it('should select all concepts (non-empty)', () => {
     const results = db.prepare(`
-      SELECT concepts FROM oracle_documents
+      SELECT concepts FROM hanuman_documents
       WHERE concepts IS NOT NULL AND concepts != '[]'
     `).all() as Array<{ concepts: string }>;
 
@@ -309,7 +309,7 @@ describe('handleStats - Aggregation queries', () => {
 
   it('should calculate unique concepts count', () => {
     const results = db.prepare(`
-      SELECT concepts FROM oracle_documents
+      SELECT concepts FROM hanuman_documents
       WHERE concepts IS NOT NULL AND concepts != '[]'
     `).all() as Array<{ concepts: string }>;
 
@@ -335,7 +335,7 @@ describe('handleStats - Aggregation queries', () => {
 describe('handleConcepts - SELECT concepts', () => {
   it('should select concepts from all documents', () => {
     const results = db.prepare(`
-      SELECT concepts FROM oracle_documents
+      SELECT concepts FROM hanuman_documents
       WHERE concepts IS NOT NULL AND concepts != '[]'
     `).all() as Array<{ concepts: string }>;
 
@@ -344,7 +344,7 @@ describe('handleConcepts - SELECT concepts', () => {
 
   it('should select concepts filtered by type', () => {
     const results = db.prepare(`
-      SELECT concepts FROM oracle_documents
+      SELECT concepts FROM hanuman_documents
       WHERE type = ? AND concepts IS NOT NULL AND concepts != '[]'
     `).all('principle') as Array<{ concepts: string }>;
 
@@ -354,7 +354,7 @@ describe('handleConcepts - SELECT concepts', () => {
   it('should count concept occurrences correctly', () => {
     // Only check the original 5 test documents
     const results = db.prepare(`
-      SELECT concepts FROM oracle_documents
+      SELECT concepts FROM hanuman_documents
       WHERE id IN ('principle_1', 'principle_2', 'learning_1', 'learning_2', 'retro_1')
       AND concepts IS NOT NULL AND concepts != '[]'
     `).all() as Array<{ concepts: string }>;
@@ -480,10 +480,10 @@ describe('setIndexingStatus - UPDATE indexing_status', () => {
 });
 
 // ============================================================================
-// storeDocuments Tests - INSERT oracle_documents (batch)
+// storeDocuments Tests - INSERT hanuman_documents (batch)
 // ============================================================================
 
-describe('storeDocuments - INSERT oracle_documents (batch)', () => {
+describe('storeDocuments - INSERT hanuman_documents (batch)', () => {
   it('should insert multiple documents in batch', () => {
     const now = Date.now();
     const batchDocs = [
@@ -493,7 +493,7 @@ describe('storeDocuments - INSERT oracle_documents (batch)', () => {
     ];
 
     const insertStmt = db.prepare(`
-      INSERT OR REPLACE INTO oracle_documents
+      INSERT OR REPLACE INTO hanuman_documents
       (id, type, source_file, concepts, created_at, updated_at, indexed_at, project)
       VALUES (?, ?, ?, ?, ?, ?, ?, ?)
     `);
@@ -503,7 +503,7 @@ describe('storeDocuments - INSERT oracle_documents (batch)', () => {
     }
 
     const count = db.prepare(`
-      SELECT COUNT(*) as count FROM oracle_documents WHERE id LIKE ?
+      SELECT COUNT(*) as count FROM hanuman_documents WHERE id LIKE ?
     `).get(`batch_%_${now}`) as any;
 
     expect(count.count).toBe(3);
@@ -515,19 +515,19 @@ describe('storeDocuments - INSERT oracle_documents (batch)', () => {
 
     // Insert first time
     db.prepare(`
-      INSERT OR REPLACE INTO oracle_documents
+      INSERT OR REPLACE INTO hanuman_documents
       (id, type, source_file, concepts, created_at, updated_at, indexed_at)
       VALUES (?, ?, ?, ?, ?, ?, ?)
     `).run(id, 'learning', 'original.md', '["v1"]', now, now, now);
 
     // Upsert with updated values
     db.prepare(`
-      INSERT OR REPLACE INTO oracle_documents
+      INSERT OR REPLACE INTO hanuman_documents
       (id, type, source_file, concepts, created_at, updated_at, indexed_at)
       VALUES (?, ?, ?, ?, ?, ?, ?)
     `).run(id, 'learning', 'updated.md', '["v2"]', now, now + 1000, now + 1000);
 
-    const result = db.prepare('SELECT * FROM oracle_documents WHERE id = ?').get(id) as any;
+    const result = db.prepare('SELECT * FROM hanuman_documents WHERE id = ?').get(id) as any;
 
     expect(result.source_file).toBe('updated.md');
     expect(JSON.parse(result.concepts)).toEqual(['v2']);
@@ -542,19 +542,19 @@ describe('storeDocuments - INSERT oracle_documents (batch)', () => {
 
     // Insert into both tables
     db.prepare(`
-      INSERT OR REPLACE INTO oracle_documents
+      INSERT OR REPLACE INTO hanuman_documents
       (id, type, source_file, concepts, created_at, updated_at, indexed_at)
       VALUES (?, ?, ?, ?, ?, ?, ?)
     `).run(id, 'learning', 'fts.md', concepts, now, now, now);
 
     db.prepare(`
-      INSERT OR REPLACE INTO oracle_fts (id, content, concepts)
+      INSERT OR REPLACE INTO hanuman_fts (id, content, concepts)
       VALUES (?, ?, ?)
     `).run(id, content, concepts);
 
     // Verify FTS indexing works
     const ftsResult = db.prepare(`
-      SELECT id, content FROM oracle_fts WHERE oracle_fts MATCH 'indexing'
+      SELECT id, content FROM hanuman_fts WHERE hanuman_fts MATCH 'indexing'
     `).get() as any;
 
     expect(ftsResult).toBeDefined();
@@ -572,11 +572,11 @@ describe('Edge Cases', () => {
     const id = `empty_concepts_${now}`;
 
     db.prepare(`
-      INSERT INTO oracle_documents (id, type, source_file, concepts, created_at, updated_at, indexed_at)
+      INSERT INTO hanuman_documents (id, type, source_file, concepts, created_at, updated_at, indexed_at)
       VALUES (?, ?, ?, ?, ?, ?, ?)
     `).run(id, 'learning', 'test.md', '[]', now, now, now);
 
-    const result = db.prepare('SELECT concepts FROM oracle_documents WHERE id = ?').get(id) as any;
+    const result = db.prepare('SELECT concepts FROM hanuman_documents WHERE id = ?').get(id) as any;
     expect(JSON.parse(result.concepts)).toEqual([]);
   });
 
@@ -586,10 +586,10 @@ describe('Edge Cases', () => {
     const content = "Test with 'quotes', \"double quotes\", and unicode: ψ 日本語";
 
     db.prepare(`
-      INSERT INTO oracle_fts (id, content, concepts) VALUES (?, ?, ?)
+      INSERT INTO hanuman_fts (id, content, concepts) VALUES (?, ?, ?)
     `).run(id, content, '[]');
 
-    const result = db.prepare('SELECT content FROM oracle_fts WHERE id = ?').get(id) as any;
+    const result = db.prepare('SELECT content FROM hanuman_fts WHERE id = ?').get(id) as any;
     expect(result.content).toBe(content);
   });
 
@@ -599,11 +599,11 @@ describe('Edge Cases', () => {
     const concepts = JSON.stringify(Array.from({ length: 50 }, (_, i) => `concept_${i}`));
 
     db.prepare(`
-      INSERT INTO oracle_documents (id, type, source_file, concepts, created_at, updated_at, indexed_at)
+      INSERT INTO hanuman_documents (id, type, source_file, concepts, created_at, updated_at, indexed_at)
       VALUES (?, ?, ?, ?, ?, ?, ?)
     `).run(id, 'learning', 'test.md', concepts, now, now, now);
 
-    const result = db.prepare('SELECT concepts FROM oracle_documents WHERE id = ?').get(id) as any;
+    const result = db.prepare('SELECT concepts FROM hanuman_documents WHERE id = ?').get(id) as any;
     const parsed = JSON.parse(result.concepts);
     expect(parsed.length).toBe(50);
   });
@@ -616,12 +616,12 @@ describe('Edge Cases', () => {
 describe('Drizzle Pattern Verification', () => {
   it('should verify GROUP BY type pattern matches expected Drizzle output', () => {
     // This query pattern should work identically in Drizzle:
-    // db.select({ type: oracleDocuments.type, count: sql`count(*)` })
-    //   .from(oracleDocuments).groupBy(oracleDocuments.type).all()
+    // db.select({ type: hanumanDocuments.type, count: sql`count(*)` })
+    //   .from(hanumanDocuments).groupBy(hanumanDocuments.type).all()
 
     const results = db.prepare(`
       SELECT type, COUNT(*) as count
-      FROM oracle_documents
+      FROM hanuman_documents
       GROUP BY type
     `).all() as Array<{ type: string; count: number }>;
 
@@ -632,19 +632,19 @@ describe('Drizzle Pattern Verification', () => {
   });
 
   it('should verify COUNT(*) pattern matches expected Drizzle output', () => {
-    // db.select({ count: sql<number>`count(*)` }).from(oracleDocuments).get()
+    // db.select({ count: sql<number>`count(*)` }).from(hanumanDocuments).get()
 
-    const result = db.prepare('SELECT COUNT(*) as count FROM oracle_documents').get() as any;
+    const result = db.prepare('SELECT COUNT(*) as count FROM hanuman_documents').get() as any;
 
     expect(result).toHaveProperty('count');
     expect(typeof result.count).toBe('number');
   });
 
   it('should verify ORDER BY RANDOM() LIMIT 1 pattern', () => {
-    // db.select().from(oracleDocuments).orderBy(sql`RANDOM()`).limit(1).get()
+    // db.select().from(hanumanDocuments).orderBy(sql`RANDOM()`).limit(1).get()
 
     const result = db.prepare(`
-      SELECT * FROM oracle_documents ORDER BY RANDOM() LIMIT 1
+      SELECT * FROM hanuman_documents ORDER BY RANDOM() LIMIT 1
     `).get() as any;
 
     expect(result).toBeDefined();
@@ -659,7 +659,7 @@ describe('Drizzle Pattern Verification', () => {
     // Drizzle .returning() returns the inserted row
     // SQLite supports RETURNING clause
     const result = db.prepare(`
-      INSERT INTO oracle_documents (id, type, source_file, concepts, created_at, updated_at, indexed_at)
+      INSERT INTO hanuman_documents (id, type, source_file, concepts, created_at, updated_at, indexed_at)
       VALUES (?, ?, ?, ?, ?, ?, ?)
       RETURNING *
     `).get(id, 'learning', 'test-returning.md', '["test"]', now, now, now) as any;

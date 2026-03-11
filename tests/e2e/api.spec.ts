@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 
-test.describe('Oracle API E2E', () => {
+test.describe('Hanuman API E2E', () => {
   test('health check', async ({ request }) => {
     const res = await request.get('/api/health');
     expect(res.ok()).toBe(true);

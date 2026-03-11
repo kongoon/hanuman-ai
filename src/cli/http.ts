@@ -1,7 +1,7 @@
 /**
- * Shared HTTP client for Oracle CLI
+ * Shared HTTP client for Hanuman CLI
  *
- * All HTTP-based commands use this to talk to the Oracle server.
+ * All HTTP-based commands use this to talk to the Hanuman server.
  * Auto-starts the server if not running.
  */
 
@@ -16,10 +16,10 @@ export interface FetchOptions {
   query?: Record<string, string | undefined>;
 }
 
-export async function oracleFetch<T = any>(path: string, options?: FetchOptions): Promise<T> {
+export async function hanumanFetch<T = any>(path: string, options?: FetchOptions): Promise<T> {
   const ok = await ensureServerRunning({ timeout: 15000 });
   if (!ok) {
-    throw new Error('Failed to start Oracle server. Run "oracle server status" for details.');
+    throw new Error('Failed to start Hanuman server. Run "hanuman server status" for details.');
   }
 
   const url = new URL(path, BASE_URL);

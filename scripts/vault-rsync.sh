@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# vault-rsync.sh — rsync .md files from ghq repos' ψ/ dirs to oracle-vault
+# vault-rsync.sh — rsync .md files from ghq repos' ψ/ dirs to hanuman-vault
 #
 # Usage:
 #   vault-rsync.sh                    # sync all eligible repos
@@ -18,15 +18,15 @@ set -euo pipefail
 # --- Config ---
 GHQ_ROOT="$(ghq root 2>/dev/null || echo "$HOME/Code")"
 
-# Vault path: env var or auto-detect via ghq (any repo ending in /oracle-vault)
-if [[ -n "${ORACLE_VAULT_PATH:-}" ]]; then
-  VAULT="$ORACLE_VAULT_PATH"
+# Vault path: env var or auto-detect via ghq (any repo ending in /hanuman-vault)
+if [[ -n "${HANUMAN_VAULT_PATH:-}" ]]; then
+  VAULT="$HANUMAN_VAULT_PATH"
 else
-  VAULT="$(ghq list -p | grep '/oracle-vault$' | head -1 || true)"
+  VAULT="$(ghq list -p | grep '/hanuman-vault$' | head -1 || true)"
 fi
 
 if [[ -z "$VAULT" || ! -d "$VAULT" ]]; then
-  echo "ERROR: Cannot find oracle-vault. Set ORACLE_VAULT_PATH or clone your oracle-vault repo via ghq." >&2
+  echo "ERROR: Cannot find hanuman-vault. Set HANUMAN_VAULT_PATH or clone your hanuman-vault repo via ghq." >&2
   exit 1
 fi
 
@@ -65,7 +65,7 @@ is_worktree() {
 }
 
 # Strip worktree suffix to get parent repo path
-# e.g. github.com/laris-co/fireman-oracle.wt-1 → github.com/laris-co/fireman-oracle
+# e.g. github.com/laris-co/fireman-hanuman.wt-1 → github.com/laris-co/fireman-hanuman
 parent_path() {
   local rel="$1"
   echo "$rel" | sed -E 's/\.wt[-/][0-9]+$//'
@@ -96,7 +96,7 @@ is_eligible() {
   [[ ! -L "$repo/ψ" ]] || return 1
 
   # Skip the vault repo itself
-  [[ ! "$rel" =~ oracle-vault$ ]] || return 1
+  [[ ! "$rel" =~ hanuman-vault$ ]] || return 1
 
   return 0
 }

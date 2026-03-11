@@ -1,5 +1,5 @@
 /**
- * Oracle Trace Tool Handlers
+ * Hanuman Trace Tool Handlers
  *
  * Thin wrappers around trace/handler.ts — these don't need ToolContext
  * since trace handlers use their own module-scoped DB.
@@ -28,7 +28,7 @@ import type { ToolResponse } from './types.ts';
 // ============================================================================
 
 export const traceToolDef = {
-  name: 'oracle_trace',
+  name: 'hanuman_trace',
   description: 'Log a trace session with dig points (files, commits, issues found). Use to capture /trace command results for future exploration.',
   inputSchema: {
     type: 'object',
@@ -51,7 +51,7 @@ export const traceToolDef = {
 };
 
 export const traceListToolDef = {
-  name: 'oracle_trace_list',
+  name: 'hanuman_trace_list',
   description: 'List recent traces with optional filters. Returns trace summaries for browsing.',
   inputSchema: {
     type: 'object',
@@ -67,7 +67,7 @@ export const traceListToolDef = {
 };
 
 export const traceGetToolDef = {
-  name: 'oracle_trace_get',
+  name: 'hanuman_trace_get',
   description: 'Get full details of a specific trace including all dig points (files, commits, issues).',
   inputSchema: {
     type: 'object',
@@ -80,7 +80,7 @@ export const traceGetToolDef = {
 };
 
 export const traceLinkToolDef = {
-  name: 'oracle_trace_link',
+  name: 'hanuman_trace_link',
   description: 'Link two traces as a chain (prev \u2192 next). Creates bidirectional navigation without deleting anything. Use when agents create related traces that should be connected.',
   inputSchema: {
     type: 'object',
@@ -93,7 +93,7 @@ export const traceLinkToolDef = {
 };
 
 export const traceUnlinkToolDef = {
-  name: 'oracle_trace_unlink',
+  name: 'hanuman_trace_unlink',
   description: 'Remove a link between traces. Breaks the chain connection in the specified direction.',
   inputSchema: {
     type: 'object',
@@ -106,7 +106,7 @@ export const traceUnlinkToolDef = {
 };
 
 export const traceChainToolDef = {
-  name: 'oracle_trace_chain',
+  name: 'hanuman_trace_chain',
   description: 'Get the full linked chain for a trace. Returns all traces in the chain and the position of the requested trace.',
   inputSchema: {
     type: 'object',
@@ -148,7 +148,7 @@ export async function handleTrace(input: CreateTraceInput): Promise<ToolResponse
           issue_count: result.summary.issueCount,
           total_dig_points: result.summary.totalDigPoints,
         },
-        message: `Trace logged. Use oracle_trace_get with trace_id="${result.traceId}" to explore dig points.`
+        message: `Trace logged. Use hanuman_trace_get with trace_id="${result.traceId}" to explore dig points.`
       }, null, 2)
     }]
   };

@@ -1,5 +1,5 @@
 import type { Command } from 'commander';
-import { oracleFetch } from '../http.ts';
+import { hanumanFetch } from '../http.ts';
 import { printJson, printTraces } from '../format.ts';
 
 export function registerTraces(program: Command): void {
@@ -12,7 +12,7 @@ export function registerTraces(program: Command): void {
     .option('-l, --limit <n>', 'Max results', '50')
     .option('--json', 'Output raw JSON')
     .action(async (opts) => {
-      const data = await oracleFetch('/api/traces', {
+      const data = await hanumanFetch('/api/traces', {
         query: {
           query: opts.query,
           status: opts.status,
@@ -29,7 +29,7 @@ export function registerTraces(program: Command): void {
     .description('View a specific trace')
     .option('--json', 'Output raw JSON')
     .action(async (id, opts) => {
-      const data = await oracleFetch(`/api/traces/${id}`);
+      const data = await hanumanFetch(`/api/traces/${id}`);
       if (opts.json) return printJson(data);
       printJson(data); // Traces are complex, JSON is most useful
     });

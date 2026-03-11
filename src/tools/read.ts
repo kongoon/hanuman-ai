@@ -1,5 +1,5 @@
 /**
- * Oracle Read Handler
+ * Hanuman Read Handler
  *
  * Read full document content by file path or document ID.
  * Resolves vault paths, ghq paths, and symlinks server-side.
@@ -8,11 +8,11 @@
 import fs from 'fs';
 import path from 'path';
 import { getVaultPsiRoot } from '../vault/handler.ts';
-import type { ToolContext, ToolResponse, OracleReadInput } from './types.ts';
+import type { ToolContext, ToolResponse, HanumanReadInput } from './types.ts';
 
 export const readToolDef = {
-  name: 'oracle_read',
-  description: 'Read full content of an Oracle document by file path or document ID. Use after oracle_search to retrieve complete file contents. Resolves vault paths, ghq paths, and symlinks server-side.',
+  name: 'hanuman_read',
+  description: 'Read full content of an Hanuman document by file path or document ID. Use after hanuman_search to retrieve complete file contents. Resolves vault paths, ghq paths, and symlinks server-side.',
   inputSchema: {
     type: 'object',
     properties: {
@@ -22,7 +22,7 @@ export const readToolDef = {
       },
       id: {
         type: 'string',
-        description: 'Document ID from oracle_search results. Looks up source_file from DB.',
+        description: 'Document ID from hanuman_search results. Looks up source_file from DB.',
       },
     },
   },
@@ -95,7 +95,7 @@ function isPathAllowed(resolvedPath: string, repoRoot: string, ghqRoot: string):
   return false;
 }
 
-export async function handleRead(ctx: ToolContext, input: OracleReadInput): Promise<ToolResponse> {
+export async function handleRead(ctx: ToolContext, input: HanumanReadInput): Promise<ToolResponse> {
   const { file, id } = input;
 
   if (!file && !id) {
@@ -111,7 +111,7 @@ export async function handleRead(ctx: ToolContext, input: OracleReadInput): Prom
   // ID lookup: resolve source_file from DB
   if (id) {
     const row = ctx.sqlite.prepare(
-      'SELECT source_file, project FROM oracle_documents WHERE id = ?'
+      'SELECT source_file, project FROM hanuman_documents WHERE id = ?'
     ).get(id) as { source_file: string; project: string | null } | null;
 
     if (!row) {
@@ -147,7 +147,7 @@ export async function handleRead(ctx: ToolContext, input: OracleReadInput): Prom
   // Fallback: try FTS indexed content (if we have an id)
   if (id) {
     const ftsRow = ctx.sqlite.prepare(
-      'SELECT content FROM oracle_fts WHERE id = ?'
+      'SELECT content FROM hanuman_fts WHERE id = ?'
     ).get(id) as { content: string } | null;
 
     if (ftsRow) {

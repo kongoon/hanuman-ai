@@ -110,7 +110,7 @@ export function Superseded() {
         <div className={styles.empty}>
           <p>No superseded documents yet.</p>
           <p className={styles.hint}>
-            Use <code>oracle_supersede(oldId, newId)</code> to mark outdated documents.
+            Use <code>hanuman_supersede(oldId, newId)</code> to mark outdated documents.
           </p>
         </div>
       ) : (

@@ -71,21 +71,21 @@ describe('parseGitStatus', () => {
 // ============================================================================
 
 describe('mapToVaultPath', () => {
-  const project = 'github.com/soul-brews-studio/oracle-v2';
+  const project = 'github.com/soul-brews-studio/hanuman-ai';
 
   it('prefixes learnings with project', () => {
     expect(mapToVaultPath('ψ/memory/learnings/file.md', project))
-      .toBe('github.com/soul-brews-studio/oracle-v2/ψ/memory/learnings/file.md');
+      .toBe('github.com/soul-brews-studio/hanuman-ai/ψ/memory/learnings/file.md');
   });
 
   it('prefixes retrospectives with project', () => {
     expect(mapToVaultPath('ψ/memory/retrospectives/2026-01/15/session.md', project))
-      .toBe('github.com/soul-brews-studio/oracle-v2/ψ/memory/retrospectives/2026-01/15/session.md');
+      .toBe('github.com/soul-brews-studio/hanuman-ai/ψ/memory/retrospectives/2026-01/15/session.md');
   });
 
   it('prefixes inbox/handoff with project', () => {
     expect(mapToVaultPath('ψ/inbox/handoff/context.md', project))
-      .toBe('github.com/soul-brews-studio/oracle-v2/ψ/inbox/handoff/context.md');
+      .toBe('github.com/soul-brews-studio/hanuman-ai/ψ/inbox/handoff/context.md');
   });
 
   it('keeps resonance universal (no project prefix)', () => {
@@ -100,7 +100,7 @@ describe('mapToVaultPath', () => {
 
   it('handles nested learning files', () => {
     expect(mapToVaultPath('ψ/memory/learnings/deep/nested/file.md', project))
-      .toBe('github.com/soul-brews-studio/oracle-v2/ψ/memory/learnings/deep/nested/file.md');
+      .toBe('github.com/soul-brews-studio/hanuman-ai/ψ/memory/learnings/deep/nested/file.md');
   });
 });
 
@@ -109,18 +109,18 @@ describe('mapToVaultPath', () => {
 // ============================================================================
 
 describe('mapFromVaultPath', () => {
-  const project = 'github.com/soul-brews-studio/oracle-v2';
+  const project = 'github.com/soul-brews-studio/hanuman-ai';
 
   it('strips project prefix from learnings path', () => {
     expect(mapFromVaultPath(
-      'github.com/soul-brews-studio/oracle-v2/ψ/memory/learnings/file.md',
+      'github.com/soul-brews-studio/hanuman-ai/ψ/memory/learnings/file.md',
       project
     )).toBe('ψ/memory/learnings/file.md');
   });
 
   it('strips project prefix from retrospectives path', () => {
     expect(mapFromVaultPath(
-      'github.com/soul-brews-studio/oracle-v2/ψ/memory/retrospectives/2026-01/15/session.md',
+      'github.com/soul-brews-studio/hanuman-ai/ψ/memory/retrospectives/2026-01/15/session.md',
       project
     )).toBe('ψ/memory/retrospectives/2026-01/15/session.md');
   });
@@ -147,7 +147,7 @@ describe('mapFromVaultPath', () => {
 // ============================================================================
 
 describe('ensureFrontmatterProject', () => {
-  const project = 'github.com/soul-brews-studio/oracle-v2';
+  const project = 'github.com/soul-brews-studio/hanuman-ai';
 
   it('adds frontmatter when none exists', () => {
     const content = '# My Learning\n\nSome content here.';
@@ -158,11 +158,11 @@ describe('ensureFrontmatterProject', () => {
   });
 
   it('injects project into existing frontmatter', () => {
-    const content = '---\ntags: [git, safety]\nsource: Oracle Learn\n---\n\n# Content';
+    const content = '---\ntags: [git, safety]\nsource: Hanuman Learn\n---\n\n# Content';
     const result = ensureFrontmatterProject(content, project);
     expect(result).toContain(`project: ${project}`);
     expect(result).toContain('tags: [git, safety]');
-    expect(result).toContain('source: Oracle Learn');
+    expect(result).toContain('source: Hanuman Learn');
   });
 
   it('does not modify if project already exists', () => {

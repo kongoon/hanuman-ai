@@ -1,5 +1,5 @@
 /**
- * Oracle Nightly MCP Server
+ * Hanuman Nightly MCP Server
  *
  * Slim entry point: server lifecycle, tool registration, and routing.
  * Handler implementations live in src/tools/.
@@ -43,23 +43,23 @@ import {
 } from './tools/index.ts';
 
 import type {
-  OracleSearchInput,
-  OracleLearnInput,
-  OracleListInput,
-  OracleStatsInput,
-  OracleConceptsInput,
-  OracleReflectInput,
-  OracleSupersededInput,
-  OracleHandoffInput,
-  OracleInboxInput,
-  OracleVerifyInput,
-  OracleScheduleAddInput,
-  OracleScheduleListInput,
-  OracleReadInput,
-  OracleThreadInput,
-  OracleThreadsInput,
-  OracleThreadReadInput,
-  OracleThreadUpdateInput,
+  HanumanSearchInput,
+  HanumanLearnInput,
+  HanumanListInput,
+  HanumanStatsInput,
+  HanumanConceptsInput,
+  HanumanReflectInput,
+  HanumanSupersededInput,
+  HanumanHandoffInput,
+  HanumanInboxInput,
+  HanumanVerifyInput,
+  HanumanScheduleAddInput,
+  HanumanScheduleListInput,
+  HanumanReadInput,
+  HanumanThreadInput,
+  HanumanThreadsInput,
+  HanumanThreadReadInput,
+  HanumanThreadUpdateInput,
 } from './tools/index.ts';
 
 import type {
@@ -70,16 +70,16 @@ import type {
 
 // Write tools that should be disabled in read-only mode
 const WRITE_TOOLS = [
-  'oracle_learn',
-  'oracle_thread',
-  'oracle_thread_update',
-  'oracle_trace',
-  'oracle_supersede',
-  'oracle_handoff',
-  'oracle_schedule_add',
+  'hanuman_learn',
+  'hanuman_thread',
+  'hanuman_thread_update',
+  'hanuman_trace',
+  'hanuman_supersede',
+  'hanuman_handoff',
+  'hanuman_schedule_add',
 ];
 
-class OracleMCPServer {
+class HanumanMCPServer {
   private server: Server;
   private sqlite: Database;
   private db: BunSQLiteDatabase<typeof schema>;
@@ -92,9 +92,9 @@ class OracleMCPServer {
   constructor(options: { readOnly?: boolean } = {}) {
     this.readOnly = options.readOnly ?? false;
     if (this.readOnly) {
-      console.error('[Oracle] Running in READ-ONLY mode');
+      console.error('[Hanuman] Running in READ-ONLY mode');
     }
-    this.repoRoot = process.env.ORACLE_REPO_ROOT || process.cwd();
+    this.repoRoot = process.env.HANUMAN_REPO_ROOT || process.cwd();
 
     const homeDir = process.env.HOME || process.env.USERPROFILE || '/tmp';
 
@@ -105,12 +105,12 @@ class OracleMCPServer {
     const pkg = JSON.parse(fs.readFileSync(path.join(import.meta.dirname || __dirname, '..', 'package.json'), 'utf-8'));
     this.version = pkg.version;
     this.server = new Server(
-      { name: 'oracle-nightly', version: this.version },
+      { name: 'hanuman-nightly', version: this.version },
       { capabilities: { tools: {} } }
     );
 
-    const oracleDataDir = process.env.ORACLE_DATA_DIR || path.join(homeDir, '.oracle');
-    const dbPath = process.env.ORACLE_DB_PATH || path.join(oracleDataDir, 'oracle.db');
+    const hanumanDataDir = process.env.HANUMAN_DATA_DIR || path.join(homeDir, '.hanuman');
+    const dbPath = process.env.HANUMAN_DB_PATH || path.join(hanumanDataDir, 'hanuman.db');
     const { sqlite, db } = createDatabase(dbPath);
     this.sqlite = sqlite;
     this.db = db;
@@ -137,7 +137,7 @@ class OracleMCPServer {
       const stats = await this.vectorStore.getStats();
       if (stats.count > 0) {
         this.vectorStatus = 'connected';
-        console.error(`[VectorDB:${this.vectorStore.name}] ✓ oracle_knowledge: ${stats.count} documents`);
+        console.error(`[VectorDB:${this.vectorStore.name}] ✓ hanuman_knowledge: ${stats.count} documents`);
       } else {
         this.vectorStatus = 'connected';
         console.error(`[VectorDB:${this.vectorStore.name}] ✓ Connected but collection empty`);
@@ -173,7 +173,7 @@ class OracleMCPServer {
         // Meta-documentation tool
         {
           name: '____IMPORTANT',
-          description: `ORACLE WORKFLOW GUIDE (v${this.version}):\n\n1. SEARCH & DISCOVER\n   oracle_search(query) → Find knowledge by keywords/vectors\n   oracle_read(file/id) → Read full document content\n   oracle_list() → Browse all documents\n   oracle_concepts() → See topic coverage\n\n2. REFLECT\n   oracle_reflect() → Random wisdom for alignment\n\n3. LEARN & REMEMBER\n   oracle_learn(pattern) → Add new patterns/learnings\n   oracle_thread(message) → Multi-turn discussions\n   ⚠️ BEFORE adding: search for similar topics first!\n   If updating old info → use oracle_supersede(oldId, newId)\n\n4. TRACE & DISTILL\n   oracle_trace(query) → Log discovery sessions with dig points\n   oracle_trace_list() → Find past traces\n   oracle_trace_get(id) → Explore dig points (files, commits, issues)\n   oracle_trace_link(prevId, nextId) → Chain related traces together\n   oracle_trace_chain(id) → View the full linked chain\n\n5. HANDOFF & INBOX\n   oracle_handoff(content) → Save session context for next session\n   oracle_inbox() → List pending handoffs\n\n6. SCHEDULE (shared across all Oracles)\n   oracle_schedule_add(date, event) → Add appointment to shared schedule\n   oracle_schedule_list(filter?) → View upcoming events\n   Schedule lives at ~/.oracle/ψ/inbox/schedule.md (per-human, not per-project)\n\n7. SUPERSEDE (when info changes)\n   oracle_supersede(oldId, newId, reason) → Mark old doc as outdated\n   "Nothing is Deleted" — old preserved, just marked superseded\n\n7. VERIFY (health check)\n   oracle_verify(check?) → Compare ψ/ files vs DB index\n   check=true (default): read-only report\n   check=false: also flag orphaned entries\n\nPhilosophy: "Nothing is Deleted" — All interactions logged.`,
+          description: `HANUMAN WORKFLOW GUIDE (v${this.version}):\n\n1. SEARCH & DISCOVER\n   hanuman_search(query) → Find knowledge by keywords/vectors\n   hanuman_read(file/id) → Read full document content\n   hanuman_list() → Browse all documents\n   hanuman_concepts() → See topic coverage\n\n2. REFLECT\n   hanuman_reflect() → Random wisdom for alignment\n\n3. LEARN & REMEMBER\n   hanuman_learn(pattern) → Add new patterns/learnings\n   hanuman_thread(message) → Multi-turn discussions\n   ⚠️ BEFORE adding: search for similar topics first!\n   If updating old info → use hanuman_supersede(oldId, newId)\n\n4. TRACE & DISTILL\n   hanuman_trace(query) → Log discovery sessions with dig points\n   hanuman_trace_list() → Find past traces\n   hanuman_trace_get(id) → Explore dig points (files, commits, issues)\n   hanuman_trace_link(prevId, nextId) → Chain related traces together\n   hanuman_trace_chain(id) → View the full linked chain\n\n5. HANDOFF & INBOX\n   hanuman_handoff(content) → Save session context for next session\n   hanuman_inbox() → List pending handoffs\n\n6. SCHEDULE (shared across all Hanumans)\n   hanuman_schedule_add(date, event) → Add appointment to shared schedule\n   hanuman_schedule_list(filter?) → View upcoming events\n   Schedule lives at ~/.hanuman/ψ/inbox/schedule.md (per-human, not per-project)\n\n7. SUPERSEDE (when info changes)\n   hanuman_supersede(oldId, newId, reason) → Mark old doc as outdated\n   "Nothing is Deleted" — old preserved, just marked superseded\n\n7. VERIFY (health check)\n   hanuman_verify(check?) → Compare ψ/ files vs DB index\n   check=true (default): read-only report\n   check=false: also flag orphaned entries\n\nPhilosophy: "Nothing is Deleted" — All interactions logged.`,
           inputSchema: { type: 'object', properties: {} }
         },
         // Core tools (from src/tools/)
@@ -212,7 +212,7 @@ class OracleMCPServer {
         return {
           content: [{
             type: 'text',
-            text: `Error: Tool "${request.params.name}" is disabled in read-only mode. This Oracle instance is configured for read-only access.`
+            text: `Error: Tool "${request.params.name}" is disabled in read-only mode. This Hanuman instance is configured for read-only access.`
           }],
           isError: true
         };
@@ -223,55 +223,55 @@ class OracleMCPServer {
       try {
         switch (request.params.name) {
           // Core tools (delegated to src/tools/)
-          case 'oracle_search':
-            return await handleSearch(ctx, request.params.arguments as unknown as OracleSearchInput);
-          case 'oracle_read':
-            return await handleRead(ctx, request.params.arguments as unknown as OracleReadInput);
-          case 'oracle_reflect':
-            return await handleReflect(ctx, request.params.arguments as unknown as OracleReflectInput);
-          case 'oracle_learn':
-            return await handleLearn(ctx, request.params.arguments as unknown as OracleLearnInput);
-          case 'oracle_list':
-            return await handleList(ctx, request.params.arguments as unknown as OracleListInput);
-          case 'oracle_stats':
-            return await handleStats(ctx, request.params.arguments as unknown as OracleStatsInput);
-          case 'oracle_concepts':
-            return await handleConcepts(ctx, request.params.arguments as unknown as OracleConceptsInput);
-          case 'oracle_supersede':
-            return await handleSupersede(ctx, request.params.arguments as unknown as OracleSupersededInput);
-          case 'oracle_handoff':
-            return await handleHandoff(ctx, request.params.arguments as unknown as OracleHandoffInput);
-          case 'oracle_inbox':
-            return await handleInbox(ctx, request.params.arguments as unknown as OracleInboxInput);
-          case 'oracle_verify':
-            return await handleVerify(ctx, request.params.arguments as unknown as OracleVerifyInput);
-          case 'oracle_schedule_add':
-            return await handleScheduleAdd(ctx, request.params.arguments as unknown as OracleScheduleAddInput);
-          case 'oracle_schedule_list':
-            return await handleScheduleList(ctx, request.params.arguments as unknown as OracleScheduleListInput);
+          case 'hanuman_search':
+            return await handleSearch(ctx, request.params.arguments as unknown as HanumanSearchInput);
+          case 'hanuman_read':
+            return await handleRead(ctx, request.params.arguments as unknown as HanumanReadInput);
+          case 'hanuman_reflect':
+            return await handleReflect(ctx, request.params.arguments as unknown as HanumanReflectInput);
+          case 'hanuman_learn':
+            return await handleLearn(ctx, request.params.arguments as unknown as HanumanLearnInput);
+          case 'hanuman_list':
+            return await handleList(ctx, request.params.arguments as unknown as HanumanListInput);
+          case 'hanuman_stats':
+            return await handleStats(ctx, request.params.arguments as unknown as HanumanStatsInput);
+          case 'hanuman_concepts':
+            return await handleConcepts(ctx, request.params.arguments as unknown as HanumanConceptsInput);
+          case 'hanuman_supersede':
+            return await handleSupersede(ctx, request.params.arguments as unknown as HanumanSupersededInput);
+          case 'hanuman_handoff':
+            return await handleHandoff(ctx, request.params.arguments as unknown as HanumanHandoffInput);
+          case 'hanuman_inbox':
+            return await handleInbox(ctx, request.params.arguments as unknown as HanumanInboxInput);
+          case 'hanuman_verify':
+            return await handleVerify(ctx, request.params.arguments as unknown as HanumanVerifyInput);
+          case 'hanuman_schedule_add':
+            return await handleScheduleAdd(ctx, request.params.arguments as unknown as HanumanScheduleAddInput);
+          case 'hanuman_schedule_list':
+            return await handleScheduleList(ctx, request.params.arguments as unknown as HanumanScheduleListInput);
 
           // Forum tools (delegated to src/tools/forum.ts)
-          case 'oracle_thread':
-            return await handleThread(request.params.arguments as unknown as OracleThreadInput);
-          case 'oracle_threads':
-            return await handleThreads(request.params.arguments as unknown as OracleThreadsInput);
-          case 'oracle_thread_read':
-            return await handleThreadRead(request.params.arguments as unknown as OracleThreadReadInput);
-          case 'oracle_thread_update':
-            return await handleThreadUpdate(request.params.arguments as unknown as OracleThreadUpdateInput);
+          case 'hanuman_thread':
+            return await handleThread(request.params.arguments as unknown as HanumanThreadInput);
+          case 'hanuman_threads':
+            return await handleThreads(request.params.arguments as unknown as HanumanThreadsInput);
+          case 'hanuman_thread_read':
+            return await handleThreadRead(request.params.arguments as unknown as HanumanThreadReadInput);
+          case 'hanuman_thread_update':
+            return await handleThreadUpdate(request.params.arguments as unknown as HanumanThreadUpdateInput);
 
           // Trace tools (delegated to src/tools/trace.ts)
-          case 'oracle_trace':
+          case 'hanuman_trace':
             return await handleTrace(request.params.arguments as unknown as CreateTraceInput);
-          case 'oracle_trace_list':
+          case 'hanuman_trace_list':
             return await handleTraceList(request.params.arguments as unknown as ListTracesInput);
-          case 'oracle_trace_get':
+          case 'hanuman_trace_get':
             return await handleTraceGet(request.params.arguments as unknown as GetTraceInput);
-          case 'oracle_trace_link':
+          case 'hanuman_trace_link':
             return await handleTraceLink(request.params.arguments as unknown as { prevTraceId: string; nextTraceId: string });
-          case 'oracle_trace_unlink':
+          case 'hanuman_trace_unlink':
             return await handleTraceUnlink(request.params.arguments as unknown as { traceId: string; direction: 'prev' | 'next' });
-          case 'oracle_trace_chain':
+          case 'hanuman_trace_chain':
             return await handleTraceChain(request.params.arguments as unknown as { traceId: string });
 
           default:
@@ -296,13 +296,13 @@ class OracleMCPServer {
   async run(): Promise<void> {
     const transport = new StdioServerTransport();
     await this.server.connect(transport);
-    console.error('Oracle Nightly MCP Server running on stdio (FTS5 mode)');
+    console.error('Hanuman Nightly MCP Server running on stdio (FTS5 mode)');
   }
 }
 
 async function main() {
-  const readOnly = process.env.ORACLE_READ_ONLY === 'true' || process.argv.includes('--read-only');
-  const server = new OracleMCPServer({ readOnly });
+  const readOnly = process.env.HANUMAN_READ_ONLY === 'true' || process.argv.includes('--read-only');
+  const server = new HanumanMCPServer({ readOnly });
 
   try {
     console.error('[Startup] Pre-connecting to vector store...');

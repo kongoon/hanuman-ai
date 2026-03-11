@@ -10,7 +10,7 @@
  */
 
 import { createVectorStore, EMBEDDING_MODELS } from '../vector/factory.ts';
-import { createDatabase, oracleDocuments } from '../db/index.ts';
+import { createDatabase, hanumanDocuments } from '../db/index.ts';
 import { count } from 'drizzle-orm';
 import { DB_PATH } from '../config.ts';
 
@@ -36,7 +36,7 @@ async function main() {
 
   // Use Drizzle for structured queries, raw sqlite only for FTS5 joins
   const { db, sqlite } = createDatabase(DB_PATH);
-  const [{ total: docCount }] = db.select({ total: count() }).from(oracleDocuments).all();
+  const [{ total: docCount }] = db.select({ total: count() }).from(hanumanDocuments).all();
   console.log(`Documents: ${docCount}`);
 
   const store = createVectorStore({
@@ -56,8 +56,8 @@ async function main() {
   // FTS5 join requires raw SQL — Drizzle doesn't support virtual tables
   const rows = sqlite.prepare(`
     SELECT d.id, d.type, GROUP_CONCAT(f.content, '\n') as content, d.source_file, d.concepts, d.project, d.created_at
-    FROM oracle_documents d
-    JOIN oracle_fts f ON d.id = f.id
+    FROM hanuman_documents d
+    JOIN hanuman_fts f ON d.id = f.id
     GROUP BY d.id
     ORDER BY d.created_at DESC
   `).all() as Array<{

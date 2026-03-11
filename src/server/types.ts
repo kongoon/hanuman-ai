@@ -1,5 +1,5 @@
 /**
- * Oracle v2 Server Types
+ * Hanuman v2 Server Types
  */
 
 export interface SearchResult {

@@ -1,17 +1,17 @@
 /**
- * Oracle v2 Type Definitions
+ * Hanuman v2 Type Definitions
  * Following claude-mem patterns for granular vector documents
  */
 
-export type OracleDocumentType = 'principle' | 'pattern' | 'learning' | 'retro';
+export type HanumanDocumentType = 'principle' | 'pattern' | 'learning' | 'retro';
 
 /**
  * Granular document stored in vector DB
  * Following claude-mem's pattern of splitting large documents into smaller chunks
  */
-export interface OracleDocument {
-  id: string;           // e.g., "resonance_oracle_principle_1"
-  type: OracleDocumentType;
+export interface HanumanDocument {
+  id: string;           // e.g., "resonance_hanuman_principle_1"
+  type: HanumanDocumentType;
   source_file: string;  // Relative path from repo root
   content: string;      // The actual text to embed
   concepts: string[];   // Tags for filtering: ['trust', 'patterns', 'mirror']
@@ -23,9 +23,9 @@ export interface OracleDocument {
 /**
  * Metadata stored in SQLite (source of truth)
  */
-export interface OracleMetadata {
+export interface HanumanMetadata {
   id: string;
-  type: OracleDocumentType;
+  type: HanumanDocumentType;
   source_file: string;
   concepts: string;     // JSON array as string
   created_at: number;
@@ -37,7 +37,7 @@ export interface OracleMetadata {
  * Search result from hybrid search
  */
 export interface SearchResult {
-  document: OracleDocument;
+  document: HanumanDocument;
   score: number;        // Relevance score from vector search
   source: 'vector' | 'fts' | 'hybrid';
 }
@@ -45,26 +45,26 @@ export interface SearchResult {
 /**
  * Tool input schemas
  */
-export interface OracleSearchInput {
+export interface HanumanSearchInput {
   query: string;
-  type?: OracleDocumentType | 'all';
+  type?: HanumanDocumentType | 'all';
   limit?: number;
 }
 
-export interface OracleConsultInput {
+export interface HanumanConsultInput {
   decision: string;
   context?: string;
 }
 
-export interface OracleReflectInput {
+export interface HanumanReflectInput {
   // No parameters - returns random wisdom
 }
 
 /**
- * oracle_list input - browse documents without search query
+ * hanuman_list input - browse documents without search query
  */
-export interface OracleListInput {
-  type?: OracleDocumentType | 'all';
+export interface HanumanListInput {
+  type?: HanumanDocumentType | 'all';
   limit?: number;
   offset?: number;
 }
@@ -72,28 +72,28 @@ export interface OracleListInput {
 /**
  * Tool output types
  */
-export interface OracleSearchOutput {
+export interface HanumanSearchOutput {
   results: SearchResult[];
   total: number;
 }
 
-export interface OracleConsultOutput {
+export interface HanumanConsultOutput {
   principles: SearchResult[];
   patterns: SearchResult[];
   guidance: string;
 }
 
-export interface OracleReflectOutput {
-  principle: OracleDocument;
+export interface HanumanReflectOutput {
+  principle: HanumanDocument;
 }
 
 /**
- * oracle_list output - paginated document list
+ * hanuman_list output - paginated document list
  */
-export interface OracleListOutput {
+export interface HanumanListOutput {
   documents: Array<{
     id: string;
-    type: OracleDocumentType;
+    type: HanumanDocumentType;
     title: string;
     content: string;
     source_file: string;

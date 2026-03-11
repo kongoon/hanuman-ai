@@ -72,7 +72,7 @@ EOF
 
 | Type | Prefix | Example |
 |------|--------|---------|
-| Feature | `feat/` | `feat/add-oracle-stats` |
+| Feature | `feat/` | `feat/add-hanuman-stats` |
 | Bug fix | `fix/` | `fix/fts5-syntax-error` |
 | Docs | `docs/` | `docs/update-readme` |
 | Refactor | `refactor/` | `refactor/cleanup-search` |

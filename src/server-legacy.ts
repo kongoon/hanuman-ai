@@ -1,12 +1,12 @@
 /**
- * Oracle v2 HTTP Server
+ * Hanuman v2 HTTP Server
  *
- * Web viewer for Oracle knowledge base.
+ * Web viewer for Hanuman knowledge base.
  * Exposes same functionality as MCP but via HTTP.
  *
  * Endpoints:
  * - GET /health          - Health check
- * - GET /search?q=...    - Search Oracle knowledge
+ * - GET /search?q=...    - Search Hanuman knowledge
  * - GET /list            - Browse all documents (no query needed)
  * - GET /reflect         - Random wisdom
  * - GET /stats           - Database statistics
@@ -113,7 +113,7 @@ const dataDir = path.join(import.meta.dirname || __dirname, '..');
 configure({ dataDir });
 
 // Write PID file for process tracking
-writePidFile({ pid: process.pid, port: Number(PORT), startedAt: new Date().toISOString(), name: 'oracle-http' });
+writePidFile({ pid: process.pid, port: Number(PORT), startedAt: new Date().toISOString(), name: 'hanuman-http' });
 
 // Register graceful shutdown handlers
 registerSignalHandlers(async () => {
@@ -124,7 +124,7 @@ registerSignalHandlers(async () => {
     ]
   });
   removePidFile();
-  console.log('👋 Oracle v2 HTTP Server stopped.');
+  console.log('👋 Hanuman v2 HTTP Server stopped.');
 });
 
 /**
@@ -173,7 +173,7 @@ const server = http.createServer(async (req, res) => {
             thread_id: result.threadId,
             message_id: result.messageId,
             status: result.status,
-            oracle_response: result.oracleResponse,
+            hanuman_response: result.hanumanResponse,
             issue_url: result.issueUrl
           }, null, 2));
         } catch (error) {
@@ -287,7 +287,7 @@ const server = http.createServer(async (req, res) => {
         res.end(fs.readFileSync(ARTHUR_UI_PATH, 'utf-8'));
         return;
 
-      case '/legacy/oracle':
+      case '/legacy/hanuman':
         res.setHeader('Content-Type', 'text/html');
         res.end(fs.readFileSync(UI_PATH, 'utf-8'));
         return;
@@ -298,7 +298,7 @@ const server = http.createServer(async (req, res) => {
         return;
 
       case '/api/health':
-        result = { status: 'ok', server: 'oracle-v2', port: PORT, oracleV2: 'connected' };
+        result = { status: 'ok', server: 'hanuman-ai', port: PORT, hanumanV2: 'connected' };
         break;
 
       case '/api/search':
@@ -454,7 +454,7 @@ const server = http.createServer(async (req, res) => {
           error: 'Not found',
           endpoints: [
             'GET /health - Health check',
-            'GET /search?q=... - Search Oracle',
+            'GET /search?q=... - Search Hanuman',
             'GET /list - Browse all documents',
             'GET /reflect - Random wisdom',
             'GET /stats - Database stats',
@@ -466,7 +466,7 @@ const server = http.createServer(async (req, res) => {
             'GET /dashboard/growth?period=week - Growth over time',
             'GET /threads - List discussion threads',
             'GET /thread/:id - Get thread with messages',
-            'POST /thread - Send message to thread (Oracle auto-responds)'
+            'POST /thread - Send message to thread (Hanuman auto-responds)'
           ]
         };
     }
@@ -483,13 +483,13 @@ const server = http.createServer(async (req, res) => {
 // Start server
 server.listen(PORT, () => {
   console.log(`
-🔮 Oracle v2 HTTP Server running!
+🔮 Hanuman v2 HTTP Server running!
 
    URL: http://localhost:${PORT}
 
    Endpoints:
    - GET /health          Health check
-   - GET /search?q=...    Search Oracle knowledge
+   - GET /search?q=...    Search Hanuman knowledge
    - GET /list            Browse all documents
    - GET /reflect         Random wisdom
    - GET /stats           Database statistics

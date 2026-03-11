@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { search } from '../api/oracle';
-import type { Document } from '../api/oracle';
+import { search } from '../api/hanuman';
+import type { Document } from '../api/hanuman';
 import styles from './Playground.module.css';
 
 interface ColumnResult {

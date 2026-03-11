@@ -1,5 +1,5 @@
 /**
- * Ensure Oracle HTTP Server is Running
+ * Ensure Hanuman HTTP Server is Running
  *
  * Auto-starts the server if not running.
  * Used by MCP tools and CLI to guarantee server availability.
@@ -18,16 +18,16 @@ import {
 import { waitForHealth, isPortInUse } from './process-manager/HealthMonitor.ts';
 
 // Simple file-based lock to prevent race conditions
-const LOCK_FILE = () => path.join(getDataDir(), 'oracle-http.lock');
+const LOCK_FILE = () => path.join(getDataDir(), 'hanuman-http.lock');
 const LOCK_TIMEOUT = 30000; // 30 seconds max lock age
 
-import { PORT, ORACLE_DATA_DIR } from './config.ts';
+import { PORT, HANUMAN_DATA_DIR } from './config.ts';
 
 const HEALTH_URL = `http://localhost:${PORT}/api/health`;
 const SERVER_SCRIPT = path.join(import.meta.dirname || __dirname, 'server.ts');
 
-// Configure process manager to use oracle data dir
-configure({ dataDir: ORACLE_DATA_DIR, pidFileName: 'oracle-http.pid' });
+// Configure process manager to use hanuman data dir
+configure({ dataDir: HANUMAN_DATA_DIR, pidFileName: 'hanuman-http.pid' });
 
 export interface EnsureServerOptions {
   /** Timeout in ms to wait for server to be healthy (default: 10000) */
@@ -111,7 +111,7 @@ async function isServerHealthy(): Promise<boolean> {
 }
 
 /**
- * Ensure the Oracle HTTP server is running.
+ * Ensure the Hanuman HTTP server is running.
  * Returns true if server is ready, false if failed to start.
  */
 export async function ensureServerRunning(options: EnsureServerOptions = {}): Promise<boolean> {
@@ -122,24 +122,24 @@ export async function ensureServerRunning(options: EnsureServerOptions = {}): Pr
 
   // 1. Quick health check - maybe it's already running
   if (await isServerHealthy()) {
-    if (verbose) console.log('🔮 Oracle server already running');
+    if (verbose) console.log('🔮 Hanuman server already running');
     return true;
   }
 
   // 2. Check PID file - maybe process exists but not healthy yet
   const pidInfo = readPidFile();
   if (pidInfo && isProcessAlive(pidInfo.pid)) {
-    if (verbose) console.log(`🔮 Oracle server process exists (PID ${pidInfo.pid}), waiting for health...`);
+    if (verbose) console.log(`🔮 Hanuman server process exists (PID ${pidInfo.pid}), waiting for health...`);
 
     // Wait for it to become healthy
     const healthy = await waitForHealthWithTimeout(timeout);
     if (healthy) {
-      if (verbose) console.log('🔮 Oracle server is now healthy');
+      if (verbose) console.log('🔮 Hanuman server is now healthy');
       return true;
     }
 
     // Process exists but not responding - something's wrong
-    if (verbose) console.log('⚠️ Oracle server process exists but not responding');
+    if (verbose) console.log('⚠️ Hanuman server process exists but not responding');
   }
 
   // 3. Acquire lock to prevent race conditions
@@ -148,7 +148,7 @@ export async function ensureServerRunning(options: EnsureServerOptions = {}): Pr
     // Wait and re-check health
     const healthy = await waitForHealthWithTimeout(timeout);
     if (healthy) {
-      if (verbose) console.log('🔮 Oracle server is now healthy');
+      if (verbose) console.log('🔮 Hanuman server is now healthy');
       return true;
     }
     if (verbose) console.log('⚠️ Timed out waiting for other process to start server');
@@ -158,7 +158,7 @@ export async function ensureServerRunning(options: EnsureServerOptions = {}): Pr
   try {
     // 4. Re-check health after acquiring lock (another process may have started it)
     if (await isServerHealthy()) {
-      if (verbose) console.log('🔮 Oracle server already running');
+      if (verbose) console.log('🔮 Hanuman server already running');
       return true;
     }
 
@@ -169,30 +169,30 @@ export async function ensureServerRunning(options: EnsureServerOptions = {}): Pr
     }
 
     // 5. Start the server
-    if (verbose) console.log('🔮 Starting Oracle server...');
+    if (verbose) console.log('🔮 Starting Hanuman server...');
 
     const pid = spawnDaemon({
       scriptPath: SERVER_SCRIPT,
       port: PORT,
-      portEnvVar: 'ORACLE_PORT',
+      portEnvVar: 'HANUMAN_PORT',
       args: [], // No special args needed
     });
 
     if (!pid) {
-      if (verbose) console.log('❌ Failed to spawn Oracle server');
+      if (verbose) console.log('❌ Failed to spawn Hanuman server');
       return false;
     }
 
-    if (verbose) console.log(`🔮 Oracle server spawned (PID ${pid}), waiting for health...`);
+    if (verbose) console.log(`🔮 Hanuman server spawned (PID ${pid}), waiting for health...`);
 
     // 6. Wait for server to become healthy
     const healthy = await waitForHealthWithTimeout(timeout);
 
     if (healthy) {
-      if (verbose) console.log('✅ Oracle server is ready');
+      if (verbose) console.log('✅ Hanuman server is ready');
       return true;
     } else {
-      if (verbose) console.log('❌ Oracle server failed to become healthy');
+      if (verbose) console.log('❌ Hanuman server failed to become healthy');
       return false;
     }
   } finally {

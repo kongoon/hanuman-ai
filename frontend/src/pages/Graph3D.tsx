@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import * as THREE from 'three';
-import { getGraph, getFile } from '../api/oracle';
+import { getGraph, getFile } from '../api/hanuman';
 import { useHandTracking } from '../hooks/useHandTracking';
 import styles from './Graph3D.module.css';
 
@@ -136,7 +136,7 @@ function clusterNodes(nodes: Node[], links: Link[]): Map<string, number> {
   return clusters;
 }
 
-const STORAGE_KEY_VIEW = 'oracle-graph-view-mode';
+const STORAGE_KEY_VIEW = 'hanuman-graph-view-mode';
 
 export function Graph3D() {
   const containerRef = useRef<HTMLDivElement>(null);

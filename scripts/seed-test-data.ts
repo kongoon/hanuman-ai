@@ -15,13 +15,13 @@ const now = Date.now();
 
 // Insert test documents into main table
 const insertDoc = sqlite.prepare(`
-  INSERT OR IGNORE INTO oracle_documents (id, type, source_file, concepts, created_at, updated_at, indexed_at)
+  INSERT OR IGNORE INTO hanuman_documents (id, type, source_file, concepts, created_at, updated_at, indexed_at)
   VALUES (?, ?, ?, ?, ?, ?, ?)
 `);
 
 // Insert into FTS5 table for content search (3-column schema: id, content, concepts)
 const insertFts = sqlite.prepare(`
-  INSERT OR IGNORE INTO oracle_fts (id, content, concepts)
+  INSERT OR IGNORE INTO hanuman_fts (id, content, concepts)
   VALUES (?, ?, ?)
 `);
 
@@ -31,7 +31,7 @@ const testDocs = [
     type: 'principle',
     title: 'Nothing is Deleted',
     content: 'All data is preserved. History is append-only. Timestamps are truth.',
-    concepts: '["oracle", "philosophy", "data"]',
+    concepts: '["hanuman", "philosophy", "data"]',
     source_file: 'test/principle.md'
   },
   {

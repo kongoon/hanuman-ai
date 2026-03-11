@@ -1,5 +1,5 @@
 import type { Command } from 'commander';
-import { oracleFetch } from '../http.ts';
+import { hanumanFetch } from '../http.ts';
 import { printJson } from '../format.ts';
 
 export function registerStats(program: Command): void {
@@ -8,10 +8,10 @@ export function registerStats(program: Command): void {
     .description('Show knowledge base statistics')
     .option('--json', 'Output raw JSON')
     .action(async (opts) => {
-      const data = await oracleFetch('/api/stats');
+      const data = await hanumanFetch('/api/stats');
       if (opts.json) return printJson(data);
 
-      console.log('Oracle Knowledge Base Stats\n');
+      console.log('Hanuman Knowledge Base Stats\n');
       if (data.total !== undefined) console.log(`  Total documents: ${data.total}`);
       if (data.byType) {
         console.log('  By type:');

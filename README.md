@@ -1,6 +1,6 @@
-# Oracle Nightly - MCP Memory Layer
+# Hanuman Nightly - MCP Memory Layer
 
-> "The Oracle Keeps the Human Human" - now queryable via MCP
+> "The Hanuman Keeps the Human Human" - now queryable via MCP
 
 | | |
 |---|---|
@@ -9,19 +9,19 @@
 | **Created** | 2025-12-29 |
 | **Updated** | 2026-03-02 |
 
-TypeScript MCP server for semantic search over Oracle philosophy — SQLite FTS5 + ChromaDB hybrid search, HTTP API, and vault CLI.
+TypeScript MCP server for semantic search over Hanuman philosophy — SQLite FTS5 + ChromaDB hybrid search, HTTP API, and vault CLI.
 
 ## Architecture
 
 ```
-oracle-v2 (one package, two bins)
-├── bunx oracle-v2                          → MCP server (src/index.ts)
-├── bunx --package oracle-v2 oracle-vault   → Vault CLI (src/vault/cli.ts)
+hanuman-ai (one package, two bins)
+├── bunx hanuman-ai                          → MCP server (src/index.ts)
+├── bunx --package hanuman-ai hanuman-vault   → Vault CLI (src/vault/cli.ts)
 ├── bun run server                          → HTTP API (src/server.ts)
 └── bun run index                           → Indexer (src/indexer.ts)
 
-oracle-studio (separate repo)
-└── bunx oracle-studio                      → React dashboard
+hanuman-studio (separate repo)
+└── bunx hanuman-studio                      → React dashboard
 ```
 
 **Stack:**
@@ -40,25 +40,25 @@ Distributed via GitHub — no npm publish needed:
 
 ```bash
 # MCP server (stdio, for Claude Code)
-bunx --bun oracle-v2@github:Soul-Brews-Studio/oracle-v2#main
+bunx --bun hanuman-ai@github:Soul-Brews-Studio/hanuman-ai#main
 
 # Vault CLI (secondary bin — use --package)
-bunx --bun --package oracle-v2@github:Soul-Brews-Studio/oracle-v2#main oracle-vault --help
+bunx --bun --package hanuman-ai@github:Soul-Brews-Studio/hanuman-ai#main hanuman-vault --help
 ```
 
 ### Add to Claude Code
 
 ```bash
-claude mcp add oracle-v2 -- bunx --bun oracle-v2@github:Soul-Brews-Studio/oracle-v2#main
+claude mcp add hanuman-ai -- bunx --bun hanuman-ai@github:Soul-Brews-Studio/hanuman-ai#main
 ```
 
 Or in `~/.claude.json`:
 ```json
 {
   "mcpServers": {
-    "oracle-v2": {
+    "hanuman-ai": {
       "command": "bunx",
-      "args": ["--bun", "oracle-v2@github:Soul-Brews-Studio/oracle-v2#main"]
+      "args": ["--bun", "hanuman-ai@github:Soul-Brews-Studio/hanuman-ai#main"]
     }
   }
 }
@@ -67,8 +67,8 @@ Or in `~/.claude.json`:
 ### From source
 
 ```bash
-git clone https://github.com/Soul-Brews-Studio/oracle-v2.git
-cd oracle-v2 && bun install
+git clone https://github.com/Soul-Brews-Studio/hanuman-ai.git
+cd hanuman-ai && bun install
 bun run dev          # MCP server
 bun run server       # HTTP API on :47778
 ```
@@ -77,7 +77,7 @@ bun run server       # HTTP API on :47778
 <summary>Install script (legacy)</summary>
 
 ```bash
-curl -sSL https://raw.githubusercontent.com/Soul-Brews-Studio/oracle-v2/main/scripts/install.sh | bash
+curl -sSL https://raw.githubusercontent.com/Soul-Brews-Studio/hanuman-ai/main/scripts/install.sh | bash
 ```
 </details>
 
@@ -98,39 +98,39 @@ curl -sSL https://raw.githubusercontent.com/Soul-Brews-Studio/oracle-v2/main/scr
 
 | Tool | Description |
 |------|-------------|
-| `oracle_search` | Hybrid search (FTS5 + ChromaDB) |
-| `oracle_reflect` | Random wisdom |
-| `oracle_learn` | Add new patterns |
-| `oracle_list` | Browse documents |
-| `oracle_stats` | Database statistics |
-| `oracle_concepts` | List concept tags |
-| `oracle_supersede` | Mark documents as superseded |
-| `oracle_handoff` | Session handoff |
-| `oracle_inbox` | Inbox messages |
-| `oracle_verify` | Verify documents |
-| `oracle_thread` | Create thread |
-| `oracle_threads` | List threads |
-| `oracle_thread_read` | Read thread |
-| `oracle_thread_update` | Update thread |
-| `oracle_trace` | Create trace |
-| `oracle_trace_list` | List traces |
-| `oracle_trace_get` | Get trace |
-| `oracle_trace_link` | Link traces |
-| `oracle_trace_unlink` | Unlink traces |
-| `oracle_trace_chain` | Trace chain |
-| `oracle_schedule_add` | Add schedule entry |
-| `oracle_schedule_list` | List schedule |
+| `hanuman_search` | Hybrid search (FTS5 + ChromaDB) |
+| `hanuman_reflect` | Random wisdom |
+| `hanuman_learn` | Add new patterns |
+| `hanuman_list` | Browse documents |
+| `hanuman_stats` | Database statistics |
+| `hanuman_concepts` | List concept tags |
+| `hanuman_supersede` | Mark documents as superseded |
+| `hanuman_handoff` | Session handoff |
+| `hanuman_inbox` | Inbox messages |
+| `hanuman_verify` | Verify documents |
+| `hanuman_thread` | Create thread |
+| `hanuman_threads` | List threads |
+| `hanuman_thread_read` | Read thread |
+| `hanuman_thread_update` | Update thread |
+| `hanuman_trace` | Create trace |
+| `hanuman_trace_list` | List traces |
+| `hanuman_trace_get` | Get trace |
+| `hanuman_trace_link` | Link traces |
+| `hanuman_trace_unlink` | Unlink traces |
+| `hanuman_trace_chain` | Trace chain |
+| `hanuman_schedule_add` | Add schedule entry |
+| `hanuman_schedule_list` | List schedule |
 
 ## Vault CLI
 
-Global CLI for managing the Oracle knowledge vault:
+Global CLI for managing the Hanuman knowledge vault:
 
 ```bash
-oracle-vault init <owner/repo>    # Initialize vault with GitHub repo
-oracle-vault status               # Show config and pending changes
-oracle-vault sync                 # Commit + push to GitHub
-oracle-vault pull                 # Pull vault files into local ψ/
-oracle-vault migrate              # Seed vault from ghq repos
+hanuman-vault init <owner/repo>    # Initialize vault with GitHub repo
+hanuman-vault status               # Show config and pending changes
+hanuman-vault sync                 # Commit + push to GitHub
+hanuman-vault pull                 # Pull vault files into local ψ/
+hanuman-vault migrate              # Seed vault from ghq repos
 ```
 
 ## API Endpoints
@@ -165,7 +165,7 @@ bun db:studio     # Open Drizzle Studio GUI
 ## Project Structure
 
 ```
-oracle-v2/
+hanuman-ai/
 ├── src/
 │   ├── index.ts          # MCP server entry
 │   ├── server.ts         # HTTP API (Hono)
@@ -187,8 +187,8 @@ oracle-v2/
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `ORACLE_PORT` | `47778` | HTTP server port |
-| `ORACLE_REPO_ROOT` | `process.cwd()` | Knowledge base root |
+| `HANUMAN_PORT` | `47778` | HTTP server port |
+| `HANUMAN_REPO_ROOT` | `process.cwd()` | Knowledge base root |
 
 ## Testing
 

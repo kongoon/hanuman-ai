@@ -1,11 +1,11 @@
 #!/usr/bin/env bun
 /**
- * Index oracle knowledge with qwen3-embedding into a separate LanceDB collection.
+ * Index hanuman knowledge with qwen3-embedding into a separate LanceDB collection.
  * Runs alongside the default nomic-embed-text collection.
  *
  * Usage: bun src/scripts/index-qwen3.ts
  *
- * Creates: ~/.chromadb/oracle_knowledge_qwen3.lance/
+ * Creates: ~/.chromadb/hanuman_knowledge_qwen3.lance/
  * (same LanceDB dir as default, different table name)
  */
 
@@ -14,7 +14,7 @@ import { Database } from 'bun:sqlite';
 import { DB_PATH } from '../config.ts';
 
 const BATCH_SIZE = 50; // Smaller batches — qwen3 is slower per embedding
-const COLLECTION = 'oracle_knowledge_qwen3';
+const COLLECTION = 'hanuman_knowledge_qwen3';
 
 async function main() {
   console.log('=== Qwen3-Embedding Indexer ===');
@@ -22,9 +22,9 @@ async function main() {
   console.log(`Collection: ${COLLECTION}`);
   console.log(`Model: qwen3-embedding (4096 dims)`);
 
-  // Open oracle.db to read documents
+  // Open hanuman.db to read documents
   const db = new Database(DB_PATH, { readonly: true });
-  const total = db.query('SELECT COUNT(*) as count FROM oracle_documents').get() as { count: number };
+  const total = db.query('SELECT COUNT(*) as count FROM hanuman_documents').get() as { count: number };
   console.log(`Documents: ${total.count}`);
 
   // Create LanceDB store with qwen3
@@ -41,11 +41,11 @@ async function main() {
   try { await store.deleteCollection(); } catch {}
   await store.ensureCollection();
 
-  // Read all docs (join oracle_documents + oracle_fts for content, GROUP BY to dedupe FTS chunks)
+  // Read all docs (join hanuman_documents + hanuman_fts for content, GROUP BY to dedupe FTS chunks)
   const rows = db.query(`
     SELECT d.id, d.type, GROUP_CONCAT(f.content, '\n') as content, d.source_file, d.concepts, d.project, d.created_at
-    FROM oracle_documents d
-    JOIN oracle_fts f ON d.id = f.id
+    FROM hanuman_documents d
+    JOIN hanuman_fts f ON d.id = f.id
     GROUP BY d.id
     ORDER BY d.created_at DESC
   `).all() as Array<{

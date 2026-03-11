@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { learn } from '../api/oracle';
+import { learn } from '../api/hanuman';
 import styles from './QuickLearn.module.css';
 
 export function QuickLearn() {
@@ -47,11 +47,11 @@ export function QuickLearn() {
         setConcepts('');
 
         // Update session stats
-        const stored = localStorage.getItem('oracle_session');
+        const stored = localStorage.getItem('hanuman_session');
         if (stored) {
           const stats = JSON.parse(stored);
           stats.learnings = (stats.learnings || 0) + 1;
-          localStorage.setItem('oracle_session', JSON.stringify(stats));
+          localStorage.setItem('hanuman_session', JSON.stringify(stats));
         }
 
         // Auto close after success

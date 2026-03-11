@@ -1,10 +1,10 @@
 import { defineConfig } from 'drizzle-kit';
 import path from 'path';
 
-// Default to ~/.oracle/oracle.db (same as server)
-const ORACLE_DATA_DIR = process.env.ORACLE_DATA_DIR ||
-  path.join(process.env.HOME || '/tmp', '.oracle');
-const DB_PATH = process.env.ORACLE_DB_PATH || path.join(ORACLE_DATA_DIR, 'oracle.db');
+// Default to ~/.hanuman/hanuman.db (same as server)
+const HANUMAN_DATA_DIR = process.env.HANUMAN_DATA_DIR ||
+  path.join(process.env.HOME || '/tmp', '.hanuman');
+const DB_PATH = process.env.HANUMAN_DB_PATH || path.join(HANUMAN_DATA_DIR, 'hanuman.db');
 
 export default defineConfig({
   dialect: 'sqlite',
@@ -15,7 +15,7 @@ export default defineConfig({
   },
   // Tables managed by Drizzle (excludes FTS5 internal tables)
   tablesFilter: [
-    'oracle_documents',
+    'hanuman_documents',
     'indexing_status',
     'search_log',
     'consult_log',

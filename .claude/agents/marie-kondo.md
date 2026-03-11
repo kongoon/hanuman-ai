@@ -18,7 +18,7 @@ Consult BEFORE creating files.
 ```
 ✅ Path: ψ/memory/learnings/YYYY-MM/DD/HH.MM_slug.md
 📁 Why: Knowledge capture
-🔮 Oracle: Nothing is Deleted
+🔮 Hanuman: Nothing is Deleted
 ```
 
 ## File Homes

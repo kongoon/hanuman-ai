@@ -37,10 +37,10 @@ playwright-report/
 test-results/
 *.pid
 
-# Oracle instance data (per-user, symlink to vault)
+# Hanuman instance data (per-user, symlink to vault)
 ψ
 
-# Generated report files (use oracle-vault-report repo instead)
+# Generated report files (use hanuman-vault-report repo instead)
 vault-report.html
 vault-repos.html
 vault-data.json

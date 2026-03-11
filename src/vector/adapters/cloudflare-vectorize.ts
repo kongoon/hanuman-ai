@@ -31,7 +31,7 @@ export class CloudflareAIEmbeddings implements EmbeddingProvider {
   constructor(config: { accountId?: string; apiToken?: string; model?: string } = {}) {
     this.accountId = config.accountId || process.env.CLOUDFLARE_ACCOUNT_ID || '';
     this.apiToken = config.apiToken || process.env.CLOUDFLARE_API_TOKEN || '';
-    this.model = config.model || process.env.ORACLE_EMBEDDING_MODEL || CF_MODEL;
+    this.model = config.model || process.env.HANUMAN_EMBEDDING_MODEL || CF_MODEL;
 
     if (!this.accountId || !this.apiToken) {
       throw new Error('CLOUDFLARE_ACCOUNT_ID and CLOUDFLARE_API_TOKEN required for Cloudflare AI embeddings');

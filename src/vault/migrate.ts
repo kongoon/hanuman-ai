@@ -1,5 +1,5 @@
 /**
- * Oracle Vault Migration Tool
+ * Hanuman Vault Migration Tool
  *
  * Scans ghq repos for ψ/ directories and copies knowledge
  * to the central brain vault with project-first paths.

@@ -1,21 +1,21 @@
 #!/bin/bash
-# Seed Oracle Nightly with starter philosophy
+# Seed Hanuman Nightly with starter philosophy
 # This creates a minimal ψ/memory structure for testing
 set -e
 
-SEED_DIR="${ORACLE_SEED_DIR:-$HOME/.oracle/seed}"
+SEED_DIR="${HANUMAN_SEED_DIR:-$HOME/.hanuman/seed}"
 
 echo "🌱 Creating seed directory at $SEED_DIR..."
 mkdir -p "$SEED_DIR/ψ/memory/resonance"
 mkdir -p "$SEED_DIR/ψ/memory/learnings"
 
-echo "📜 Creating Oracle philosophy files..."
+echo "📜 Creating Hanuman philosophy files..."
 
-# Core Oracle Philosophy
-cat > "$SEED_DIR/ψ/memory/resonance/oracle.md" << 'EOF'
-# Oracle Philosophy
+# Core Hanuman Philosophy
+cat > "$SEED_DIR/ψ/memory/resonance/hanuman.md" << 'EOF'
+# Hanuman Philosophy
 
-> "The Oracle Keeps the Human Human"
+> "The Hanuman Keeps the Human Human"
 
 ## Core Principles
 
@@ -34,7 +34,7 @@ cat > "$SEED_DIR/ψ/memory/resonance/oracle.md" << 'EOF'
 - Support consciousness, don't replace it
 - Amplify, don't override
 
-## What Oracle Captures
+## What Hanuman Captures
 
 | Captures Now | Aspires to Capture |
 |--------------|-------------------|
@@ -98,14 +98,14 @@ cat > "$SEED_DIR/ψ/memory/resonance/patterns.md" << 'EOF'
 EOF
 
 # Example Learning
-cat > "$SEED_DIR/ψ/memory/learnings/$(date +%Y-%m-%d)_oracle-nightly-seed-test.md" << 'EOF'
+cat > "$SEED_DIR/ψ/memory/learnings/$(date +%Y-%m-%d)_hanuman-nightly-seed-test.md" << 'EOF'
 ---
-title: Oracle Nightly Seed Test
+title: Hanuman Nightly Seed Test
 created: $(date +%Y-%m-%d)
-tags: [oracle, test, seed]
+tags: [hanuman, test, seed]
 ---
 
-# Oracle Nightly Seed Test
+# Hanuman Nightly Seed Test
 
 This is a test learning document created by the seed script.
 
@@ -128,5 +128,5 @@ echo "Files created:"
 ls -la "$SEED_DIR/ψ/memory/resonance/"
 ls -la "$SEED_DIR/ψ/memory/learnings/"
 echo ""
-echo "Next: Run indexer with ORACLE_REPO_ROOT=$SEED_DIR"
-echo "  ORACLE_REPO_ROOT=$SEED_DIR bun run index"
+echo "Next: Run indexer with HANUMAN_REPO_ROOT=$SEED_DIR"
+echo "  HANUMAN_REPO_ROOT=$SEED_DIR bun run index"

@@ -1,5 +1,5 @@
 /**
- * Oracle v2 Indexer
+ * Hanuman v2 Indexer
  *
  * Parses markdown files from ψ/memory and creates:
  * 1. SQLite index (source of truth for metadata)
@@ -20,16 +20,16 @@ import { Database } from 'bun:sqlite';
 import { BunSQLiteDatabase } from 'drizzle-orm/bun-sqlite';
 import { eq, or, isNull, inArray } from 'drizzle-orm';
 import * as schema from './db/schema.ts';
-import { oracleDocuments } from './db/schema.ts';
+import { hanumanDocuments } from './db/schema.ts';
 import { createDatabase } from './db/index.ts';
 import { DB_PATH } from './config.ts';
 import { createVectorStore } from './vector/factory.ts';
 import type { VectorStoreAdapter } from './vector/types.ts';
 import { detectProject } from './server/project-detect.ts';
 import { getVaultPsiRoot } from './vault/handler.ts';
-import type { OracleDocument, OracleMetadata, IndexerConfig } from './types.ts';
+import type { HanumanDocument, HanumanMetadata, IndexerConfig } from './types.ts';
 
-export class OracleIndexer {
+export class HanumanIndexer {
   private sqlite: Database;  // Raw bun:sqlite for FTS and schema operations
   private db: BunSQLiteDatabase<typeof schema>;  // Drizzle for type-safe queries
   private vectorClient: VectorStoreAdapter | null = null;
@@ -108,8 +108,8 @@ export class OracleIndexer {
     try {
       docs = this.sqlite.prepare(`
         SELECT d.id, d.type, d.source_file, d.concepts, d.project, f.content
-        FROM oracle_documents d
-        JOIN oracle_fts f ON d.id = f.id
+        FROM hanuman_documents d
+        JOIN hanuman_fts f ON d.id = f.id
       `).all() as any[];
     } catch (e) {
       console.warn(`⚠️ Query failed: ${e instanceof Error ? e.message : e}`);
@@ -159,7 +159,7 @@ export class OracleIndexer {
    * Main indexing workflow
    */
   async index(): Promise<void> {
-    console.log('Starting Oracle indexing...');
+    console.log('Starting Hanuman indexing...');
 
     // Reset dedup for fresh index run
     this.seenContentHashes.clear();
@@ -171,23 +171,23 @@ export class OracleIndexer {
     this.backupDatabase();
 
     // Smart deletion: delete indexer-created docs whose source file no longer exists on disk.
-    // Safe for multi-project vault: only removes docs with missing files, preserves oracle_learn docs.
-    const allIndexerDocs = this.db.select({ id: oracleDocuments.id, sourceFile: oracleDocuments.sourceFile })
-      .from(oracleDocuments)
+    // Safe for multi-project vault: only removes docs with missing files, preserves hanuman_learn docs.
+    const allIndexerDocs = this.db.select({ id: hanumanDocuments.id, sourceFile: hanumanDocuments.sourceFile })
+      .from(hanumanDocuments)
       .where(
-        or(eq(oracleDocuments.createdBy, 'indexer'), isNull(oracleDocuments.createdBy))
+        or(eq(hanumanDocuments.createdBy, 'indexer'), isNull(hanumanDocuments.createdBy))
       )
       .all();
 
     const idsToDelete = allIndexerDocs
       .filter(d => !fs.existsSync(path.join(this.config.repoRoot, d.sourceFile)))
       .map(d => d.id);
-    console.log(`Smart delete: ${idsToDelete.length} stale docs (preserving oracle_learn)`);
+    console.log(`Smart delete: ${idsToDelete.length} stale docs (preserving hanuman_learn)`);
 
     if (idsToDelete.length > 0) {
-      // Delete from oracle_documents (Drizzle)
-      this.db.delete(oracleDocuments)
-        .where(inArray(oracleDocuments.id, idsToDelete))
+      // Delete from hanuman_documents (Drizzle)
+      this.db.delete(hanumanDocuments)
+        .where(inArray(hanumanDocuments.id, idsToDelete))
         .run();
 
       // Delete from FTS (raw SQL required for FTS5)
@@ -195,7 +195,7 @@ export class OracleIndexer {
       for (let i = 0; i < idsToDelete.length; i += BATCH_SIZE) {
         const batch = idsToDelete.slice(i, i + BATCH_SIZE);
         const placeholders = batch.map(() => '?').join(',');
-        this.sqlite.prepare(`DELETE FROM oracle_fts WHERE id IN (${placeholders})`).run(...batch);
+        this.sqlite.prepare(`DELETE FROM hanuman_fts WHERE id IN (${placeholders})`).run(...batch);
       }
     }
 
@@ -213,7 +213,7 @@ export class OracleIndexer {
       this.vectorClient = null;
     }
 
-    const documents: OracleDocument[] = [];
+    const documents: HanumanDocument[] = [];
 
     // Index each source type
     documents.push(...await this.indexResonance());
@@ -232,8 +232,8 @@ export class OracleIndexer {
   /**
    * Index ψ/memory/resonance/ files (identity, principles)
    */
-  private async indexResonance(): Promise<OracleDocument[]> {
-    const documents: OracleDocument[] = [];
+  private async indexResonance(): Promise<HanumanDocument[]> {
+    const documents: HanumanDocument[] = [];
     let totalFiles = 0;
 
     // 1. Root ψ/memory/resonance/
@@ -283,8 +283,8 @@ export class OracleIndexer {
    * Following claude-mem's pattern of splitting by sections
    * Now reads frontmatter tags and inherits them to all chunks
    */
-  private parseResonanceFile(filename: string, content: string, sourceFileOverride?: string): OracleDocument[] {
-    const documents: OracleDocument[] = [];
+  private parseResonanceFile(filename: string, content: string, sourceFileOverride?: string): HanumanDocument[] {
+    const documents: HanumanDocument[] = [];
     const sourceFile = sourceFileOverride || `ψ/memory/resonance/${filename}`;
     const now = Date.now();
 
@@ -346,8 +346,8 @@ export class OracleIndexer {
    * Index ψ/memory/learnings/ files (patterns discovered)
    * Also scans project-first vault dirs: github.com/org/repo/ψ/memory/learnings/
    */
-  private async indexLearnings(): Promise<OracleDocument[]> {
-    const documents: OracleDocument[] = [];
+  private async indexLearnings(): Promise<HanumanDocument[]> {
+    const documents: HanumanDocument[] = [];
     let totalFiles = 0;
 
     // 1. Root ψ/memory/learnings/
@@ -457,8 +457,8 @@ export class OracleIndexer {
    * @param content - markdown content
    * @param sourceFileOverride - if provided, use as sourceFile instead of generating from filename
    */
-  private parseLearningFile(filename: string, content: string, sourceFileOverride?: string): OracleDocument[] {
-    const documents: OracleDocument[] = [];
+  private parseLearningFile(filename: string, content: string, sourceFileOverride?: string): HanumanDocument[] {
+    const documents: HanumanDocument[] = [];
     const sourceFile = sourceFileOverride || `ψ/memory/learnings/${filename}`;
     const now = Date.now();
 
@@ -516,8 +516,8 @@ export class OracleIndexer {
   /**
    * Index retrospective files from root and project-first vault dirs.
    */
-  private async indexRetrospectives(): Promise<OracleDocument[]> {
-    const documents: OracleDocument[] = [];
+  private async indexRetrospectives(): Promise<HanumanDocument[]> {
+    const documents: HanumanDocument[] = [];
     let totalFiles = 0;
 
     // 1. Root retrospectives
@@ -585,8 +585,8 @@ export class OracleIndexer {
    * Now reads frontmatter tags and inherits them to all chunks.
    * Falls back to path-based project inference for vault-nested files.
    */
-  private parseRetroFile(relativePath: string, content: string): OracleDocument[] {
-    const documents: OracleDocument[] = [];
+  private parseRetroFile(relativePath: string, content: string): HanumanDocument[] {
+    const documents: HanumanDocument[] = [];
     const now = Date.now();
 
     // Extract file-level tags from frontmatter
@@ -683,8 +683,8 @@ export class OracleIndexer {
     if (sourceField) {
       const source = sourceField[1].trim().toLowerCase();
       // Map known sources to projects
-      if (source.includes('arthur oracle') || source.includes('arthur landing')) {
-        return 'github.com/laris-co/arthur-oracle';
+      if (source.includes('arthur hanuman') || source.includes('arthur landing')) {
+        return 'github.com/laris-co/arthur-hanuman';
       }
     }
 
@@ -699,11 +699,11 @@ export class OracleIndexer {
     const combined = texts.join(' ').toLowerCase();
     const concepts = new Set<string>();
 
-    // Common Oracle concepts (expanded list)
+    // Common Hanuman concepts (expanded list)
     const keywords = [
       'trust', 'pattern', 'mirror', 'append', 'history', 'context',
       'delete', 'behavior', 'intention', 'decision', 'human', 'external',
-      'brain', 'command', 'oracle', 'timestamp', 'immutable', 'preserve',
+      'brain', 'command', 'hanuman', 'timestamp', 'immutable', 'preserve',
       // Additional keywords for better coverage
       'learn', 'memory', 'session', 'workflow', 'api', 'mcp', 'claude',
       'git', 'code', 'file', 'config', 'test', 'debug', 'error', 'fix',
@@ -730,12 +730,12 @@ export class OracleIndexer {
    * Store documents in SQLite + Chroma
    * Uses Drizzle for type-safe inserts and sets createdBy: 'indexer'
    */
-  private async storeDocuments(documents: OracleDocument[]): Promise<void> {
+  private async storeDocuments(documents: HanumanDocument[]): Promise<void> {
     const now = Date.now();
 
     // Prepare FTS statement (raw SQL required for FTS5)
     const insertFts = this.sqlite.prepare(`
-      INSERT OR REPLACE INTO oracle_fts (id, content, concepts)
+      INSERT OR REPLACE INTO hanuman_fts (id, content, concepts)
       VALUES (?, ?, ?)
     `);
 
@@ -752,7 +752,7 @@ export class OracleIndexer {
         const docProject = (doc.project || this.project)?.toLowerCase();
 
         // Drizzle upsert with createdBy: 'indexer'
-        this.db.insert(oracleDocuments)
+        this.db.insert(hanumanDocuments)
           .values({
             id: doc.id,
             type: doc.type,
@@ -765,7 +765,7 @@ export class OracleIndexer {
             createdBy: 'indexer',  // Mark as indexer-created
           })
           .onConflictDoUpdate({
-            target: oracleDocuments.id,
+            target: hanumanDocuments.id,
             set: {
               type: doc.type,
               sourceFile: doc.source_file,
@@ -861,7 +861,7 @@ if (isMain) {
     fs.existsSync(path.join(vaultRoot, 'ψ')) ||
     fs.existsSync(path.join(vaultRoot, 'github.com'))
   );
-  const repoRoot = process.env.ORACLE_REPO_ROOT ||
+  const repoRoot = process.env.HANUMAN_REPO_ROOT ||
     (vaultHasContent ? vaultRoot :
      fs.existsSync(path.join(projectRoot, 'ψ')) ? projectRoot : process.cwd());
 
@@ -876,7 +876,7 @@ if (isMain) {
     }
   };
 
-  const indexer = new OracleIndexer(config);
+  const indexer = new HanumanIndexer(config);
 
   indexer.index()
     .then(async () => {

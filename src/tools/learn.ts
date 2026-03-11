@@ -1,5 +1,5 @@
 /**
- * Oracle Learn Handler
+ * Hanuman Learn Handler
  *
  * Add new patterns/learnings to the knowledge base.
  * Exports normalizeProject and extractProjectFromSource for testability.
@@ -7,10 +7,10 @@
 
 import path from 'path';
 import fs from 'fs';
-import { oracleDocuments } from '../db/schema.ts';
+import { hanumanDocuments } from '../db/schema.ts';
 import { detectProject } from '../server/project-detect.ts';
 import { getVaultPsiRoot } from '../vault/handler.ts';
-import type { ToolContext, ToolResponse, OracleLearnInput } from './types.ts';
+import type { ToolContext, ToolResponse, HanumanLearnInput } from './types.ts';
 
 /** Coerce concepts to string[] — handles string, array, or undefined from MCP input */
 export function coerceConcepts(concepts: unknown): string[] {
@@ -20,8 +20,8 @@ export function coerceConcepts(concepts: unknown): string[] {
 }
 
 export const learnToolDef = {
-  name: 'oracle_learn',
-  description: 'Add a new pattern or learning to the Oracle knowledge base. Creates a markdown file in ψ/memory/learnings/ and indexes it.',
+  name: 'hanuman_learn',
+  description: 'Add a new pattern or learning to the Hanuman knowledge base. Creates a markdown file in ψ/memory/learnings/ and indexes it.',
   inputSchema: {
     type: 'object',
     properties: {
@@ -31,7 +31,7 @@ export const learnToolDef = {
       },
       source: {
         type: 'string',
-        description: 'Optional source attribution (defaults to "Oracle Learn")'
+        description: 'Optional source attribution (defaults to "Hanuman Learn")'
       },
       concepts: {
         type: 'array',
@@ -80,13 +80,13 @@ export function normalizeProject(input?: string): string | null {
 
 /**
  * Extract project from source field (fallback).
- * Handles "oracle_learn from github.com/owner/repo" and "rrr: org/repo" formats.
+ * Handles "hanuman_learn from github.com/owner/repo" and "rrr: org/repo" formats.
  */
 export function extractProjectFromSource(source?: string): string | null {
   if (!source) return null;
 
-  const oracleLearnMatch = source.match(/from\s+(github\.com\/[^\/\s]+\/[^\/\s]+)/);
-  if (oracleLearnMatch) return oracleLearnMatch[1].toLowerCase();
+  const hanumanLearnMatch = source.match(/from\s+(github\.com\/[^\/\s]+\/[^\/\s]+)/);
+  if (hanumanLearnMatch) return hanumanLearnMatch[1].toLowerCase();
 
   const rrrMatch = source.match(/^rrr:\s*([^\/\s]+\/[^\/\s]+)/);
   if (rrrMatch) return `github.com/${rrrMatch[1]}`.toLowerCase();
@@ -101,7 +101,7 @@ export function extractProjectFromSource(source?: string): string | null {
 // Handler
 // ============================================================================
 
-export async function handleLearn(ctx: ToolContext, input: OracleLearnInput): Promise<ToolResponse> {
+export async function handleLearn(ctx: ToolContext, input: HanumanLearnInput): Promise<ToolResponse> {
   const { pattern, source, concepts, project: projectInput } = input;
   const now = new Date();
   const dateStr = now.toISOString().split('T')[0];
@@ -151,7 +151,7 @@ export async function handleLearn(ctx: ToolContext, input: OracleLearnInput): Pr
     `title: ${title}`,
     conceptsList.length > 0 ? `tags: [${conceptsList.join(', ')}]` : 'tags: []',
     `created: ${dateStr}`,
-    `source: ${source || 'Oracle Learn'}`,
+    `source: ${source || 'Hanuman Learn'}`,
     ...(project ? [`project: ${project}`] : []),
     '---',
     '',
@@ -160,7 +160,7 @@ export async function handleLearn(ctx: ToolContext, input: OracleLearnInput): Pr
     pattern,
     '',
     '---',
-    '*Added via Oracle Learn*',
+    '*Added via Hanuman Learn*',
     ''
   ].join('\n');
 
@@ -168,7 +168,7 @@ export async function handleLearn(ctx: ToolContext, input: OracleLearnInput): Pr
 
   const id = `learning_${dateStr}_${slug}`;
 
-  ctx.db.insert(oracleDocuments).values({
+  ctx.db.insert(hanumanDocuments).values({
     id,
     type: 'learning',
     sourceFile: sourceFileRel,
@@ -178,11 +178,11 @@ export async function handleLearn(ctx: ToolContext, input: OracleLearnInput): Pr
     indexedAt: now.getTime(),
     origin: null,
     project,
-    createdBy: 'oracle_learn',
+    createdBy: 'hanuman_learn',
   }).run();
 
   ctx.sqlite.prepare(`
-    INSERT INTO oracle_fts (id, content, concepts)
+    INSERT INTO hanuman_fts (id, content, concepts)
     VALUES (?, ?, ?)
   `).run(id, frontmatter, conceptsList.join(' '));
 
@@ -193,7 +193,7 @@ export async function handleLearn(ctx: ToolContext, input: OracleLearnInput): Pr
         success: true,
         file: sourceFileRel,
         id,
-        message: `Pattern added to Oracle knowledge base${vaultRoot ? ' (vault)' : ''}`
+        message: `Pattern added to Hanuman knowledge base${vaultRoot ? ' (vault)' : ''}`
       }, null, 2)
     }]
   };

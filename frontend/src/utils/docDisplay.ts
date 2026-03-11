@@ -2,7 +2,7 @@
  * Shared helper for computing document display info (project links, vault URLs, paths).
  * Used across DocDetail, Traces, Superseded, and LogCard (search results).
  *
- * Vault repo is read from /api/stats (configured via `oracle-vault init`).
+ * Vault repo is read from /api/stats (configured via `hanuman-vault init`).
  * No hardcoded defaults — each subscriber has their own vault.
  */
 
@@ -22,11 +22,11 @@ function getVaultBase(): string | null {
 export interface DocDisplayInfo {
   /** Clean display path (strips github.com/owner/repo/ prefix) */
   displayPath: string;
-  /** URL to the project's directory in oracle-vault, or null */
+  /** URL to the project's directory in hanuman-vault, or null */
   projectVaultUrl: string | null;
-  /** Short display name for the project (e.g. "soul-brews-studio/shrimp-oracle") */
+  /** Short display name for the project (e.g. "soul-brews-studio/shrimp-hanuman") */
   projectDisplay: string | null;
-  /** URL to the specific file in oracle-vault, or null if no vault configured */
+  /** URL to the specific file in hanuman-vault, or null if no vault configured */
   vaultUrl: string | null;
   /** URL to the file on the project's own GitHub repo (for "View on GitHub"), or null */
   fileUrl: string | null;

@@ -102,7 +102,7 @@ describe('createVectorStore factory', () => {
   });
 
   test('creates sqlite-vec', () => {
-    const tmpDb = path.join(os.tmpdir(), `oracle-test-factory-${Date.now()}.db`);
+    const tmpDb = path.join(os.tmpdir(), `hanuman-test-factory-${Date.now()}.db`);
     const store = createVectorStore({
       type: 'sqlite-vec',
       dataPath: tmpDb,
@@ -114,18 +114,18 @@ describe('createVectorStore factory', () => {
     try { fs.unlinkSync(tmpDb); } catch {}
   });
 
-  test('respects ORACLE_VECTOR_DB env', () => {
-    const orig = process.env.ORACLE_VECTOR_DB;
-    process.env.ORACLE_VECTOR_DB = 'sqlite-vec';
-    process.env.ORACLE_VECTOR_DB_PATH = '/tmp/oracle-test-env.db';
+  test('respects HANUMAN_VECTOR_DB env', () => {
+    const orig = process.env.HANUMAN_VECTOR_DB;
+    process.env.HANUMAN_VECTOR_DB = 'sqlite-vec';
+    process.env.HANUMAN_VECTOR_DB_PATH = '/tmp/hanuman-test-env.db';
 
     const store = createVectorStore();
     expect(store.name).toBe('sqlite-vec');
 
     // Restore
-    if (orig) process.env.ORACLE_VECTOR_DB = orig;
-    else delete process.env.ORACLE_VECTOR_DB;
-    delete process.env.ORACLE_VECTOR_DB_PATH;
+    if (orig) process.env.HANUMAN_VECTOR_DB = orig;
+    else delete process.env.HANUMAN_VECTOR_DB;
+    delete process.env.HANUMAN_VECTOR_DB_PATH;
   });
 });
 
@@ -143,7 +143,7 @@ describe('SqliteVecAdapter + Ollama', () => {
     available = await isOllamaAvailable();
     if (!available) return;
 
-    tmpDb = path.join(os.tmpdir(), `oracle-vec-test-${Date.now()}.db`);
+    tmpDb = path.join(os.tmpdir(), `hanuman-vec-test-${Date.now()}.db`);
     store = createVectorStore({
       type: 'sqlite-vec',
       dataPath: tmpDb,
@@ -166,7 +166,7 @@ describe('SqliteVecAdapter + Ollama', () => {
     await store.ensureCollection();
 
     const info = await store.getCollectionInfo();
-    expect(info.name).toBe('oracle_knowledge');
+    expect(info.name).toBe('hanuman_knowledge');
     expect(info.count).toBe(0);
   });
 
@@ -250,7 +250,7 @@ describe('ChromaMcpAdapter', () => {
   const setup = async () => {
     store = createVectorStore({
       type: 'chroma',
-      collectionName: 'oracle_test_adapter',
+      collectionName: 'hanuman_test_adapter',
     });
 
     try {
@@ -274,7 +274,7 @@ describe('ChromaMcpAdapter', () => {
 
     await store.ensureCollection();
     const info = await store.getCollectionInfo();
-    expect(info.name).toBe('oracle_test_adapter');
+    expect(info.name).toBe('hanuman_test_adapter');
   });
 
   test('addDocuments + query', async () => {
@@ -311,11 +311,11 @@ describe('LanceDBAdapter + Ollama', () => {
     available = await isOllamaAvailable();
     if (!available) return;
 
-    tmpDir = path.join(os.tmpdir(), `oracle-lance-test-${Date.now()}`);
+    tmpDir = path.join(os.tmpdir(), `hanuman-lance-test-${Date.now()}`);
     store = createVectorStore({
       type: 'lancedb',
       dataPath: tmpDir,
-      collectionName: 'oracle_test_lance',
+      collectionName: 'hanuman_test_lance',
       embeddingProvider: 'ollama',
     });
   };
@@ -335,7 +335,7 @@ describe('LanceDBAdapter + Ollama', () => {
     await store.ensureCollection();
 
     const info = await store.getCollectionInfo();
-    expect(info.name).toBe('oracle_test_lance');
+    expect(info.name).toBe('hanuman_test_lance');
     expect(info.count).toBe(0);
   });
 
@@ -427,7 +427,7 @@ describe('QdrantAdapter + Ollama', () => {
 
     store = createVectorStore({
       type: 'qdrant',
-      collectionName: 'oracle_test_qdrant',
+      collectionName: 'hanuman_test_qdrant',
       embeddingProvider: 'ollama',
     });
   };
@@ -447,7 +447,7 @@ describe('QdrantAdapter + Ollama', () => {
     await store.ensureCollection();
 
     const info = await store.getCollectionInfo();
-    expect(info.name).toBe('oracle_test_qdrant');
+    expect(info.name).toBe('hanuman_test_qdrant');
   });
 
   test('addDocuments', async () => {

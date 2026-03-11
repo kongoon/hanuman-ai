@@ -1,6 +1,6 @@
 /**
  * MCP (Model Context Protocol) Integration Tests
- * Tests oracle-v2 MCP tools via stdio transport
+ * Tests hanuman-ai MCP tools via stdio transport
  *
  * Requires MCP server to be startable. If the server can't connect,
  * tests fail with a clear message rather than silently skipping.
@@ -141,9 +141,9 @@ describe.skipIf(!MCP_TEST_ENABLED)("MCP Integration", () => {
 
       // Check for core tools
       const toolNames = result.tools.map((t) => t.name);
-      expect(toolNames).toContain("oracle_search");
-      expect(toolNames).toContain("oracle_list");
-      expect(toolNames).toContain("oracle_stats");
+      expect(toolNames).toContain("hanuman_search");
+      expect(toolNames).toContain("hanuman_list");
+      expect(toolNames).toContain("hanuman_stats");
     });
   });
 
@@ -151,9 +151,9 @@ describe.skipIf(!MCP_TEST_ENABLED)("MCP Integration", () => {
   // Read-Only Tools
   // ===================
   describe("Read-Only Tools", () => {
-    test("oracle_search returns results", async () => {
-      const result = await callTool("oracle_search", {
-        query: "oracle",
+    test("hanuman_search returns results", async () => {
+      const result = await callTool("hanuman_search", {
+        query: "hanuman",
         limit: 5,
       });
 
@@ -161,29 +161,29 @@ describe.skipIf(!MCP_TEST_ENABLED)("MCP Integration", () => {
       expect(typeof result).toBe("object");
     });
 
-    test("oracle_list returns documents", async () => {
-      const result = await callTool("oracle_list", {
+    test("hanuman_list returns documents", async () => {
+      const result = await callTool("hanuman_list", {
         limit: 10,
       });
 
       expect(result).toBeDefined();
     });
 
-    test("oracle_stats returns statistics", async () => {
-      const result = await callTool("oracle_stats", {});
+    test("hanuman_stats returns statistics", async () => {
+      const result = await callTool("hanuman_stats", {});
       expect(result).toBeDefined();
     });
 
-    test("oracle_concepts returns concept list", async () => {
-      const result = await callTool("oracle_concepts", {
+    test("hanuman_concepts returns concept list", async () => {
+      const result = await callTool("hanuman_concepts", {
         limit: 20,
       });
 
       expect(result).toBeDefined();
     });
 
-    test("oracle_reflect returns random wisdom", async () => {
-      const result = await callTool("oracle_reflect", {});
+    test("hanuman_reflect returns random wisdom", async () => {
+      const result = await callTool("hanuman_reflect", {});
       expect(result).toBeDefined();
     });
   });
@@ -192,16 +192,16 @@ describe.skipIf(!MCP_TEST_ENABLED)("MCP Integration", () => {
   // Thread Tools
   // ===================
   describe("Thread Tools", () => {
-    test("oracle_threads lists threads", async () => {
-      const result = await callTool("oracle_threads", {
+    test("hanuman_threads lists threads", async () => {
+      const result = await callTool("hanuman_threads", {
         limit: 10,
       });
 
       expect(result).toBeDefined();
     });
 
-    test("oracle_threads with status filter", async () => {
-      const result = await callTool("oracle_threads", {
+    test("hanuman_threads with status filter", async () => {
+      const result = await callTool("hanuman_threads", {
         status: "active",
         limit: 5,
       });
@@ -214,8 +214,8 @@ describe.skipIf(!MCP_TEST_ENABLED)("MCP Integration", () => {
   // Trace Tools
   // ===================
   describe("Trace Tools", () => {
-    test("oracle_trace_list returns traces", async () => {
-      const result = await callTool("oracle_trace_list", {
+    test("hanuman_trace_list returns traces", async () => {
+      const result = await callTool("hanuman_trace_list", {
         limit: 10,
       });
 
@@ -238,8 +238,8 @@ describe.skipIf(!MCP_TEST_ENABLED)("MCP Integration", () => {
 
     test("handles missing required params", async () => {
       try {
-        // oracle_search requires 'query' param
-        await callTool("oracle_search", {});
+        // hanuman_search requires 'query' param
+        await callTool("hanuman_search", {});
         // May or may not throw depending on implementation
       } catch (error) {
         expect(error).toBeDefined();

@@ -1,5 +1,5 @@
 /**
- * Oracle v2 Logging Functions
+ * Hanuman v2 Logging Functions
  *
  * Refactored to use Drizzle ORM for type-safe queries.
  */
@@ -96,7 +96,7 @@ export function logLearning(documentId: string, patternPreview: string, source: 
     db.insert(learnLog).values({
       documentId,
       patternPreview: patternPreview.substring(0, 100),
-      source: source || 'Oracle Learn',
+      source: source || 'Hanuman Learn',
       concepts: JSON.stringify(concepts),
       createdAt: Date.now(),
       project: project || null,

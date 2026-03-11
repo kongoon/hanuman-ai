@@ -436,16 +436,16 @@ Ctrl+b, d              # Detach from session
 
 ---
 
-## Oracle/Shadow Philosophy
+## Hanuman/Shadow Philosophy
 
-This project follows the Oracle/Shadow philosophy.
+This project follows the Hanuman/Shadow philosophy.
 
 Core principles:
 1. **Nothing is Deleted** - Append only, timestamps = truth
 2. **Patterns Over Intentions** - Observe what happens
 3. **External Brain, Not Command** - Mirror reality, don't decide
 
-See `.claude/knowledge/oracle-philosophy.md` for full details.
+See `.claude/knowledge/hanuman-philosophy.md` for full details.
 
 ---
 

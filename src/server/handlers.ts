@@ -1,5 +1,5 @@
 /**
- * Oracle v2 Core Request Handlers
+ * Hanuman v2 Core Request Handlers
  *
  * Partially migrated to Drizzle ORM. FTS5 operations remain as raw SQL
  * since Drizzle doesn't support virtual tables.
@@ -8,7 +8,7 @@
 import fs from 'fs';
 import path from 'path';
 import { eq, sql, or, inArray } from 'drizzle-orm';
-import { db, sqlite, oracleDocuments, indexingStatus } from '../db/index.ts';
+import { db, sqlite, hanumanDocuments, indexingStatus } from '../db/index.ts';
 import { REPO_ROOT } from '../config.ts';
 import { logSearch, logDocumentAccess, logLearning } from './logging.ts';
 import type { SearchResult, SearchResponse } from './types.ts';
@@ -23,7 +23,7 @@ async function getVectorStore(model?: string): Promise<VectorStoreAdapter> {
 }
 
 /**
- * Search Oracle knowledge base with hybrid search (FTS5 + Vector)
+ * Search Hanuman knowledge base with hybrid search (FTS5 + Vector)
  * HTTP server can safely use ChromaMcpClient since it's not an MCP server
  */
 export async function handleSearch(
@@ -60,17 +60,17 @@ export async function handleSearch(
     if (type === 'all') {
       const countStmt = sqlite.prepare(`
         SELECT COUNT(*) as total
-        FROM oracle_fts f
-        JOIN oracle_documents d ON f.id = d.id
-        WHERE oracle_fts MATCH ? AND ${projectFilter}
+        FROM hanuman_fts f
+        JOIN hanuman_documents d ON f.id = d.id
+        WHERE hanuman_fts MATCH ? AND ${projectFilter}
       `);
       ftsTotal = (countStmt.get(safeQuery, ...projectParams) as { total: number }).total;
 
       const stmt = sqlite.prepare(`
         SELECT f.id, f.content, d.type, d.source_file, d.concepts, d.project, rank as score
-        FROM oracle_fts f
-        JOIN oracle_documents d ON f.id = d.id
-        WHERE oracle_fts MATCH ? AND ${projectFilter}
+        FROM hanuman_fts f
+        JOIN hanuman_documents d ON f.id = d.id
+        WHERE hanuman_fts MATCH ? AND ${projectFilter}
         ORDER BY rank
         LIMIT ?
       `);
@@ -87,17 +87,17 @@ export async function handleSearch(
     } else {
       const countStmt = sqlite.prepare(`
         SELECT COUNT(*) as total
-        FROM oracle_fts f
-        JOIN oracle_documents d ON f.id = d.id
-        WHERE oracle_fts MATCH ? AND d.type = ? AND ${projectFilter}
+        FROM hanuman_fts f
+        JOIN hanuman_documents d ON f.id = d.id
+        WHERE hanuman_fts MATCH ? AND d.type = ? AND ${projectFilter}
       `);
       ftsTotal = (countStmt.get(safeQuery, type, ...projectParams) as { total: number }).total;
 
       const stmt = sqlite.prepare(`
         SELECT f.id, f.content, d.type, d.source_file, d.concepts, d.project, rank as score
-        FROM oracle_fts f
-        JOIN oracle_documents d ON f.id = d.id
-        WHERE oracle_fts MATCH ? AND d.type = ? AND ${projectFilter}
+        FROM hanuman_fts f
+        JOIN hanuman_documents d ON f.id = d.id
+        WHERE hanuman_fts MATCH ? AND d.type = ? AND ${projectFilter}
         ORDER BY rank
         LIMIT ?
       `);
@@ -136,9 +136,9 @@ export async function handleSearch(
         if (!chromaResults.ids || chromaResults.ids.length === 0) return [];
 
         // Get project metadata
-        const rows = db.select({ id: oracleDocuments.id, project: oracleDocuments.project })
-          .from(oracleDocuments)
-          .where(inArray(oracleDocuments.id, chromaResults.ids))
+        const rows = db.select({ id: hanumanDocuments.id, project: hanumanDocuments.project })
+          .from(hanumanDocuments)
+          .where(inArray(hanumanDocuments.id, chromaResults.ids))
           .all();
         const projectMap = new Map<string, string | null>();
         rows.forEach(r => projectMap.set(r.id, r.project));
@@ -286,15 +286,15 @@ function combineSearchResults(fts: SearchResult[], vector: SearchResult[]): Sear
 export function handleReflect() {
   // Get random document using Drizzle
   const randomDoc = db.select({
-    id: oracleDocuments.id,
-    type: oracleDocuments.type,
-    sourceFile: oracleDocuments.sourceFile,
-    concepts: oracleDocuments.concepts
+    id: hanumanDocuments.id,
+    type: hanumanDocuments.type,
+    sourceFile: hanumanDocuments.sourceFile,
+    concepts: hanumanDocuments.concepts
   })
-    .from(oracleDocuments)
+    .from(hanumanDocuments)
     .where(or(
-      eq(oracleDocuments.type, 'principle'),
-      eq(oracleDocuments.type, 'learning')
+      eq(hanumanDocuments.type, 'principle'),
+      eq(hanumanDocuments.type, 'learning')
     ))
     .orderBy(sql`RANDOM()`)
     .limit(1)
@@ -306,7 +306,7 @@ export function handleReflect() {
 
   // Get content from FTS (must use raw SQL)
   const content = sqlite.prepare(`
-    SELECT content FROM oracle_fts WHERE id = ?
+    SELECT content FROM hanuman_fts WHERE id = ?
   `).get(randomDoc.id) as { content: string } | undefined;
 
   if (!content) {
@@ -338,16 +338,16 @@ export function handleList(type: string = 'all', limit: number = 10, offset: num
     // Group by source_file to avoid duplicate entries from same file
     if (type === 'all') {
       // Count distinct files using Drizzle
-      const countResult = db.select({ total: sql<number>`count(distinct ${oracleDocuments.sourceFile})` })
-        .from(oracleDocuments)
+      const countResult = db.select({ total: sql<number>`count(distinct ${hanumanDocuments.sourceFile})` })
+        .from(hanumanDocuments)
         .get();
       const total = countResult?.total || 0;
 
       // Need raw SQL for FTS JOIN with GROUP BY
       const stmt = sqlite.prepare(`
         SELECT d.id, d.type, d.source_file, d.concepts, d.project, MAX(d.indexed_at) as indexed_at, f.content
-        FROM oracle_documents d
-        JOIN oracle_fts f ON d.id = f.id
+        FROM hanuman_documents d
+        JOIN hanuman_fts f ON d.id = f.id
         GROUP BY d.source_file
         ORDER BY indexed_at DESC
         LIMIT ? OFFSET ?
@@ -365,17 +365,17 @@ export function handleList(type: string = 'all', limit: number = 10, offset: num
       return { results, total, offset, limit };
     } else {
       // Count distinct files for type using Drizzle
-      const countResult = db.select({ total: sql<number>`count(distinct ${oracleDocuments.sourceFile})` })
-        .from(oracleDocuments)
-        .where(eq(oracleDocuments.type, type))
+      const countResult = db.select({ total: sql<number>`count(distinct ${hanumanDocuments.sourceFile})` })
+        .from(hanumanDocuments)
+        .where(eq(hanumanDocuments.type, type))
         .get();
       const total = countResult?.total || 0;
 
       // Need raw SQL for FTS JOIN with GROUP BY
       const stmt = sqlite.prepare(`
         SELECT d.id, d.type, d.source_file, d.concepts, d.project, MAX(d.indexed_at) as indexed_at, f.content
-        FROM oracle_documents d
-        JOIN oracle_fts f ON d.id = f.id
+        FROM hanuman_documents d
+        JOIN hanuman_fts f ON d.id = f.id
         WHERE d.type = ?
         GROUP BY d.source_file
         ORDER BY indexed_at DESC
@@ -399,15 +399,15 @@ export function handleList(type: string = 'all', limit: number = 10, offset: num
   if (type === 'all') {
     // Count using Drizzle
     const countResult = db.select({ total: sql<number>`count(*)` })
-      .from(oracleDocuments)
+      .from(hanumanDocuments)
       .get();
     const total = countResult?.total || 0;
 
     // Need raw SQL for FTS JOIN
     const stmt = sqlite.prepare(`
       SELECT d.id, d.type, d.source_file, d.concepts, d.project, d.indexed_at, f.content
-      FROM oracle_documents d
-      JOIN oracle_fts f ON d.id = f.id
+      FROM hanuman_documents d
+      JOIN hanuman_fts f ON d.id = f.id
       ORDER BY d.indexed_at DESC
       LIMIT ? OFFSET ?
     `);
@@ -425,16 +425,16 @@ export function handleList(type: string = 'all', limit: number = 10, offset: num
   } else {
     // Count using Drizzle
     const countResult = db.select({ total: sql<number>`count(*)` })
-      .from(oracleDocuments)
-      .where(eq(oracleDocuments.type, type))
+      .from(hanumanDocuments)
+      .where(eq(hanumanDocuments.type, type))
       .get();
     const total = countResult?.total || 0;
 
     // Need raw SQL for FTS JOIN
     const stmt = sqlite.prepare(`
       SELECT d.id, d.type, d.source_file, d.concepts, d.project, d.indexed_at, f.content
-      FROM oracle_documents d
-      JOIN oracle_fts f ON d.id = f.id
+      FROM hanuman_documents d
+      JOIN hanuman_fts f ON d.id = f.id
       WHERE d.type = ?
       ORDER BY d.indexed_at DESC
       LIMIT ? OFFSET ?
@@ -459,22 +459,22 @@ export function handleList(type: string = 'all', limit: number = 10, offset: num
 export function handleStats(dbPath: string) {
   // Total documents using Drizzle
   const totalDocsResult = db.select({ count: sql<number>`count(*)` })
-    .from(oracleDocuments)
+    .from(hanumanDocuments)
     .get();
   const totalDocs = totalDocsResult?.count || 0;
 
   // Count by type using Drizzle
   const byTypeResults = db.select({
-    type: oracleDocuments.type,
+    type: hanumanDocuments.type,
     count: sql<number>`count(*)`
   })
-    .from(oracleDocuments)
-    .groupBy(oracleDocuments.type)
+    .from(hanumanDocuments)
+    .groupBy(hanumanDocuments.type)
     .all();
 
   // Get last indexed timestamp using Drizzle
-  const lastIndexedResult = db.select({ lastIndexed: sql<number | null>`max(${oracleDocuments.indexedAt})` })
-    .from(oracleDocuments)
+  const lastIndexedResult = db.select({ lastIndexed: sql<number | null>`max(${hanumanDocuments.indexedAt})` })
+    .from(hanumanDocuments)
     .get();
 
   const lastIndexedDate = lastIndexedResult?.lastIndexed
@@ -513,11 +513,11 @@ export function handleStats(dbPath: string) {
 
   // Unique files by type (deduped by source_file)
   const uniqueByType = db.select({
-    type: oracleDocuments.type,
-    count: sql<number>`count(DISTINCT ${oracleDocuments.sourceFile})`
+    type: hanumanDocuments.type,
+    count: sql<number>`count(DISTINCT ${hanumanDocuments.sourceFile})`
   })
-    .from(oracleDocuments)
-    .groupBy(oracleDocuments.type)
+    .from(hanumanDocuments)
+    .groupBy(hanumanDocuments.type)
     .all();
 
   return {
@@ -549,31 +549,31 @@ export function handleGraph(limitPerType = 310) {
   const perType = Math.min(Math.max(limitPerType, 10), 500);
 
   const selectFields = {
-    id: oracleDocuments.id,
-    type: oracleDocuments.type,
-    sourceFile: oracleDocuments.sourceFile,
-    concepts: oracleDocuments.concepts,
-    project: oracleDocuments.project
+    id: hanumanDocuments.id,
+    type: hanumanDocuments.type,
+    sourceFile: hanumanDocuments.sourceFile,
+    concepts: hanumanDocuments.concepts,
+    project: hanumanDocuments.project
   };
 
   // Get random sample from each type
   const principles = db.select(selectFields)
-    .from(oracleDocuments)
-    .where(eq(oracleDocuments.type, 'principle'))
+    .from(hanumanDocuments)
+    .where(eq(hanumanDocuments.type, 'principle'))
     .orderBy(sql`RANDOM()`)
     .limit(perType)
     .all();
 
   const learnings = db.select(selectFields)
-    .from(oracleDocuments)
-    .where(eq(oracleDocuments.type, 'learning'))
+    .from(hanumanDocuments)
+    .where(eq(hanumanDocuments.type, 'learning'))
     .orderBy(sql`RANDOM()`)
     .limit(perType)
     .all();
 
   const retros = db.select(selectFields)
-    .from(oracleDocuments)
-    .where(eq(oracleDocuments.type, 'retro'))
+    .from(hanumanDocuments)
+    .where(eq(hanumanDocuments.type, 'retro'))
     .orderBy(sql`RANDOM()`)
     .limit(perType)
     .all();
@@ -631,14 +631,14 @@ export async function handleSimilar(
 
     // Enrich with SQLite data (concepts, project)
     const rows = db.select({
-      id: oracleDocuments.id,
-      type: oracleDocuments.type,
-      sourceFile: oracleDocuments.sourceFile,
-      concepts: oracleDocuments.concepts,
-      project: oracleDocuments.project
+      id: hanumanDocuments.id,
+      type: hanumanDocuments.type,
+      sourceFile: hanumanDocuments.sourceFile,
+      concepts: hanumanDocuments.concepts,
+      project: hanumanDocuments.project
     })
-      .from(oracleDocuments)
-      .where(inArray(oracleDocuments.id, chromaResults.ids))
+      .from(hanumanDocuments)
+      .where(inArray(hanumanDocuments.id, chromaResults.ids))
       .all();
 
     const docMap = new Map(rows.map(r => [r.id, r]));
@@ -710,14 +710,14 @@ export async function handleMap(): Promise<{
   try {
     // Get all docs from SQLite (no ChromaDB dependency)
     const allDocs = db.select({
-      id: oracleDocuments.id,
-      type: oracleDocuments.type,
-      sourceFile: oracleDocuments.sourceFile,
-      concepts: oracleDocuments.concepts,
-      project: oracleDocuments.project,
-      createdAt: oracleDocuments.createdAt
+      id: hanumanDocuments.id,
+      type: hanumanDocuments.type,
+      sourceFile: hanumanDocuments.sourceFile,
+      concepts: hanumanDocuments.concepts,
+      project: hanumanDocuments.project,
+      createdAt: hanumanDocuments.createdAt
     })
-      .from(oracleDocuments)
+      .from(hanumanDocuments)
       .all();
 
     if (allDocs.length === 0) {
@@ -912,15 +912,15 @@ export async function handleMap3d(model?: string): Promise<{
     for (let i = 0; i < ids.length; i += batchSize) {
       const batch = ids.slice(i, i + batchSize);
       const rows = db.select({
-        id: oracleDocuments.id,
-        type: oracleDocuments.type,
-        sourceFile: oracleDocuments.sourceFile,
-        concepts: oracleDocuments.concepts,
-        project: oracleDocuments.project,
-        createdAt: oracleDocuments.createdAt,
+        id: hanumanDocuments.id,
+        type: hanumanDocuments.type,
+        sourceFile: hanumanDocuments.sourceFile,
+        concepts: hanumanDocuments.concepts,
+        project: hanumanDocuments.project,
+        createdAt: hanumanDocuments.createdAt,
       })
-        .from(oracleDocuments)
-        .where(inArray(oracleDocuments.id, batch))
+        .from(hanumanDocuments)
+        .where(inArray(hanumanDocuments.id, batch))
         .all();
 
       for (const row of rows) {
@@ -1184,7 +1184,7 @@ export async function handleVectorStats(): Promise<{
   vector: { enabled: boolean; count: number; collection: string };
   vectors?: Array<{ key: string; model: string; collection: string; count: number; enabled: boolean }>;
 }> {
-  const timeout = parseInt(process.env.ORACLE_CHROMA_TIMEOUT || '5000', 10);
+  const timeout = parseInt(process.env.HANUMAN_CHROMA_TIMEOUT || '5000', 10);
   const models = getEmbeddingModels();
   const engines: Array<{ key: string; model: string; collection: string; count: number; enabled: boolean }> = [];
 
@@ -1212,7 +1212,7 @@ export async function handleVectorStats(): Promise<{
     vector: {
       enabled: primary?.enabled ?? false,
       count: primary?.count ?? 0,
-      collection: primary?.collection ?? 'oracle_knowledge_bge_m3'
+      collection: primary?.collection ?? 'hanuman_knowledge_bge_m3'
     },
     vectors: engines,
   };
@@ -1265,7 +1265,7 @@ export function handleLearn(
     `title: ${title}`,
     concepts && concepts.length > 0 ? `tags: [${concepts.join(', ')}]` : 'tags: []',
     `created: ${dateStr}`,
-    `source: ${source || 'Oracle Learn'}`,
+    `source: ${source || 'Hanuman Learn'}`,
     '---',
     '',
     `# ${title}`,
@@ -1273,7 +1273,7 @@ export function handleLearn(
     pattern,
     '',
     '---',
-    '*Added via Oracle Learn*',
+    '*Added via Hanuman Learn*',
     ''
   ].join('\n');
 
@@ -1286,7 +1286,7 @@ export function handleLearn(
   const conceptsList = coerceConcepts(concepts);
 
   // Insert into database with provenance using Drizzle
-  db.insert(oracleDocuments).values({
+  db.insert(hanumanDocuments).values({
     id,
     type: 'learning',
     sourceFile: `ψ/memory/learnings/${filename}`,
@@ -1296,12 +1296,12 @@ export function handleLearn(
     indexedAt: now.getTime(),
     origin: origin || null,          // origin: null = universal/mother
     project: resolvedProject || null, // project: null = universal (auto-detected from cwd)
-    createdBy: 'oracle_learn'
+    createdBy: 'hanuman_learn'
   }).run();
 
   // Insert into FTS (must use raw SQL - Drizzle doesn't support virtual tables)
   sqlite.prepare(`
-    INSERT INTO oracle_fts (id, content, concepts)
+    INSERT INTO hanuman_fts (id, content, concepts)
     VALUES (?, ?, ?)
   `).run(
     id,
@@ -1310,7 +1310,7 @@ export function handleLearn(
   );
 
   // Log the learning
-  logLearning(id, pattern, source || 'Oracle Learn', conceptsList);
+  logLearning(id, pattern, source || 'Hanuman Learn', conceptsList);
 
   return {
     success: true,

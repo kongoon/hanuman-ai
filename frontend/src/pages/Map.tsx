@@ -4,8 +4,8 @@ import * as THREE from 'three';
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
 import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js';
-import { getMap, getStats, search } from '../api/oracle';
-import type { MapDocument, Stats } from '../api/oracle';
+import { getMap, getStats, search } from '../api/hanuman';
+import type { MapDocument, Stats } from '../api/hanuman';
 import styles from './Map.module.css';
 
 const TYPE_COLORS: Record<string, string> = {

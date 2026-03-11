@@ -1,5 +1,5 @@
 import type { Command } from 'commander';
-import { oracleFetch } from '../http.ts';
+import { hanumanFetch } from '../http.ts';
 import { printJson } from '../format.ts';
 
 export function registerLearn(program: Command): void {
@@ -14,7 +14,7 @@ export function registerLearn(program: Command): void {
     .option('--json', 'Output raw JSON')
     .action(async (opts) => {
       const concepts = opts.concepts?.split(',').map((s: string) => s.trim());
-      const data = await oracleFetch('/api/learn', {
+      const data = await hanumanFetch('/api/learn', {
         method: 'POST',
         body: {
           pattern: opts.pattern,

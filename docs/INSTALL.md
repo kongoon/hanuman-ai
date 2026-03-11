@@ -1,15 +1,15 @@
-# Oracle Nightly Installation Guide
+# Hanuman Nightly Installation Guide
 
 Complete guide for fresh installation with seed data.
 
 ## Quick Install (Recommended)
 
 ```bash
-curl -sSL https://raw.githubusercontent.com/Soul-Brews-Studio/oracle-v2/main/scripts/fresh-install.sh | bash
+curl -sSL https://raw.githubusercontent.com/Soul-Brews-Studio/hanuman-ai/main/scripts/fresh-install.sh | bash
 ```
 
 This one-liner will:
-1. Clone to `~/.local/share/oracle-v2`
+1. Clone to `~/.local/share/hanuman-ai`
 2. Install dependencies
 3. Create seed philosophy files
 4. Index seed data (29 documents)
@@ -19,13 +19,13 @@ This one-liner will:
 
 ### Installation Directory
 ```
-~/.local/share/oracle-v2/    # Code
-~/.oracle/                 # Data
-├── oracle.db                 # SQLite database
+~/.local/share/hanuman-ai/    # Code
+~/.hanuman/                 # Data
+├── hanuman.db                 # SQLite database
 └── seed/                     # Seed philosophy files
     └── ψ/memory/
         ├── resonance/        # Core principles
-        │   ├── oracle.md
+        │   ├── hanuman.md
         │   ├── patterns.md
         │   └── style.md
         └── learnings/        # Example learning
@@ -33,7 +33,7 @@ This one-liner will:
 
 ### Seed Philosophy Content
 
-**oracle.md** - Core Oracle Philosophy:
+**hanuman.md** - Core Hanuman Philosophy:
 - Nothing is Deleted (append only)
 - Patterns Over Intentions (observe behavior)
 - External Brain, Not Command (mirror, don't decide)
@@ -50,7 +50,7 @@ This one-liner will:
 
 ### 1. Start Server
 ```bash
-cd ~/.local/share/oracle-v2
+cd ~/.local/share/hanuman-ai
 bun run server
 ```
 
@@ -74,9 +74,9 @@ Add to `~/.claude.json`:
 ```json
 {
   "mcpServers": {
-    "oracle-v2": {
+    "hanuman-ai": {
       "command": "bun",
-      "args": ["run", "~/.local/share/oracle-v2/src/index.ts"]
+      "args": ["run", "~/.local/share/hanuman-ai/src/index.ts"]
     }
   }
 }
@@ -88,8 +88,8 @@ If you prefer step-by-step:
 
 ```bash
 # 1. Clone
-git clone https://github.com/Soul-Brews-Studio/oracle-v2.git ~/.local/share/oracle-v2
-cd ~/.local/share/oracle-v2
+git clone https://github.com/Soul-Brews-Studio/hanuman-ai.git ~/.local/share/hanuman-ai
+cd ~/.local/share/hanuman-ai
 
 # 2. Install dependencies
 bun install
@@ -101,7 +101,7 @@ bun run db:push
 ./scripts/seed.sh
 
 # 5. Index seed data
-ORACLE_REPO_ROOT=~/.oracle/seed bun run index
+HANUMAN_REPO_ROOT=~/.hanuman/seed bun run index
 
 # 6. Start server
 bun run server
@@ -112,7 +112,7 @@ bun run server
 To index your own ψ/memory files:
 
 ```bash
-ORACLE_REPO_ROOT=/path/to/your/repo bun run index
+HANUMAN_REPO_ROOT=/path/to/your/repo bun run index
 ```
 
 The indexer scans:
@@ -132,7 +132,7 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
 bun run server
 ```
 
-Without uvx, Oracle falls back to FTS5-only search (still works).
+Without uvx, Hanuman falls back to FTS5-only search (still works).
 
 ## Troubleshooting
 
@@ -149,10 +149,10 @@ bun run server
 Directory structure must be `ψ/memory/` not just `memory/`:
 ```bash
 # Wrong
-~/.oracle/seed/memory/resonance/
+~/.hanuman/seed/memory/resonance/
 
 # Correct
-~/.oracle/seed/ψ/memory/resonance/
+~/.hanuman/seed/ψ/memory/resonance/
 ```
 
 ### Vector search unavailable warning
@@ -165,8 +165,8 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
 ## Uninstall
 
 ```bash
-rm -rf ~/.local/share/oracle-v2
-rm -rf ~/.oracle
+rm -rf ~/.local/share/hanuman-ai
+rm -rf ~/.hanuman
 ```
 
 ---

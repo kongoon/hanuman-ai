@@ -73,8 +73,8 @@
             padding-top: 80px;
         }
 
-        /* Oracle core visualization */
-        .oracle-core {
+        /* Hanuman core visualization */
+        .hanuman-core {
             position: relative;
             width: 200px;
             height: 200px;
@@ -183,7 +183,7 @@
             text-align: right;
         }
 
-        .message.oracle {
+        .message.hanuman {
             background: rgba(0, 195, 255, 0.15);
             margin-right: 20%;
             border-left: 3px solid rgba(0, 195, 255, 0.5);
@@ -373,7 +373,7 @@
     <div class="grid-bg"></div>
 
     <div class="header-bar">
-        <a href="/oracle" class="nav-link">ORACLE KNOWLEDGE</a>
+        <a href="/hanuman" class="nav-link">HANUMAN KNOWLEDGE</a>
         <div class="info-panel">
             <div class="status-item">
                 <span class="status-dot"></span>
@@ -398,7 +398,7 @@
     <div class="container">
         <div class="title">ARTHUR <span>AI ASSISTANT</span></div>
 
-        <div class="oracle-core">
+        <div class="hanuman-core">
             <div class="core-ring"></div>
             <div class="core-ring"></div>
             <div class="core-ring"></div>
@@ -408,7 +408,7 @@
         <div class="status" id="status">Awaiting Input</div>
 
         <div class="conversation" id="conversation">
-            <div class="message oracle">
+            <div class="message hanuman">
                 <div class="label">Arthur</div>
                 Good morning. I'm Arthur, your AI assistant. How may I help you today?
             </div>
@@ -486,7 +486,7 @@
                     // Update RAG status
                     const ragStatus = document.getElementById('rag-status');
                     const ragDot = document.getElementById('rag-dot');
-                    if (data.oracleV2 === 'connected') {
+                    if (data.hanumanV2 === 'connected') {
                         ragStatus.textContent = 'Active (5.5K)';
                         ragStatus.style.color = '#64ff96';
                         if (ragDot) ragDot.className = 'status-dot';
@@ -513,7 +513,7 @@
         }
 
         // Ask real Claude via server
-        async function askRealOracle(question) {
+        async function askRealHanuman(question) {
             try {
                 const res = await fetch(`${API_URL}/api/ask`, {
                     method: 'POST',
@@ -523,7 +523,7 @@
                 const data = await res.json();
                 return data.response || data.error || 'No response';
             } catch (e) {
-                console.error('[Oracle] Server error:', e);
+                console.error('[Hanuman] Server error:', e);
                 return 'I apologize, but I am having trouble connecting. Please try again.';
             }
         }
@@ -589,7 +589,7 @@
 
         function startListening() {
             if (!recognition) {
-                addMessage('oracle', "Voice recognition not supported in this browser. Try Chrome.");
+                addMessage('hanuman', "Voice recognition not supported in this browser. Try Chrome.");
                 return;
             }
 
@@ -627,7 +627,7 @@
 
             if (useRealAI) {
                 // Real AI via server
-                response = await askRealOracle(text);
+                response = await askRealHanuman(text);
             } else {
                 // Demo mode - use pre-programmed responses
                 const lower = text.toLowerCase();
@@ -642,7 +642,7 @@
             }
 
             document.getElementById('status').textContent = 'Awaiting Input';
-            addMessage('oracle', response);  // click to open modal
+            addMessage('hanuman', response);  // click to open modal
             speak(response);
         }
 
@@ -666,7 +666,7 @@
             conv.scrollTop = conv.scrollHeight;
 
             // Auto-open modal for Arthur's responses
-            if (autoOpen && type === 'oracle') {
+            if (autoOpen && type === 'hanuman') {
                 openModal(text, type);
             }
         }

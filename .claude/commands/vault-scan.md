@@ -13,7 +13,7 @@ Scan all ghq repos, show which have real (non-symlinked) `ψ/` dirs eligible for
 
 ```
 /vault-scan              # CLI summary
-/vault-scan --report     # Generate HTML dashboard (via oracle-vault-report repo)
+/vault-scan --report     # Generate HTML dashboard (via hanuman-vault-report repo)
 ```
 
 ## Action
@@ -29,7 +29,7 @@ Run the vault-rsync script in list mode and gather vault status:
 # 2. Count total repos with ψ (symlinked vs real)
 echo "=== Vault Overview ==="
 GHQ_ROOT="$(ghq root)"
-VAULT="$(ghq list -p | grep '/oracle-vault$' | head -1)"
+VAULT="$(ghq list -p | grep '/hanuman-vault$' | head -1)"
 sym=0; real=0; total=0
 for repo in $(ghq list -p); do
   if [ -L "$repo/ψ" ]; then sym=$((sym+1)); total=$((total+1))
@@ -52,10 +52,10 @@ Then present a markdown summary table.
 
 ### HTML Report (--report)
 
-The report generator lives in a separate repo: `oracle-vault-report`
+The report generator lives in a separate repo: `hanuman-vault-report`
 
 ```bash
-REPORT_REPO="$(ghq list -p | grep oracle-vault-report | head -1)"
+REPORT_REPO="$(ghq list -p | grep hanuman-vault-report | head -1)"
 cd "$REPORT_REPO" && node generate.mjs && open index.html
 ```
 

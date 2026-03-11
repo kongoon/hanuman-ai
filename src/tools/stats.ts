@@ -1,16 +1,16 @@
 /**
- * Oracle Stats Handler
+ * Hanuman Stats Handler
  *
  * Knowledge base statistics and health status.
  */
 
 import { sql, and, ne, isNotNull } from 'drizzle-orm';
-import { oracleDocuments } from '../db/schema.ts';
-import type { ToolContext, ToolResponse, OracleStatsInput } from './types.ts';
+import { hanumanDocuments } from '../db/schema.ts';
+import type { ToolContext, ToolResponse, HanumanStatsInput } from './types.ts';
 
 export const statsToolDef = {
-  name: 'oracle_stats',
-  description: 'Get Oracle knowledge base statistics and health status. Returns document counts by type, indexing status, and ChromaDB connection status.',
+  name: 'hanuman_stats',
+  description: 'Get Hanuman knowledge base statistics and health status. Returns document counts by type, indexing status, and ChromaDB connection status.',
   inputSchema: {
     type: 'object',
     properties: {},
@@ -18,13 +18,13 @@ export const statsToolDef = {
   }
 };
 
-export async function handleStats(ctx: ToolContext, _input: OracleStatsInput): Promise<ToolResponse> {
+export async function handleStats(ctx: ToolContext, _input: HanumanStatsInput): Promise<ToolResponse> {
   const typeCounts = ctx.db.select({
-    type: oracleDocuments.type,
+    type: hanumanDocuments.type,
     count: sql<number>`count(*)`,
   })
-    .from(oracleDocuments)
-    .groupBy(oracleDocuments.type)
+    .from(hanumanDocuments)
+    .groupBy(hanumanDocuments.type)
     .all();
 
   const byType: Record<string, number> = {};
@@ -34,17 +34,17 @@ export async function handleStats(ctx: ToolContext, _input: OracleStatsInput): P
     totalDocs += row.count;
   }
 
-  const ftsCount = ctx.sqlite.prepare('SELECT COUNT(*) as count FROM oracle_fts').get() as { count: number };
+  const ftsCount = ctx.sqlite.prepare('SELECT COUNT(*) as count FROM hanuman_fts').get() as { count: number };
 
   const lastIndexed = ctx.db.select({
     lastIndexed: sql<number | null>`MAX(indexed_at)`,
-  }).from(oracleDocuments).get();
+  }).from(hanumanDocuments).get();
 
   const conceptsResult = ctx.db.select({
-    concepts: oracleDocuments.concepts,
+    concepts: hanumanDocuments.concepts,
   })
-    .from(oracleDocuments)
-    .where(and(isNotNull(oracleDocuments.concepts), ne(oracleDocuments.concepts, '[]')))
+    .from(hanumanDocuments)
+    .where(and(isNotNull(hanumanDocuments.concepts), ne(hanumanDocuments.concepts, '[]')))
     .all();
 
   const uniqueConcepts = new Set<string>();

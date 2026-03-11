@@ -18,7 +18,7 @@ import { Settings } from './pages/Settings';
 import { Playground } from './pages/Playground';
 import { Map } from './pages/Map';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
-import { getStats } from './api/oracle';
+import { getStats } from './api/hanuman';
 import { setVaultRepo } from './utils/docDisplay';
 
 // Protected route wrapper

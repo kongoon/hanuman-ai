@@ -1,12 +1,12 @@
 #!/bin/bash
-# Fresh installation of Oracle Nightly with seed data
-# Usage: curl -sSL https://raw.githubusercontent.com/Soul-Brews-Studio/oracle-v2/main/scripts/fresh-install.sh | bash
+# Fresh installation of Hanuman Nightly with seed data
+# Usage: curl -sSL https://raw.githubusercontent.com/Soul-Brews-Studio/hanuman-ai/main/scripts/fresh-install.sh | bash
 set -e
 
-INSTALL_DIR="${ORACLE_INSTALL_DIR:-$HOME/.local/share/oracle-v2}"
-DATA_DIR="$HOME/.oracle"
+INSTALL_DIR="${HANUMAN_INSTALL_DIR:-$HOME/.local/share/hanuman-ai}"
+DATA_DIR="$HOME/.hanuman"
 
-echo "🔮 Oracle Nightly - Fresh Installation"
+echo "🔮 Hanuman Nightly - Fresh Installation"
 echo "======================================="
 echo ""
 
@@ -46,8 +46,8 @@ if [ -d "$DATA_DIR" ]; then
 fi
 
 # Clone
-echo "📥 Cloning Oracle Nightly..."
-git clone --depth 1 https://github.com/Soul-Brews-Studio/oracle-v2.git "$INSTALL_DIR"
+echo "📥 Cloning Hanuman Nightly..."
+git clone --depth 1 https://github.com/Soul-Brews-Studio/hanuman-ai.git "$INSTALL_DIR"
 cd "$INSTALL_DIR"
 
 # Install dependencies
@@ -69,7 +69,7 @@ cd frontend && bun install && bun run build && cd ..
 
 # Index seed data
 echo "📚 Indexing seed data..."
-ORACLE_REPO_ROOT="$DATA_DIR/seed" bun run index
+HANUMAN_REPO_ROOT="$DATA_DIR/seed" bun run index
 
 # Run tests
 echo "🧪 Running tests..."
@@ -89,7 +89,7 @@ echo ""
 echo "📝 Add to Claude Code (~/.claude.json):"
 echo '  {'
 echo '    "mcpServers": {'
-echo '      "oracle-v2": {'
+echo '      "hanuman-ai": {'
 echo '        "command": "bun",'
 echo "        \"args\": [\"run\", \"$INSTALL_DIR/src/index.ts\"]"
 echo '      }'
@@ -116,4 +116,4 @@ elif command -v ifconfig &> /dev/null; then
     done
 fi
 echo ""
-echo "📖 Docs: https://github.com/Soul-Brews-Studio/oracle-v2"
+echo "📖 Docs: https://github.com/Soul-Brews-Studio/hanuman-ai"

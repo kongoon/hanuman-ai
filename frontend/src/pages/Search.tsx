@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { search } from '../api/oracle';
-import type { Document } from '../api/oracle';
+import { search } from '../api/hanuman';
+import type { Document } from '../api/hanuman';
 import { LogCard } from '../components/LogCard';
 import styles from './Search.module.css';
 
@@ -45,7 +45,7 @@ export function Search() {
 
   return (
     <div className={styles.container}>
-      <h1 className={styles.title}>Search Oracle</h1>
+      <h1 className={styles.title}>Search Hanuman</h1>
 
       <form onSubmit={handleSubmit} className={styles.form}>
         <input

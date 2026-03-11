@@ -1,4 +1,4 @@
-// Oracle API client
+// Hanuman API client
 // Always use /api prefix (backend routes are under /api/*)
 const API_BASE = '/api';
 

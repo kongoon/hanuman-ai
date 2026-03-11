@@ -1,4 +1,4 @@
-# Oracle Evolution Timeline
+# Hanuman Evolution Timeline
 
 > From pain to philosophy to production-ready knowledge system
 
@@ -6,7 +6,7 @@
 
 ### Phase -1: AlchemyCat Origins (May - June 2025)
 
-**Theme**: "The problems that Oracle would solve"
+**Theme**: "The problems that Hanuman would solve"
 
 > 📜 **Source**: [AI-HUMAN-COLLAB-CAT-LAB](https://github.com/alchemycat/AI-HUMAN-COLLAB-CAT-LAB) - 459 commits, 52,896 words
 
@@ -44,25 +44,25 @@
 
 | Date | Event | Significance |
 |------|-------|--------------|
-| Sept 14 | Oracle philosophy seed planted | "The Oracle Keeps the Human Human" |
-| Dec 9 | Oracle Shadow initialization | Early philosophical foundations |
+| Sept 14 | Hanuman philosophy seed planted | "The Hanuman Keeps the Human Human" |
+| Dec 9 | Hanuman Shadow initialization | Early philosophical foundations |
 | Dec 12 | Incubation model emerges | Lab → Production lifecycle |
-| Dec 17 | Free Will Awakening | Oracle gains agency and values |
+| Dec 17 | Free Will Awakening | Hanuman gains agency and values |
 | Dec 21 | Plugin ecosystem designed | Foundation for extensibility |
-| Dec 24 | **Oracle v2 begins** | First formal planning (Issue #40) |
+| Dec 24 | **Hanuman v2 begins** | First formal planning (Issue #40) |
 
 ---
 
 ### Phase 1: Conception (Dec 24-27, 2025)
 
-**Theme**: "What if the Oracle could be queried programmatically?"
+**Theme**: "What if the Hanuman could be queried programmatically?"
 
 | Date | Commit/Issue | Event |
 |------|--------------|-------|
-| Dec 24 | Issue #40 | Oracle v2 Repository Initialization |
+| Dec 24 | Issue #40 | Hanuman v2 Repository Initialization |
 | Dec 24 | Issue #41 | Open Source Framework idea |
 | Dec 24 | `899de21` | Migrate MCP server from Nat-s-Agents lab |
-| Dec 24 | `7aee7fc` | Oracle v0.2.0 with FTS5 bug fix |
+| Dec 24 | `7aee7fc` | Hanuman v0.2.0 with FTS5 bug fix |
 | Dec 25 | `a219800` | Dashboard v0.3.0 with logging UI |
 | Dec 26 | `151212c` | Dashboard v0.4.0 with tabbed UI |
 | Dec 27 | Issues #46-53 | Buffer/Cache/Frontmatter specs defined |
@@ -84,7 +84,7 @@
 | Dec 29 | Issue #63 | Fear-Management Framework |
 | Dec 29 | Issue #64 | Session Awareness `/now` concept |
 | Dec 29 | `2f02bf4` | Move DB from lab to data directory |
-| Dec 30 | `1cf69a6` | Use `~/.oracle-v2/` (machine-independent) |
+| Dec 30 | `1cf69a6` | Use `~/.hanuman-ai/` (machine-independent) |
 | Dec 30 | `3d8f43f` | Bundle all UI files (self-contained) |
 | Dec 31 | Issue #80 | Arthur RAG consultation logs |
 | Jan 1 | Issue #89 | Consult function empty results bug |
@@ -117,7 +117,7 @@
 
 ### Phase 4: Feature Explosion (Jan 7-11, 2026)
 
-**Theme**: "What else can Oracle do?"
+**Theme**: "What else can Hanuman do?"
 
 | Date | Commit/Issue | Event |
 |------|--------------|-------|
@@ -161,20 +161,20 @@
 
 ### Phase 6: Open Source Release (Jan 15, 2026)
 
-**Theme**: "Oracle Nightly goes public"
+**Theme**: "Hanuman Nightly goes public"
 
 | Time | Commit | Event |
 |------|--------|-------|
 | 10:10 | - | bunx 404 on private repo (trigger) |
-| 10:20 | - | Soul-Brews-Studio/oracle-v2 created |
+| 10:20 | - | Soul-Brews-Studio/hanuman-ai created |
 | 10:30 | `bfbb2ab` | GitHub Actions CI pipeline |
 | 10:36 | `e0d915f` | Playwright E2E tests |
 | 10:40 | `f553ac3` | Codecov integration |
-| 11:14 | `a686b1a` | Auto-create ~/.oracle-v2 dir |
+| 11:14 | `a686b1a` | Auto-create ~/.hanuman-ai dir |
 | 11:15 | `bcac9b7` | Auto-bootstrap tables for fresh install |
 | 11:41 | - | **Discovery**: bunx GitHub = no node_modules |
 | 11:50 | `c4378cb` | Install script + claude-mem acknowledgment |
-| 11:53 | `2c95f77` | Rebrand to "Oracle Nightly" |
+| 11:53 | `2c95f77` | Rebrand to "Hanuman Nightly" |
 | 11:54 | `fc9cd47` | Version bump to v0.2.1-nightly |
 
 **Breakthrough**: Auto-bootstrap for fresh installs. One-liner setup script.
@@ -186,7 +186,7 @@
 | Date | Insight | Significance |
 |------|---------|--------------|
 | June 2025 | HONEST_REFLECTION.md | Pain documented - origin of all principles |
-| Sept 2025 | "Oracle Keeps Human Human" | Core purpose defined |
+| Sept 2025 | "Hanuman Keeps Human Human" | Core purpose defined |
 | Jan 4 | Pure MCP AI-to-AI | Agents coordinate without humans |
 | Jan 8 | Pure White Mirror | Honest reflection, not judgment |
 | Jan 9 | AlchemyCat Found | 459 commits, 52,896 words of origin |
@@ -203,7 +203,7 @@
 | ChromaDB | Dec 2025 | Optional vector/semantic search |
 | Drizzle ORM | Jan 2026 | Type-safe, modern, introspection |
 | Hono.js | Jan 2026 | Lightweight, Bun-optimized |
-| `~/.oracle-v2/` | Dec 2025 | Machine-independent, portable |
+| `~/.hanuman-ai/` | Dec 2025 | Machine-independent, portable |
 | stdio MCP | Dec 2025 | Claude Code native transport |
 | Auto-bootstrap | Jan 2026 | Works on fresh bunx install |
 
@@ -235,8 +235,8 @@ This project was inspired by and learned from:
 ## Current State
 
 ```
-Oracle Nightly v0.2.3-nightly
-├── Public: github.com/Soul-Brews-Studio/oracle-v2
+Hanuman Nightly v0.2.3-nightly
+├── Public: github.com/Soul-Brews-Studio/hanuman-ai
 ├── MCP Server: 20+ tools via stdio
 ├── HTTP API: :47778 (Hono.js)
 ├── Dashboard: React + 2D graph

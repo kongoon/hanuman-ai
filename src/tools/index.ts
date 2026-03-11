@@ -1,5 +1,5 @@
 /**
- * Oracle Tools — Barrel Export
+ * Hanuman Tools — Barrel Export
  *
  * All tool definitions and handlers in one place.
  */
@@ -7,19 +7,19 @@
 // Types
 export type { ToolContext, ToolResponse } from './types.ts';
 export type {
-  OracleSearchInput,
-  OracleReflectInput,
-  OracleLearnInput,
-  OracleListInput,
-  OracleStatsInput,
-  OracleConceptsInput,
-  OracleSupersededInput,
-  OracleHandoffInput,
-  OracleInboxInput,
-  OracleVerifyInput,
-  OracleScheduleAddInput,
-  OracleScheduleListInput,
-  OracleReadInput,
+  HanumanSearchInput,
+  HanumanReflectInput,
+  HanumanLearnInput,
+  HanumanListInput,
+  HanumanStatsInput,
+  HanumanConceptsInput,
+  HanumanSupersededInput,
+  HanumanHandoffInput,
+  HanumanInboxInput,
+  HanumanVerifyInput,
+  HanumanScheduleAddInput,
+  HanumanScheduleListInput,
+  HanumanReadInput,
 } from './types.ts';
 
 // Search (+ pure helpers)
@@ -73,10 +73,10 @@ export { readToolDef, handleRead } from './read.ts';
 
 // Forum
 export type {
-  OracleThreadInput,
-  OracleThreadsInput,
-  OracleThreadReadInput,
-  OracleThreadUpdateInput,
+  HanumanThreadInput,
+  HanumanThreadsInput,
+  HanumanThreadReadInput,
+  HanumanThreadUpdateInput,
 } from './forum.ts';
 export {
   forumToolDefs,

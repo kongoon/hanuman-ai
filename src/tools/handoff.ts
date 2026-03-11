@@ -1,5 +1,5 @@
 /**
- * Oracle Handoff Handler
+ * Hanuman Handoff Handler
  *
  * Write session context to ψ/inbox/handoff/ for future sessions.
  * When vault is configured, writes to vault repo with project-nested paths.
@@ -9,11 +9,11 @@ import path from 'path';
 import fs from 'fs';
 import { getVaultPsiRoot } from '../vault/handler.ts';
 import { detectProject } from '../server/project-detect.ts';
-import type { ToolContext, ToolResponse, OracleHandoffInput } from './types.ts';
+import type { ToolContext, ToolResponse, HanumanHandoffInput } from './types.ts';
 
 export const handoffToolDef = {
-  name: 'oracle_handoff',
-  description: 'Write session context to the Oracle inbox for future sessions to pick up. Creates a timestamped markdown file in ψ/inbox/handoff/. Use at end of sessions to preserve context.',
+  name: 'hanuman_handoff',
+  description: 'Write session context to the Hanuman inbox for future sessions to pick up. Creates a timestamped markdown file in ψ/inbox/handoff/. Use at end of sessions to preserve context.',
   inputSchema: {
     type: 'object',
     properties: {
@@ -30,7 +30,7 @@ export const handoffToolDef = {
   }
 };
 
-export async function handleHandoff(ctx: ToolContext, input: OracleHandoffInput): Promise<ToolResponse> {
+export async function handleHandoff(ctx: ToolContext, input: HanumanHandoffInput): Promise<ToolResponse> {
   const { content, slug: slugInput } = input;
   const now = new Date();
 
@@ -75,7 +75,7 @@ export async function handleHandoff(ctx: ToolContext, input: OracleHandoffInput)
       text: JSON.stringify({
         success: true,
         file: sourceFileRel,
-        message: `Handoff written${vaultRoot ? ' (vault)' : ''}. Next session can read it with oracle_inbox().`
+        message: `Handoff written${vaultRoot ? ' (vault)' : ''}. Next session can read it with hanuman_inbox().`
       }, null, 2)
     }]
   };

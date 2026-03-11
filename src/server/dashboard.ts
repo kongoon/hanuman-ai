@@ -1,11 +1,11 @@
 /**
- * Oracle v2 Dashboard Handlers
+ * Hanuman v2 Dashboard Handlers
  *
  * Refactored to use Drizzle ORM for type-safe queries.
  */
 
 import { sql, gt, and, gte, lt, desc } from 'drizzle-orm';
-import { db, oracleDocuments, searchLog, learnLog } from '../db/index.ts';
+import { db, hanumanDocuments, searchLog, learnLog } from '../db/index.ts';
 import type { DashboardSummary, DashboardActivity, DashboardGrowth } from './types.ts';
 
 /**
@@ -14,24 +14,24 @@ import type { DashboardSummary, DashboardActivity, DashboardGrowth } from './typ
 export function handleDashboardSummary(): DashboardSummary {
   // Document counts
   const totalDocsResult = db.select({ count: sql<number>`count(*)` })
-    .from(oracleDocuments)
+    .from(hanumanDocuments)
     .get();
   const totalDocs = totalDocsResult?.count || 0;
 
   const byTypeResults = db.select({
-    type: oracleDocuments.type,
+    type: hanumanDocuments.type,
     count: sql<number>`count(*)`
   })
-    .from(oracleDocuments)
-    .groupBy(oracleDocuments.type)
+    .from(hanumanDocuments)
+    .groupBy(hanumanDocuments.type)
     .all();
 
   // Concept counts - need to parse JSON concepts from all documents
-  const conceptsResult = db.select({ concepts: oracleDocuments.concepts })
-    .from(oracleDocuments)
+  const conceptsResult = db.select({ concepts: hanumanDocuments.concepts })
+    .from(hanumanDocuments)
     .where(and(
-      sql`${oracleDocuments.concepts} IS NOT NULL`,
-      sql`${oracleDocuments.concepts} != '[]'`
+      sql`${hanumanDocuments.concepts} IS NOT NULL`,
+      sql`${hanumanDocuments.concepts} != '[]'`
     ))
     .all();
 
@@ -75,8 +75,8 @@ export function handleDashboardSummary(): DashboardSummary {
   } catch {}
 
   // Health status
-  const lastIndexedResult = db.select({ lastIndexed: sql<number | null>`max(${oracleDocuments.indexedAt})` })
-    .from(oracleDocuments)
+  const lastIndexedResult = db.select({ lastIndexed: sql<number | null>`max(${hanumanDocuments.indexedAt})` })
+    .from(hanumanDocuments)
     .get();
 
   return {
@@ -181,10 +181,10 @@ export function handleDashboardGrowth(period: string = 'week'): DashboardGrowth 
 
     // Documents created that day
     const docsResult = db.select({ count: sql<number>`count(*)` })
-      .from(oracleDocuments)
+      .from(hanumanDocuments)
       .where(and(
-        gte(oracleDocuments.createdAt, dayStart),
-        lt(oracleDocuments.createdAt, dayEnd)
+        gte(hanumanDocuments.createdAt, dayStart),
+        lt(hanumanDocuments.createdAt, dayEnd)
       ))
       .get();
 

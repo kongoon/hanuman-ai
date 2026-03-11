@@ -1,16 +1,16 @@
 /**
- * Oracle List Handler
+ * Hanuman List Handler
  *
  * List documents without search query, with pagination and type filtering.
  */
 
 import { eq, sql } from 'drizzle-orm';
-import { oracleDocuments } from '../db/schema.ts';
-import type { ToolContext, ToolResponse, OracleListInput } from './types.ts';
+import { hanumanDocuments } from '../db/schema.ts';
+import type { ToolContext, ToolResponse, HanumanListInput } from './types.ts';
 
 export const listToolDef = {
-  name: 'oracle_list',
-  description: 'List all documents in Oracle knowledge base. Browse without searching - useful for exploring what knowledge exists. Supports pagination and type filtering.',
+  name: 'hanuman_list',
+  description: 'List all documents in Hanuman knowledge base. Browse without searching - useful for exploring what knowledge exists. Supports pagination and type filtering.',
   inputSchema: {
     type: 'object',
     properties: {
@@ -35,7 +35,7 @@ export const listToolDef = {
   }
 };
 
-export async function handleList(ctx: ToolContext, input: OracleListInput): Promise<ToolResponse> {
+export async function handleList(ctx: ToolContext, input: HanumanListInput): Promise<ToolResponse> {
   const { type = 'all', limit = 10, offset = 0 } = input;
 
   if (limit < 1 || limit > 100) {
@@ -51,22 +51,22 @@ export async function handleList(ctx: ToolContext, input: OracleListInput): Prom
   }
 
   const countResult = type === 'all'
-    ? ctx.db.select({ total: sql<number>`count(*)` }).from(oracleDocuments).get()
-    : ctx.db.select({ total: sql<number>`count(*)` }).from(oracleDocuments).where(eq(oracleDocuments.type, type)).get();
+    ? ctx.db.select({ total: sql<number>`count(*)` }).from(hanumanDocuments).get()
+    : ctx.db.select({ total: sql<number>`count(*)` }).from(hanumanDocuments).where(eq(hanumanDocuments.type, type)).get();
   const total = countResult?.total ?? 0;
 
   const listStmt = type === 'all'
     ? ctx.sqlite.prepare(`
         SELECT d.id, d.type, d.source_file, d.concepts, d.indexed_at, f.content
-        FROM oracle_documents d
-        JOIN oracle_fts f ON d.id = f.id
+        FROM hanuman_documents d
+        JOIN hanuman_fts f ON d.id = f.id
         ORDER BY d.indexed_at DESC
         LIMIT ? OFFSET ?
       `)
     : ctx.sqlite.prepare(`
         SELECT d.id, d.type, d.source_file, d.concepts, d.indexed_at, f.content
-        FROM oracle_documents d
-        JOIN oracle_fts f ON d.id = f.id
+        FROM hanuman_documents d
+        JOIN hanuman_fts f ON d.id = f.id
         WHERE d.type = ?
         ORDER BY d.indexed_at DESC
         LIMIT ? OFFSET ?

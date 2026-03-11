@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
-import { getDashboardSummary, getDashboardActivity, getDashboardGrowth } from '../api/oracle';
-import type { DashboardSummary, DashboardActivity, DashboardGrowth } from '../api/oracle';
+import { getDashboardSummary, getDashboardActivity, getDashboardGrowth } from '../api/hanuman';
+import type { DashboardSummary, DashboardActivity, DashboardGrowth } from '../api/hanuman';
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import styles from './Activity.module.css';
 

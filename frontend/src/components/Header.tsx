@@ -39,10 +39,10 @@ export function Header() {
   const [toolsOpen, setToolsOpen] = useState(false);
   const [sessionStartTime] = useState(() => {
     // Get or initialize session start time from localStorage
-    const stored = localStorage.getItem('oracle_session_start');
+    const stored = localStorage.getItem('hanuman_session_start');
     if (stored) return parseInt(stored);
     const now = Date.now();
-    localStorage.setItem('oracle_session_start', String(now));
+    localStorage.setItem('hanuman_session_start', String(now));
     return now;
   });
 
@@ -91,7 +91,7 @@ export function Header() {
   return (
     <header className={styles.header}>
       <Link to="/" className={styles.logo}>
-        🔮 Oracle
+        🔮 Hanuman
         <span className={styles.version}>{__APP_VERSION__}</span>
       </Link>
 

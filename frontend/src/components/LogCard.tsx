@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import type { Document } from '../api/oracle';
+import type { Document } from '../api/hanuman';
 import { getDocDisplayInfo } from '../utils/docDisplay';
 import styles from './LogCard.module.css';
 

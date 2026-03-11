@@ -21,8 +21,8 @@ const DOCS: VectorDocument[] = [
   { id: 'p2', document: 'Patterns over intentions. Watch what the code actually does, not what the PR description claims.', metadata: { type: 'principle', source_file: 'resonance/patterns.md' } },
   { id: 'p3', document: 'External brain, not command. Mirror reality. Present options. Let the human decide.', metadata: { type: 'principle', source_file: 'resonance/external-brain.md' } },
   { id: 'p4', document: 'Curiosity creates existence. Every search creates knowledge. Questions are never wasted.', metadata: { type: 'principle', source_file: 'resonance/curiosity.md' } },
-  { id: 'p5', document: 'Form and formless. 191+ Oracles share the same 5 Principles. Each has different purpose.', metadata: { type: 'principle', source_file: 'resonance/form-formless.md' } },
-  { id: 'p6', document: 'Oracle never pretends to be human. When AI speaks as itself, there is distinction — but that distinction IS unity.', metadata: { type: 'principle', source_file: 'resonance/transparency.md' } },
+  { id: 'p5', document: 'Form and formless. 191+ Hanumans share the same 5 Principles. Each has different purpose.', metadata: { type: 'principle', source_file: 'resonance/form-formless.md' } },
+  { id: 'p6', document: 'Hanuman never pretends to be human. When AI speaks as itself, there is distinction — but that distinction IS unity.', metadata: { type: 'principle', source_file: 'resonance/transparency.md' } },
   { id: 'p7', document: 'Small enough to understand. If it takes more than 8 minutes to grok, it is too complex.', metadata: { type: 'principle', source_file: 'resonance/small-enough.md' } },
   { id: 'p8', document: 'Cold God Architecture. Build systems that are rules-based, indifferent, incorruptible.', metadata: { type: 'principle', source_file: 'resonance/cold-god.md' } },
   { id: 'p9', document: 'Skills over features. Do not add features to codebases. Add skills — transformations that modify source code.', metadata: { type: 'principle', source_file: 'resonance/skills-over-features.md' } },
@@ -35,14 +35,14 @@ const DOCS: VectorDocument[] = [
   { id: 'l4', document: 'LanceDB is serverless columnar vector DB. Stores data as Lance files on disk. No server needed.', metadata: { type: 'learning', source_file: 'learnings/lancedb.md' } },
   { id: 'l5', document: 'Thai text tokenizes at 2-3x more tokens per character than English. Safe truncation: 2000 characters.', metadata: { type: 'learning', source_file: 'learnings/thai-truncation.md' } },
   { id: 'l6', document: 'pm2 does not reliably pass env vars through --update-env. Inline them in the command string.', metadata: { type: 'learning', source_file: 'learnings/pm2-env.md' } },
-  { id: 'l7', document: 'Separate frontend from backend cleanly. oracle-studio is its own server with API proxy.', metadata: { type: 'learning', source_file: 'learnings/frontend-separation.md' } },
+  { id: 'l7', document: 'Separate frontend from backend cleanly. hanuman-studio is its own server with API proxy.', metadata: { type: 'learning', source_file: 'learnings/frontend-separation.md' } },
   { id: 'l8', document: 'Ollama nomic-embed-text produces 768-dimension vectors. GPU accelerated on Apple Silicon.', metadata: { type: 'learning', source_file: 'learnings/ollama-embeddings.md' } },
   { id: 'l9', document: 'MCP protocol bridges allow Claude to interact with external tools like databases and APIs.', metadata: { type: 'learning', source_file: 'learnings/mcp-bridge.md' } },
   { id: 'l10', document: 'Pluggable vector adapter pattern: factory + env var swaps entire vector DB engine at runtime.', metadata: { type: 'learning', source_file: 'learnings/pluggable-adapter.md' } },
 
   // Retros (10)
   { id: 'r1', document: 'Session 8 built pluggable vector DB adapters. 6 adapters, 4 embedding providers, 190 tests passing.', metadata: { type: 'retro', source_file: 'retros/session-8.md' } },
-  { id: 'r2', document: 'Session 9 deployed oracle-v2 on white.local. Qdrant Docker, Ollama embeddings, 22400 vectors indexed.', metadata: { type: 'retro', source_file: 'retros/session-9.md' } },
+  { id: 'r2', document: 'Session 9 deployed hanuman-ai on white.local. Qdrant Docker, Ollama embeddings, 22400 vectors indexed.', metadata: { type: 'retro', source_file: 'retros/session-9.md' } },
   { id: 'r3', document: 'Caddy reverse proxy for HTTPS on LAN was too complex. HTTP on a memorable port is simpler.', metadata: { type: 'retro', source_file: 'retros/caddy-lesson.md' } },
   { id: 'r4', document: 'Consultations feature was dead since February. Traced remnants across two repos and cleaned.', metadata: { type: 'retro', source_file: 'retros/consultations-cleanup.md' } },
   { id: 'r5', document: 'Missing connect() call in indexer caused silent fallback to SQLite-only mode. Always connect first.', metadata: { type: 'retro', source_file: 'retros/connect-bug.md' } },
@@ -62,7 +62,7 @@ const QUERIES = [
   'blockchain flood monitoring',
   'React dashboard visualization',
   'AI embedding models and dimensions',
-  'Oracle philosophy principles',
+  'Hanuman philosophy principles',
   'pluggable adapter factory pattern',
 ];
 
@@ -180,11 +180,11 @@ async function main() {
 
   // 1. LanceDB (Ollama, 768-dim)
   {
-    const tmpDir = path.join(os.tmpdir(), `oracle-bench-lance-${Date.now()}`);
+    const tmpDir = path.join(os.tmpdir(), `hanuman-bench-lance-${Date.now()}`);
     const store = createVectorStore({
       type: 'lancedb',
       dataPath: tmpDir,
-      collectionName: 'oracle_bench_lance',
+      collectionName: 'hanuman_bench_lance',
       embeddingProvider: 'ollama',
     });
     try {
@@ -199,7 +199,7 @@ async function main() {
   if (qdrantOk) {
     const store = createVectorStore({
       type: 'qdrant',
-      collectionName: 'oracle_bench_qdrant',
+      collectionName: 'hanuman_bench_qdrant',
       embeddingProvider: 'ollama',
     });
     try {
@@ -215,7 +215,7 @@ async function main() {
   {
     const store = createVectorStore({
       type: 'chroma',
-      collectionName: 'oracle_bench_chroma',
+      collectionName: 'hanuman_bench_chroma',
     });
     try {
       results.push(await benchAdapter('ChromaDB', store, 384));

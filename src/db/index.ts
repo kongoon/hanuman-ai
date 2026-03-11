@@ -1,5 +1,5 @@
 /**
- * Oracle v2 Drizzle Database Client
+ * Hanuman v2 Drizzle Database Client
  *
  * Single source of truth for DB initialization:
  * 1. Drizzle migrations (schema tables)
@@ -14,7 +14,7 @@ import { Database } from 'bun:sqlite';
 import path from 'path';
 import fs from 'fs';
 import * as schema from './schema.ts';
-import { DB_PATH, ORACLE_DATA_DIR } from '../config.ts';
+import { DB_PATH, HANUMAN_DATA_DIR } from '../config.ts';
 
 // Migrations folder (relative to this file)
 const MIGRATIONS_FOLDER = path.join(import.meta.dirname || __dirname, 'migrations');
@@ -25,7 +25,7 @@ const MIGRATIONS_FOLDER = path.join(import.meta.dirname || __dirname, 'migration
  */
 export function initFts5(sqliteDb: Database): void {
   sqliteDb.exec(`
-    CREATE VIRTUAL TABLE IF NOT EXISTS oracle_fts USING fts5(
+    CREATE VIRTUAL TABLE IF NOT EXISTS hanuman_fts USING fts5(
       id UNINDEXED,
       content,
       concepts,
@@ -54,7 +54,7 @@ function initializeDatabase(sqliteDb: Database, drizzleDb: BunSQLiteDatabase<typ
   // One-time migration: normalize project casing to lowercase
   const migrated = sqliteDb.prepare("SELECT value FROM settings WHERE key = 'migration_lowercase_projects'").get() as { value: string } | undefined;
   if (!migrated) {
-    sqliteDb.exec("UPDATE oracle_documents SET project = LOWER(project) WHERE project <> LOWER(project)");
+    sqliteDb.exec("UPDATE hanuman_documents SET project = LOWER(project) WHERE project <> LOWER(project)");
     sqliteDb.exec("INSERT OR REPLACE INTO settings (key, value, updated_at) VALUES ('migration_lowercase_projects', '1', unixepoch() * 1000)");
   }
 }
@@ -88,8 +88,8 @@ export function createDatabase(dbPath?: string): {
 // ============================================================================
 
 // Ensure data dir exists before opening DB
-if (!fs.existsSync(ORACLE_DATA_DIR)) {
-  fs.mkdirSync(ORACLE_DATA_DIR, { recursive: true });
+if (!fs.existsSync(HANUMAN_DATA_DIR)) {
+  fs.mkdirSync(HANUMAN_DATA_DIR, { recursive: true });
 }
 
 const defaultSqlite = new Database(DB_PATH);

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title id="page-title">Oracle v2 - Knowledge Base Viewer</title>
+  <title id="page-title">Hanuman v2 - Knowledge Base Viewer</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
@@ -372,7 +372,7 @@
 <body>
   <div class="container">
     <header>
-      <h1 id="persona-title">Oracle v2</h1>
+      <h1 id="persona-title">Hanuman v2</h1>
       <span class="persona-toggle" id="persona-toggle" onclick="togglePersona()" title="Toggle persona">switch</span>
       <a href="/" class="nav-link">Arthur AI</a>
       <div class="stats" id="stats">
@@ -381,7 +381,7 @@
     </header>
 
     <div class="search-box">
-      <input type="text" id="query" placeholder="Search Oracle knowledge..." autofocus>
+      <input type="text" id="query" placeholder="Search Hanuman knowledge..." autofocus>
       <button id="btn-search" onclick="window.location.hash='';search()">Search</button>
       <button id="btn-browse" class="btn-secondary" onclick="window.location.hash='';browseList()">Browse</button>
       <button id="btn-consult" class="btn-secondary" onclick="window.location.hash='';consult()">Consult</button>
@@ -398,11 +398,11 @@
     </div>
 
     <div id="results" class="results">
-      <div class="loading">Enter a query to search Oracle knowledge</div>
+      <div class="loading">Enter a query to search Hanuman knowledge</div>
     </div>
 
     <footer>
-      <span id="footer-text">Oracle v2 - "The Oracle Keeps the Human Human"</span>
+      <span id="footer-text">Hanuman v2 - "The Hanuman Keeps the Human Human"</span>
     </footer>
   </div>
 
@@ -410,7 +410,7 @@
   <div id="learnModal" class="modal">
     <div class="modal-content">
       <div class="modal-header">
-        <div class="modal-title">Add Pattern to Oracle</div>
+        <div class="modal-title">Add Pattern to Hanuman</div>
         <button class="modal-close" onclick="closeLearnModal()">&times;</button>
       </div>
 
@@ -434,7 +434,7 @@
 
         <div class="form-actions">
           <button type="button" class="btn-secondary" onclick="closeLearnModal()">Cancel</button>
-          <button type="submit">Add to Oracle</button>
+          <button type="submit">Add to Hanuman</button>
         </div>
       </form>
     </div>
@@ -458,19 +458,19 @@
     let currentMode = 'browse'; // 'browse' or 'search'
     const PAGE_SIZE = 20;
 
-    // Persona toggle (Arthur/Oracle)
-    let currentPersona = localStorage.getItem('persona') || 'oracle';
+    // Persona toggle (Arthur/Hanuman)
+    let currentPersona = localStorage.getItem('persona') || 'hanuman';
 
     function togglePersona() {
-      currentPersona = currentPersona === 'oracle' ? 'arthur' : 'oracle';
+      currentPersona = currentPersona === 'hanuman' ? 'arthur' : 'hanuman';
       localStorage.setItem('persona', currentPersona);
       applyPersona();
     }
 
     function applyPersona() {
       const isArthur = currentPersona === 'arthur';
-      const title = isArthur ? 'Arthur v2' : 'Oracle v2';
-      const tagline = isArthur ? 'Arthur v2 - "The Shadow Knows"' : 'Oracle v2 - "The Oracle Keeps the Human Human"';
+      const title = isArthur ? 'Arthur v2' : 'Hanuman v2';
+      const tagline = isArthur ? 'Arthur v2 - "The Shadow Knows"' : 'Hanuman v2 - "The Hanuman Keeps the Human Human"';
 
       document.getElementById('persona-title').textContent = title;
       document.getElementById('page-title').textContent = title + ' - Knowledge Base Viewer';
@@ -599,7 +599,7 @@
       if (!query) return;
 
       setActiveButton('btn-consult');
-      document.getElementById('results').innerHTML = '<div class="loading">Consulting Oracle...</div>';
+      document.getElementById('results').innerHTML = '<div class="loading">Consulting Hanuman...</div>';
 
       try {
         const res = await fetch(`${API}/consult?q=${encodeURIComponent(query)}`);
@@ -635,7 +635,7 @@
 
         html += `
           <div class="guidance-box">
-            <div class="guidance-title">Oracle Guidance</div>
+            <div class="guidance-title">Hanuman Guidance</div>
             <div class="guidance-content">${escapeHtml(data.guidance)}</div>
           </div>
         `;

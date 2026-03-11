@@ -1,12 +1,12 @@
 #!/bin/bash
-# Setup oracle-v2 with frontend build
+# Setup hanuman-ai with frontend build
 set -e
 
 echo "🔧 Installing root dependencies..."
 bun install
 
 echo "🗄️ Setting up database..."
-mkdir -p ~/.oracle
+mkdir -p ~/.hanuman
 bun run db:push  # Creates/updates tables from schema
 
 echo "🔧 Installing frontend dependencies..."

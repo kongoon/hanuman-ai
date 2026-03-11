@@ -1,5 +1,5 @@
 /**
- * Oracle Nightly HTTP Server - Hono.js Version
+ * Hanuman Nightly HTTP Server - Hono.js Version
  *
  * Modern routing with Hono.js on Bun runtime.
  * Same handlers, same DB, just cleaner HTTP layer.
@@ -24,7 +24,7 @@ import { getVaultPsiRoot } from './vault/handler.ts';
 // Config constants (no DB dependency)
 import {
   PORT,
-  ORACLE_DATA_DIR,
+  HANUMAN_DATA_DIR,
   REPO_ROOT,
   DB_PATH,
 } from './config.ts';
@@ -99,10 +99,10 @@ try {
 }
 
 // Configure process lifecycle management
-configure({ dataDir: ORACLE_DATA_DIR, pidFileName: 'oracle-http.pid' });
+configure({ dataDir: HANUMAN_DATA_DIR, pidFileName: 'hanuman-http.pid' });
 
 // Write PID file for process tracking
-writePidFile({ pid: process.pid, port: Number(PORT), startedAt: new Date().toISOString(), name: 'oracle-http' });
+writePidFile({ pid: process.pid, port: Number(PORT), startedAt: new Date().toISOString(), name: 'hanuman-http' });
 
 // Register graceful shutdown handlers
 registerSignalHandlers(async () => {
@@ -113,7 +113,7 @@ registerSignalHandlers(async () => {
     ]
   });
   removePidFile();
-  console.log('👋 Oracle Nightly HTTP Server stopped.');
+  console.log('👋 Hanuman Nightly HTTP Server stopped.');
 });
 
 // Create Hono app
@@ -127,8 +127,8 @@ app.use('*', cors());
 // ============================================================================
 
 // Session secret - generate once per server run
-const SESSION_SECRET = process.env.ORACLE_SESSION_SECRET || crypto.randomUUID();
-const SESSION_COOKIE_NAME = 'oracle_session';
+const SESSION_SECRET = process.env.HANUMAN_SESSION_SECRET || crypto.randomUUID();
+const SESSION_COOKIE_NAME = 'hanuman_session';
 const SESSION_DURATION_MS = 7 * 24 * 60 * 60 * 1000; // 7 days
 
 // Check if request is from local network
@@ -369,7 +369,7 @@ app.post('/api/settings', async (c) => {
 
 // Health check
 app.get('/api/health', (c) => {
-  return c.json({ status: 'ok', server: 'oracle-nightly', port: PORT, oracleV2: 'connected' });
+  return c.json({ status: 'ok', server: 'hanuman-nightly', port: PORT, hanumanV2: 'connected' });
 });
 
 // Search
@@ -399,48 +399,48 @@ app.get('/api/reflect', (c) => {
 app.get('/api/stats', async (c) => {
   const stats = handleStats(DB_PATH);
   const vaultRepo = getSetting('vault_repo');
-  let vectorStats = { vector: { enabled: false, count: 0, collection: 'oracle_knowledge' } };
+  let vectorStats = { vector: { enabled: false, count: 0, collection: 'hanuman_knowledge' } };
   try {
     vectorStats = await handleVectorStats();
   } catch { /* vector unavailable */ }
   return c.json({ ...stats, ...vectorStats, vault_repo: vaultRepo });
 });
 
-// Active Oracles — detected from existing activity across all log tables
-let oracleCache: { data: any; ts: number } | null = null;
-app.get('/api/oracles', (c) => {
+// Active Hanumans — detected from existing activity across all log tables
+let hanumanCache: { data: any; ts: number } | null = null;
+app.get('/api/hanumans', (c) => {
   const hours = parseInt(c.req.query('hours') || '168'); // default 7 days
   const now = Date.now();
-  if (oracleCache && (now - oracleCache.ts) < 60_000) return c.json(oracleCache.data);
+  if (hanumanCache && (now - hanumanCache.ts) < 60_000) return c.json(hanumanCache.data);
 
   const cutoff = now - hours * 3600_000;
   // Active identities (forum authors, trace sessions, learn sources)
   const identities = sqlite.prepare(`
-    SELECT oracle_name, source, max(last_seen) as last_seen, sum(actions) as actions
+    SELECT hanuman_name, source, max(last_seen) as last_seen, sum(actions) as actions
     FROM (
-      SELECT author as oracle_name, 'forum' as source, max(created_at) as last_seen, count(*) as actions
+      SELECT author as hanuman_name, 'forum' as source, max(created_at) as last_seen, count(*) as actions
         FROM forum_messages WHERE author IS NOT NULL AND created_at > ?
         GROUP BY author
       UNION ALL
-      SELECT COALESCE(session_id, 'unknown') as oracle_name, 'trace' as source, max(created_at) as last_seen, count(*) as actions
+      SELECT COALESCE(session_id, 'unknown') as hanuman_name, 'trace' as source, max(created_at) as last_seen, count(*) as actions
         FROM trace_log WHERE created_at > ?
         GROUP BY session_id
       UNION ALL
-      SELECT COALESCE(source, project, 'unknown') as oracle_name, 'learn' as source, max(created_at) as last_seen, count(*) as actions
+      SELECT COALESCE(source, project, 'unknown') as hanuman_name, 'learn' as source, max(created_at) as last_seen, count(*) as actions
         FROM learn_log WHERE created_at > ?
         GROUP BY COALESCE(source, project)
     )
-    WHERE oracle_name IS NOT NULL AND oracle_name != 'unknown'
-    GROUP BY oracle_name
+    WHERE hanuman_name IS NOT NULL AND hanuman_name != 'unknown'
+    GROUP BY hanuman_name
     ORDER BY last_seen DESC
   `).all(cutoff, cutoff, cutoff);
 
-  // Projects with indexed knowledge (each project = an Oracle's domain)
+  // Projects with indexed knowledge (each project = an Hanuman's domain)
   const projects = sqlite.prepare(`
     SELECT project, count(*) as docs,
            count(DISTINCT type) as types,
            max(created_at) as last_indexed
-    FROM oracle_documents
+    FROM hanuman_documents
     WHERE project IS NOT NULL
     GROUP BY project
     ORDER BY last_indexed DESC
@@ -454,7 +454,7 @@ app.get('/api/oracles', (c) => {
     window_hours: hours,
     cached_at: new Date().toISOString(),
   };
-  oracleCache = { data: result, ts: now };
+  hanumanCache = { data: result, ts: now };
   return c.json(result);
 });
 
@@ -495,12 +495,12 @@ app.get('/api/map3d', async (c) => {
   }
 });
 
-// Live Oracle feed (from ~/.oracle/feed.log)
-const FEED_LOG = path.join(process.env.HOME || '/home/nat', '.oracle', 'feed.log');
+// Live Hanuman feed (from ~/.hanuman/feed.log)
+const FEED_LOG = path.join(process.env.HOME || '/home/nat', '.hanuman', 'feed.log');
 app.get('/api/feed', (c) => {
   try {
     const limit = Math.min(200, parseInt(c.req.query('limit') || '50'));
-    const oracle = c.req.query('oracle') || undefined;
+    const hanuman = c.req.query('hanuman') || undefined;
     const event = c.req.query('event') || undefined;
     const since = c.req.query('since') || undefined; // ISO timestamp
 
@@ -508,11 +508,11 @@ app.get('/api/feed', (c) => {
 
     const raw = fs.readFileSync(FEED_LOG, 'utf-8').trim().split('\n').filter(Boolean);
     let events = raw.map(line => {
-      const [ts, oracleName, host, eventType, project, rest] = line.split(' | ').map(s => s.trim());
+      const [ts, hanumanName, host, eventType, project, rest] = line.split(' | ').map(s => s.trim());
       const [sessionId, ...msgParts] = (rest || '').split(' » ');
       return {
         timestamp: ts,
-        oracle: oracleName,
+        hanuman: hanumanName,
         host,
         event: eventType,
         project,
@@ -521,7 +521,7 @@ app.get('/api/feed', (c) => {
       };
     });
 
-    if (oracle) events = events.filter(e => e.oracle === oracle);
+    if (hanuman) events = events.filter(e => e.hanuman === hanuman);
     if (event) events = events.filter(e => e.event === event);
     if (since) events = events.filter(e => e.timestamp >= since);
 
@@ -529,15 +529,15 @@ app.get('/api/feed', (c) => {
     const total = events.length;
     events = events.slice(0, limit);
 
-    // Derive active oracles (unique oracles from last 5 min)
+    // Derive active hanumans (unique hanumans from last 5 min)
     const fiveMinAgo = new Date(Date.now() - 5 * 60_000).toISOString().replace('T', ' ').slice(0, 19);
     const recentAll = raw.map(line => {
-      const [ts, oracleName] = line.split(' | ').map(s => s.trim());
-      return { timestamp: ts, oracle: oracleName };
+      const [ts, hanumanName] = line.split(' | ').map(s => s.trim());
+      return { timestamp: ts, hanuman: hanumanName };
     }).filter(e => e.timestamp >= fiveMinAgo);
-    const activeOracles = [...new Set(recentAll.map(e => e.oracle))];
+    const activeHanumans = [...new Set(recentAll.map(e => e.hanuman))];
 
-    return c.json({ events, total, active_oracles: activeOracles });
+    return c.json({ events, total, active_hanumans: activeHanumans });
   } catch (e: any) {
     return c.json({ error: e.message, events: [], total: 0 }, 500);
   }
@@ -573,8 +573,8 @@ app.get('/api/doc/:id', (c) => {
     // Must use raw SQL for FTS JOIN (Drizzle doesn't support virtual tables)
     const row = sqlite.prepare(`
       SELECT d.id, d.type, d.source_file, d.concepts, d.project, f.content
-      FROM oracle_documents d
-      JOIN oracle_fts f ON d.id = f.id
+      FROM hanuman_documents d
+      JOIN hanuman_fts f ON d.id = f.id
       WHERE d.id = ?
     `).get(docId) as any;
 
@@ -761,7 +761,7 @@ app.get('/api/session/stats', (c) => {
 
 // Serve raw schedule.md for frontend rendering
 app.get('/api/schedule/md', (c) => {
-  const schedulePath = path.join(process.env.HOME || '/tmp', '.oracle', 'ψ/inbox/schedule.md');
+  const schedulePath = path.join(process.env.HOME || '/tmp', '.hanuman', 'ψ/inbox/schedule.md');
   if (fs.existsSync(schedulePath)) {
     return c.text(fs.readFileSync(schedulePath, 'utf-8'));
   }
@@ -843,7 +843,7 @@ app.post('/api/thread', async (c) => {
       thread_id: result.threadId,
       message_id: result.messageId,
       status: result.status,
-      oracle_response: result.oracleResponse,
+      hanuman_response: result.hanumanResponse,
       issue_url: result.issueUrl
     });
   } catch (error) {
@@ -1228,13 +1228,13 @@ app.post('/api/learn', async (c) => {
 // ============================================================================
 
 console.log(`
-🔮 Oracle Nightly HTTP Server running! (Hono.js)
+🔮 Hanuman Nightly HTTP Server running! (Hono.js)
 
    URL: http://localhost:${PORT}
 
    Endpoints:
    - GET  /api/health          Health check
-   - GET  /api/search?q=...    Search Oracle knowledge
+   - GET  /api/search?q=...    Search Hanuman knowledge
    - GET  /api/list            Browse all documents
    - GET  /api/reflect         Random wisdom
    - GET  /api/stats           Database statistics

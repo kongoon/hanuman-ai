@@ -1,8 +1,8 @@
 /**
- * Oracle Schedule Handler (Drizzle DB)
+ * Hanuman Schedule Handler (Drizzle DB)
  *
- * Source of truth: `schedule` table in oracle.db
- * Auto-exports to ~/.oracle/ψ/inbox/schedule.md on write.
+ * Source of truth: `schedule` table in hanuman.db
+ * Auto-exports to ~/.hanuman/ψ/inbox/schedule.md on write.
  *
  * Supports:
  * - Add/list events with proper YYYY-MM-DD date queries
@@ -16,12 +16,12 @@ import os from 'os';
 import path from 'path';
 import { eq, and, gte, lte, like, asc, or } from 'drizzle-orm';
 import { schedule } from '../db/schema.ts';
-import type { ToolContext, ToolResponse, OracleScheduleAddInput, OracleScheduleListInput } from './types.ts';
+import type { ToolContext, ToolResponse, HanumanScheduleAddInput, HanumanScheduleListInput } from './types.ts';
 
 const SCHEDULE_REL = 'ψ/inbox/schedule.md';
 
 function getSchedulePath(): string {
-  return path.join(os.homedir(), '.oracle', SCHEDULE_REL);
+  return path.join(os.homedir(), '.hanuman', SCHEDULE_REL);
 }
 
 const MONTHS: Record<string, number> = {
@@ -116,8 +116,8 @@ function fmtLocal(d: Date): string {
 // ============================================================================
 
 export const scheduleAddToolDef = {
-  name: 'oracle_schedule_add',
-  description: 'Add an appointment or event to the shared schedule. The schedule is per-human (not per-project) and shared across all Oracles.',
+  name: 'hanuman_schedule_add',
+  description: 'Add an appointment or event to the shared schedule. The schedule is per-human (not per-project) and shared across all Hanumans.',
   inputSchema: {
     type: 'object',
     properties: {
@@ -148,7 +148,7 @@ export const scheduleAddToolDef = {
 };
 
 export const scheduleListToolDef = {
-  name: 'oracle_schedule_list',
+  name: 'hanuman_schedule_list',
   description: 'List appointments from the shared schedule. Filter by date, range, or keyword. Defaults to today + 14 days.',
   inputSchema: {
     type: 'object',
@@ -186,7 +186,7 @@ export const scheduleListToolDef = {
 // Handlers
 // ============================================================================
 
-export async function handleScheduleAdd(ctx: ToolContext, input: OracleScheduleAddInput): Promise<ToolResponse> {
+export async function handleScheduleAdd(ctx: ToolContext, input: HanumanScheduleAddInput): Promise<ToolResponse> {
   const { event, time, notes } = input;
   const dateCanonical = parseDate(input.date);
   const now = Date.now();
@@ -223,7 +223,7 @@ export async function handleScheduleAdd(ctx: ToolContext, input: OracleScheduleA
   };
 }
 
-export async function handleScheduleList(ctx: ToolContext, input: OracleScheduleListInput): Promise<ToolResponse> {
+export async function handleScheduleList(ctx: ToolContext, input: HanumanScheduleListInput): Promise<ToolResponse> {
   const limit = input.limit || 50;
   const statusFilter = input.status || 'pending';
 
@@ -313,7 +313,7 @@ function exportScheduleToMarkdown(ctx: ToolContext): void {
     byMonth[month].push(ev);
   }
 
-  let md = `# Schedule\n\n**Updated**: ${fmt(new Date())}\n**Source**: oracle.db (auto-generated)\n`;
+  let md = `# Schedule\n\n**Updated**: ${fmt(new Date())}\n**Source**: hanuman.db (auto-generated)\n`;
 
   for (const [month, monthEvents] of Object.entries(byMonth).sort()) {
     const d = new Date(month + '-01');
@@ -339,7 +339,7 @@ function exportScheduleToMarkdown(ctx: ToolContext): void {
     }
   }
 
-  md += `\n---\n\nManaged by Oracle. Add events via \`oracle_schedule_add\` or the web UI.\n`;
+  md += `\n---\n\nManaged by Hanuman. Add events via \`hanuman_schedule_add\` or the web UI.\n`;
 
   const schedulePath = getSchedulePath();
   fs.mkdirSync(path.dirname(schedulePath), { recursive: true });

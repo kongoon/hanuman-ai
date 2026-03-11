@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { getSettings, updateSettings, type Settings as SettingsType } from '../api/oracle';
+import { getSettings, updateSettings, type Settings as SettingsType } from '../api/hanuman';
 import { useAuth } from '../contexts/AuthContext';
 import styles from './Settings.module.css';
 

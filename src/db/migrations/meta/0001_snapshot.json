@@ -632,8 +632,8 @@
       "uniqueConstraints": {},
       "checkConstraints": {}
     },
-    "oracle_documents": {
-      "name": "oracle_documents",
+    "hanuman_documents": {
+      "name": "hanuman_documents",
       "columns": {
         "id": {
           "name": "id",

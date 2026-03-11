@@ -1,5 +1,5 @@
 /**
- * Oracle Vault Handler
+ * Hanuman Vault Handler
  *
  * Backs up ψ/ to a private GitHub repo with project-first paths.
  * No manifest, no hashing — git is the diff engine.
@@ -173,7 +173,7 @@ export function parseGitStatus(porcelainOutput: string): GitStatusCounts {
 // ---------------------------------------------------------------------------
 
 /**
- * Resolve the vault ψ/ root for shared use by oracle_learn, oracle_handoff, indexer, etc.
+ * Resolve the vault ψ/ root for shared use by hanuman_learn, hanuman_handoff, indexer, etc.
  * Returns the vault repo local path, or a setup hint if not configured.
  */
 export function getVaultPsiRoot(): { path: string } | { needsInit: true; hint: string } {
@@ -181,7 +181,7 @@ export function getVaultPsiRoot(): { path: string } | { needsInit: true; hint: s
   if (!repo) {
     return {
       needsInit: true,
-      hint: 'Run: oracle-vault init <owner/repo> to set up central knowledge vault.\nExample: oracle-vault init your-org/oracle-vault',
+      hint: 'Run: hanuman-vault init <owner/repo> to set up central knowledge vault.\nExample: hanuman-vault init your-org/hanuman-vault',
     };
   }
   try {
@@ -221,13 +221,13 @@ export function initVault(repo: string): InitResult {
   setSetting('vault_repo', repo);
   setSetting('vault_enabled', 'true');
 
-  // 3. Create ~/.oracle/ψ symlink → vault repo's ψ/
-  const oracleHome = path.join(os.homedir(), '.oracle');
-  const psiSymlink = path.join(oracleHome, 'ψ');
+  // 3. Create ~/.hanuman/ψ symlink → vault repo's ψ/
+  const hanumanHome = path.join(os.homedir(), '.hanuman');
+  const psiSymlink = path.join(hanumanHome, 'ψ');
   const vaultPsiDir = path.join(vaultPath, 'ψ');
 
-  if (!fs.existsSync(oracleHome)) {
-    fs.mkdirSync(oracleHome, { recursive: true });
+  if (!fs.existsSync(hanumanHome)) {
+    fs.mkdirSync(hanumanHome, { recursive: true });
   }
 
   if (!fs.existsSync(psiSymlink) && fs.existsSync(vaultPsiDir)) {

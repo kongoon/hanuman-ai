@@ -1,9 +1,9 @@
 #!/usr/bin/env bun
 /**
- * Oracle CLI - Unified human-facing interface
+ * Hanuman CLI - Unified human-facing interface
  *
  * Usage:
- *   oracle <command> [options]
+ *   hanuman <command> [options]
  *
  * Commands:
  *   search <query>      Search the knowledge base
@@ -17,7 +17,7 @@
  *   trace <id>          View a trace
  *   inbox               View handoff inbox
  *   health              Check server health
- *   server              Manage Oracle HTTP server
+ *   server              Manage Hanuman HTTP server
  *   vault               Manage knowledge vault
  */
 
@@ -31,8 +31,8 @@ const pkg = JSON.parse(
 
 const program = new Command();
 program
-  .name('oracle-cli')
-  .description('Oracle CLI — unified knowledge management')
+  .name('hanuman-cli')
+  .description('Hanuman CLI — unified knowledge management')
   .version(pkg.version);
 
 // Error wrapper for all commands

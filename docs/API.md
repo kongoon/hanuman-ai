@@ -1,6 +1,6 @@
-# Oracle Nightly API Documentation
+# Hanuman Nightly API Documentation
 
-Oracle Nightly is a knowledge base system with HTTP API and React dashboard.
+Hanuman Nightly is a knowledge base system with HTTP API and React dashboard.
 
 > **Note**: All API endpoints use `/api/` prefix (e.g., `/api/health`, `/api/search`).
 
@@ -28,7 +28,7 @@ cd frontend && bun dev
 | Page | URL | Description |
 |------|-----|-------------|
 | Arthur Chat | http://localhost:47778/ | Chat interface |
-| Oracle Knowledge | http://localhost:47778/oracle | Legacy knowledge browser |
+| Hanuman Knowledge | http://localhost:47778/hanuman | Legacy knowledge browser |
 | Dashboard (legacy) | http://localhost:47778/dashboard/ui | Old HTML dashboard |
 | **React Dashboard** | http://localhost:3000 | Modern React UI |
 
@@ -60,7 +60,7 @@ Returns server status.
 ```json
 {
   "status": "ok",
-  "server": "oracle-v2",
+  "server": "hanuman-ai",
   "port": 47778
 }
 ```
@@ -169,7 +169,7 @@ curl "http://localhost:47778/list?type=learning&limit=5"
 ```
 GET /consult?q={decision}&context={context}
 ```
-Get Oracle guidance on a decision.
+Get Hanuman guidance on a decision.
 
 **Parameters:**
 | Param | Required | Description |
@@ -195,7 +195,7 @@ curl "http://localhost:47778/consult?q=force+push+safety"
       "score": -8.2
     }
   ],
-  "guidance": "Based on Oracle philosophy:\n\nRelevant Patterns:\n1. Never force push..."
+  "guidance": "Based on Hanuman philosophy:\n\nRelevant Patterns:\n1. Never force push..."
 }
 ```
 
@@ -249,7 +249,7 @@ curl "http://localhost:47778/stats"
   "index_age_hours": 1.5,
   "is_stale": false,
   "is_indexing": false,
-  "database": "/path/to/oracle.db"
+  "database": "/path/to/hanuman.db"
 }
 ```
 
@@ -479,7 +479,7 @@ bun run server &                  # Backend on :47778
 cd frontend && bun dev &          # Frontend on :3000
 
 # 3. Run E2E tests
-cd ~/.claude/skills/dev-browser && npx tsx /path/to/oracle-v2/e2e/run-e2e.ts
+cd ~/.claude/skills/dev-browser && npx tsx /path/to/hanuman-ai/e2e/run-e2e.ts
 ```
 
 **E2E Test Coverage (14 tests):**
@@ -526,7 +526,7 @@ src/
 
 frontend/
 ├── src/
-│   ├── api/oracle.ts  # API client
+│   ├── api/hanuman.ts  # API client
 │   ├── pages/         # React pages
 │   └── components/    # Shared components
 └── dist/              # Production build

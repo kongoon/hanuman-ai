@@ -108,7 +108,7 @@ export function Evolution() {
         <div className={styles.empty}>
           <p>No supersessions recorded yet.</p>
           <p className={styles.hint}>
-            Use <code>oracle_supersede()</code> to track document evolution.
+            Use <code>hanuman_supersede()</code> to track document evolution.
           </p>
         </div>
       ) : (
